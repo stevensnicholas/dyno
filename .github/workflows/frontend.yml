@@ -6,7 +6,10 @@ on:
 jobs:
   ci:
     runs-on: ubuntu-latest
-    container: node:16.15.0
+    container: 
+      image: node:16.15.0
+      options: --user root
+
     steps:
       - uses: actions/checkout@v2
       - name: Frontend CI
