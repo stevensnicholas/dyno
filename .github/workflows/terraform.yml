@@ -19,9 +19,9 @@ jobs:
           terraform init \
             -backend-config="bucket=go-lambda-skeleton-state" \
             -backend-config="key=main" \
-            -backend-config="region=eu-west-1" \
+            -backend-config="region=ap-southeast-2" \
             -backend-config="encrypt=true" \
-            -backend-config="dynamodb_table=go-lambda-skeleton-state-lock";
+            -backend-config="dynamodb_table=comp9447-state"
           terraform validate
   tflint:
     runs-on: ubuntu-latest

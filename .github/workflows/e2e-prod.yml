@@ -21,11 +21,11 @@ jobs:
           cd terraform
           printf "terraform {\n  backend \"s3\" {}\n}" > state.tf
           terraform init \
-            -backend-config="bucket=go-lambda-skeleton-state" \
+            -backend-config="bucket=comp9447-state" \
             -backend-config="key=${{ steps.branch.outputs.branch }}" \
-            -backend-config="region=eu-west-1" \
+            -backend-config="region=ap-southeast-2" \
             -backend-config="encrypt=true" \
-            -backend-config="dynamodb_table=go-lambda-skeleton-state-lock"
+            -backend-config="dynamodb_table=comp9447-state"
           BACKEND_HOST=https://$(terraform output -raw cf_endpoint)
           printf "{\n  \"baseUrl\": \"$BACKEND_HOST\"\n}\n" > cypress.json
       - name: Upload hostname
