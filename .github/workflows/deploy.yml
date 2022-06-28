@@ -1,0 +1,74 @@
+name: Deploy
+on:
+  push:
+    branches:
+      - main
+      - prod
+jobs:
+  frontend:
+    runs-on: ubuntu-latest
+    container: node:16.15.0-alpine
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build frontend
+        run: |
+          cd frontend
+          npm ci
+          npm run build
+      - name: Upload frontend
+        uses: actions/upload-artifact@v3
+        with:
+          name: frontend
+          path: frontend/build
+  backend:
+    runs-on: ubuntu-latest
+    container: golang:1.17.7-alpine
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build backend
+        run: |
+          apk add --update make
+          make build
+      - name: Upload backend
+        uses: actions/upload-artifact@v3
+        with:
+          name: backend
+          path: bin
+  deploy:
+    runs-on: ubuntu-latest
+    container: hashicorp/terraform:1.1.6
+    needs:
+      - frontend
+      - backend
+    steps:
+      - uses: actions/checkout@v2
+      - name: Download frontend
+        uses: actions/download-artifact@v3
+        with:
+          name: frontend
+          path: frontend/build
+      - name: Download backend
+        uses: actions/download-artifact@v3
+        with:
+          name: backend
+          path: bin
+      - name: Get branch name
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: branch
+      - name: Terraform
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: |
+          test -f bin/main
+          test -f frontend/build/index.html
+          cd terraform
+          printf "terraform {\n  backend \"s3\" {}\n}" > state.tf
+          terraform init \
+            -backend-config="bucket=go-lambda-skeleton-state" \
+            -backend-config="key=${{ steps.branch.outputs.branch }}" \
+            -backend-config="region=eu-west-1" \
+            -backend-config="encrypt=true" \
+            -backend-config="dynamodb_table=go-lambda-skeleton-state-lock"
+          terraform apply -auto-approve \
+            -var="deployment_id=${{ steps.branch.outputs.branch }}";

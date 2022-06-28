@@ -1,0 +1,41 @@
+name: Terraform CI
+on:
+  pull_request:
+    paths:
+      - terraform/**
+jobs:
+  tf-fmt-validate:
+    runs-on: ubuntu-latest
+    container: hashicorp/terraform:1.1.6
+    steps:
+      - uses: actions/checkout@v2
+      - name: Format
+        run: terraform fmt -check -recursive
+      - name: Validate
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: |
+          terraform init \
+            -backend-config="bucket=go-lambda-skeleton-state" \
+            -backend-config="key=main" \
+            -backend-config="region=eu-west-1" \
+            -backend-config="encrypt=true" \
+            -backend-config="dynamodb_table=go-lambda-skeleton-state-lock";
+          terraform validate
+  tflint:
+    runs-on: ubuntu-latest
+    container: ghcr.io/terraform-linters/tflint-bundle:v0.34.1.2
+    steps:
+      - uses: actions/checkout@v2
+      - name: TFLint
+        run: tflint --enable-plugin=aws
+  tfsec:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: TFSec
+        uses: aquasecurity/tfsec-pr-commenter-action@v1.0.5
+        with:
+          tfsec_version: v1.5.0
+          github_token: ${{ github.token }}

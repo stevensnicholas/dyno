@@ -1,0 +1,40 @@
+name: Backend CI
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    paths:
+      - cmd/**
+      - internal/**
+      - go.*
+      - Makefile
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: golang:1.17.7
+    steps:
+      - uses: actions/checkout@v2
+      - name: build
+        run: make build
+  lint:
+    runs-on: ubuntu-latest
+    container: golangci/golangci-lint:v1.44.2
+    steps:
+      - uses: actions/checkout@v2
+      - name: Lint
+        run: golangci-lint run --enable gofmt,stylecheck,gosec ./...
+  test:
+    runs-on: ubuntu-latest
+    container: golang:1.17.7
+    steps:
+      - uses: actions/checkout@v2
+      - name: Test
+        env:
+          CODECOV_TOKEN: ${{secrets.CODECOV_TOKEN}}
+        run: |
+          go install github.com/boumenot/gocover-cobertura@latest
+          make cov
+          curl -Os https://uploader.codecov.io/latest/linux/codecov
+          chmod +x codecov
+          ./codecov -t ${CODECOV_TOKEN}

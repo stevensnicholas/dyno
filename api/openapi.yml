@@ -1,0 +1,66 @@
+openapi: 3.0.3
+info:
+  description: ""
+  title: Sample Lambda API
+  version: v1.0.0
+paths:
+  /echo:
+    post:
+      description: Returns the same string as provided
+      operationId: cmd/endpoints.PostEcho
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EndpointsPostEchoInput'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EndpointsPostEchoOutput'
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Bad Request
+      summary: Echo
+components:
+  schemas:
+    EndpointsPostEchoInput:
+      properties:
+        request:
+          type: string
+      required:
+      - request
+      type: object
+    EndpointsPostEchoOutput:
+      properties:
+        result:
+          type: string
+      required:
+      - result
+      type: object
+    RestErrResponse:
+      properties:
+        code:
+          description: Application-specific error code.
+          type: integer
+        context:
+          additionalProperties: {}
+          description: Application context.
+          type: object
+        error:
+          description: Error message.
+          type: string
+        status:
+          description: Status text.
+          type: string
+      required:
+      - code
+      - context
+      - error
+      - status
+      type: object

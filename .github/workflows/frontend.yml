@@ -1,0 +1,20 @@
+name: Frontend CI
+on:
+  pull_request:
+    paths:
+      - frontend/**
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    container: node:16.15.0
+    steps:
+      - uses: actions/checkout@v2
+      - name: Frontend CI
+        run: |
+          cd frontend
+          npm ci
+          npm run gen
+          git diff --exit-code
+          npm run build
+          npm run lint
+          npm run test
