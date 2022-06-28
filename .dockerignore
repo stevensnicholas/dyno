@@ -1,0 +1,13 @@
+.github
+.tfsec
+.vscode
+api
+bin
+frontend
+terraform
+tests
+.dockerignore
+.gitignore
+coverage.*
+*.md
+docker-compose.yml

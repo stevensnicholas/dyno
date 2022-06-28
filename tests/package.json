@@ -1,0 +1,14 @@
+{
+  "dependencies": {
+    "cypress": "^10.2.0"
+  },
+  "scripts": {
+    "start": "cypress open",
+    "test": "cypress run",
+    "test:dev": "cypress run --config baseUrl=http://localhost:3000",
+    "test:docker": "cypress run --config baseUrl=http://frontend:8080"
+  },
+  "devDependencies": {
+    "typescript": "^4.7.4"
+  }
+}

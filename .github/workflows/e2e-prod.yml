@@ -1,0 +1,53 @@
+name: Pre-production end to end tests
+on:
+  pull_request:
+    branches:
+      - prod
+# TODO make dependent on no deploy jobs running
+jobs:
+  get-deployment:
+    runs-on: ubuntu-latest
+    container: hashicorp/terraform:1.1.6
+    steps:
+      - uses: actions/checkout@v2
+      - name: Get branch name
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_HEAD_REF#refs/heads/})"
+        id: branch
+      - name: Terraform output
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: |
+          cd terraform
+          printf "terraform {\n  backend \"s3\" {}\n}" > state.tf
+          terraform init \
+            -backend-config="bucket=go-lambda-skeleton-state" \
+            -backend-config="key=${{ steps.branch.outputs.branch }}" \
+            -backend-config="region=eu-west-1" \
+            -backend-config="encrypt=true" \
+            -backend-config="dynamodb_table=go-lambda-skeleton-state-lock"
+          BACKEND_HOST=https://$(terraform output -raw cf_endpoint)
+          printf "{\n  \"baseUrl\": \"$BACKEND_HOST\"\n}\n" > cypress.json
+      - name: Upload hostname
+        uses: actions/upload-artifact@v3
+        with:
+          name: cypress
+          path: terraform/cypress.json
+  e2e-prod:
+    runs-on: ubuntu-latest
+    container: cypress/browsers:node12.18.3-chrome87-ff82
+    needs:
+      - get-deployment
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Download hostname
+        uses: actions/download-artifact@v3
+        with:
+          name: cypress
+          path: tests
+      - name: Run e2e tests
+        uses: cypress-io/github-action@v2
+        with:
+          browser: chrome
+          working-directory: tests

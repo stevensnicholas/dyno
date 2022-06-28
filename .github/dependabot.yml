@@ -1,0 +1,18 @@
+version: 2
+updates:
+  - package-ecosystem: 'terraform'
+    directory: 'terraform'
+    schedule:
+      interval: 'daily'
+  - package-ecosystem: 'npm'
+    directory: 'frontend'
+    schedule:
+      interval: 'daily'
+  - package-ecosystem: 'npm'
+    directory: 'tests'
+    schedule:
+      interval: 'daily'
+  - package-ecosystem: 'gomod'
+    directory: '/'
+    schedule:
+      interval: 'daily'

@@ -1,0 +1,7 @@
+build
+node_modules
+.dockerignore
+.eslintrc
+Dockerfile
+genclient.sh
+*.md

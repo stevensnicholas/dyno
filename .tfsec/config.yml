@@ -1,0 +1,7 @@
+---
+exclude:
+  - aws-cloudfront-enable-waf
+  - aws-s3-enable-bucket-logging
+  - aws-s3-enable-bucket-encryption
+  - aws-s3-encryption-customer-key
+  - aws-cloudwatch-log-group-customer-key

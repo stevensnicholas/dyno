@@ -1,0 +1,104 @@
+.App {
+  text-align: center;
+  margin: 0 5px;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.question-table {
+  margin: 50px auto;
+}
+
+.question-table td {
+  padding: 20px 5px 20px 0px;
+}
+
+.question-table td input {
+  padding: 20px 10px;
+  text-align: center;
+  border: 'none';
+  outline: 'none';
+  width: 100%;
+}
+
+.question-table td input:focus {
+  outline: none;
+  border: 2px solid var(--red)
+}
+
+.form-box {
+  background-color: rgba(255, 255, 255, 0.5);
+  display: inline-block;
+  margin: 0 auto;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+.next-button {
+  padding: 20px 30px;
+  border: none;
+  background-color: var(--red);
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 10px 20px;
+}
+
+.next-button:disabled {
+  opacity: 0.5;
+}
+
+.back-button {
+  padding: 20px 30px;
+  border: none;
+  background-color: grey;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 10px 20px;
+}
+
+h2 {
+  margin: 0;
+  font-size: 28px;
+}
+
+.selectable-text {
+  cursor: pointer;
+}
+
+.selectable-text:hover {
+  color: var(--red);
+}

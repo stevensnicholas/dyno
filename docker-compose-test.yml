@@ -1,0 +1,18 @@
+version: "3.8"
+services:
+  backend:
+    build:
+      context: .
+  frontend:
+    build:
+      context: frontend
+    command: [ "/tests-entrypoint.sh" ]
+    environment:
+      - BACKEND_HOST=http://backend:8080
+  tests:
+    build:
+      context: tests
+    depends_on:
+      - backend
+      - frontend
+    command: npm run test:docker
