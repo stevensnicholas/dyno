@@ -5,7 +5,7 @@ data "archive_file" "lambda" {
 }
 
 resource "aws_iam_role" "lambda_exec" {
-  name = "${var.deployment_id}-lambda-execution"
+  name = "${var.deployment_id}-lambda-execution-comp9447"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
