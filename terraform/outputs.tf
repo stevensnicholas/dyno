@@ -3,7 +3,7 @@ output "api_endpoint" {
 }
 
 output "api_test_endpoint" {
-  value = aws_apigatewayv2_stage.lambda_testing_api.invoke_url
+  value = aws_apigatewayv2_stage.lambda_test.invoke_url
 }
 
 output "cf_endpoint" {
