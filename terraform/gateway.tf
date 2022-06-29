@@ -39,7 +39,7 @@ resource "aws_apigatewayv2_stage" "lambda" {
 }
 
 
-resource "aws_apigatewayv2_stage" "lambda" {
+resource "aws_apigatewayv2_stage" "lambda_test" {
   api_id = aws_apigatewayv2_api.gateway.id
 
   name        = "test"
