@@ -99,7 +99,7 @@ resource "aws_apigatewayv2_integration" "lambda_testing" {
 resource "aws_apigatewayv2_route" "lambda_testing" {
   api_id = aws_apigatewayv2_api.gateway.id
 
-  route_key = "/test"
+  route_key = "ANY /test"
   target    = "integrations/${aws_apigatewayv2_integration.lambda_testing.id}"
 }
 
