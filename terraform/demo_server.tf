@@ -103,7 +103,7 @@ resource "aws_apigatewayv2_route" "lambda_testing" {
   target    = "integrations/${aws_apigatewayv2_integration.lambda_testing.id}"
 }
 
-resource "aws_lambda_permission" "api_gw" {
+resource "aws_lambda_permission" "api_gw_testing" {
   statement_id  = "AllowExecutionFromAPIGateway"
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.lambda_testing.function_name
