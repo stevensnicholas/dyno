@@ -1,7 +1,6 @@
 package endpoints
 
 import (
-	"encoding/json"
 	"fmt"
 	"io"
 	"os"
@@ -23,9 +22,8 @@ func TestPostFuzz(t *testing.T) {
 	PostFuzz(ws)
 	ts := httptest.NewServer(ws)
 	defer ts.Close()
-
-	requestText := fmt.Sprintf("request:%s", OpenAPIJSON)
-	request, err := json.Marshal(requestText)
+	request := fmt.Sprintf(`{"request": "%s"}`, OpenAPIJSON)
+	print(request);
 	r := strings.NewReader(request)
 	res, err := http.Post(ts.URL+"/fuzz_client", "application/json", r)
 
@@ -34,9 +32,9 @@ func TestPostFuzz(t *testing.T) {
 	data, err := io.ReadAll(res.Body)
 	res.Body.Close()
 	assert.Nil(t, err)
-	result := fmt.Sprintf(`{"result":%s`, OpenAPIJSON)
+	result := fmt.Sprintf(`{"result":"%s"`, OpenAPIJSON)
 	assert.Equal(t, 
-		result, 
+		string(result), 
 		string(data),
 	)
 }
