@@ -68,3 +68,38 @@ resource "aws_lambda_permission" "api_gw" {
 
   source_arn = "${aws_apigatewayv2_api.gateway.execution_arn}/*/*"
 }
+
+resource "aws_lambda_function" "fuzz_request_lambda" {
+  function_name    = "${var.deployment_id}-server"
+  filename         = "files/backend.zip"
+  source_code_hash = data.archive_file.fuzz_request_lambda.output_base64sha256
+
+  runtime = "go1.x"
+  handler = "main"
+
+  tracing_config {
+    mode = "Active"
+  }
+
+  role = aws_iam_role.lambda_exec.arn
+}
+
+resource "aws_cloudwatch_log_group" "fuzz_request_lambda" {
+  name              = "/aws/lambda/${aws_lambda_function.fuzz_request_lambda.function_name}"
+  retention_in_days = 30
+}
+
+resource "aws_apigatewayv2_integration" "fuzz_request_lambda" {
+  api_id = aws_apigatewayv2_api.gateway.id
+
+  integration_uri    = aws_lambda_function.fuzz_request_lambda.invoke_arn
+  integration_type   = "AWS_PROXY"
+  integration_method = "POST"
+}
+
+resource "aws_apigatewayv2_route" "fuzz_request_lambda" {
+  api_id = aws_apigatewayv2_api.gateway.id
+
+  route_key = "$default"
+  target    = "integrations/${aws_apigatewayv2_integration.fuzz_request_lambda.id}"
+}
