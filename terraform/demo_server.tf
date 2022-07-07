@@ -1,6 +1,3 @@
-
-
-
 # Backend
 data "archive_file" "lambda_test_api" {
   type        = "zip"
