@@ -23,6 +23,31 @@ type SQSSendMessageAPI interface {
 		optFns ...func(*sqs.Options)) (*sqs.SendMessageOutput, error)
 }
 
+// Functions for SQS AWS service to send message
+
+// GetQueueURL gets the URL of an Amazon SQS queue.
+// Inputs:
+//     c is the context of the method call, which includes the AWS Region.
+//     api is the interface that defines the method call.
+//     input defines the input arguments to the service call.
+// Output:
+//     If success, a GetQueueUrlOutput object containing the result of the service call and nil.
+//     Otherwise, nil and an error from the call to GetQueueUrl.
+func GetQueueURL(c context.Context, api SQSSendMessageAPI, input *sqs.GetQueueUrlInput) (*sqs.GetQueueUrlOutput, error) {
+	return api.GetQueueUrl(c, input)
+}
+
+// SendMsg sends a message to an Amazon SQS queue.
+// Inputs:
+//     c is the context of the method call, which includes the AWS Region.
+//     api is the interface that defines the method call.
+//     input defines the input arguments to the service call.
+// Output:
+//     If success, a SendMessageOutput object containing the result of the service call and nil.
+//     Otherwise, nil and an error from the call to SendMessage.
+func SendMsg(c context.Context, api SQSSendMessageAPI, input *sqs.SendMessageInput) (*sqs.SendMessageOutput, error) {
+	return api.SendMessage(c, input)
+}
 
 // Receiving a OpenAPI json file 
 // TODO check if this should be the text of the swagger file or an upload of the swagger file
@@ -75,30 +100,4 @@ func PostFuzz(service *web.Service) {
 
 	service.Post("/fuzz_client", u)
 
-}
-
-// Functions for SQS AWS service to send message
-
-// GetQueueURL gets the URL of an Amazon SQS queue.
-// Inputs:
-//     c is the context of the method call, which includes the AWS Region.
-//     api is the interface that defines the method call.
-//     input defines the input arguments to the service call.
-// Output:
-//     If success, a GetQueueUrlOutput object containing the result of the service call and nil.
-//     Otherwise, nil and an error from the call to GetQueueUrl.
-func GetQueueURL(c context.Context, api SQSSendMessageAPI, input *sqs.GetQueueUrlInput) (*sqs.GetQueueUrlOutput, error) {
-	return api.GetQueueUrl(c, input)
-}
-
-// SendMsg sends a message to an Amazon SQS queue.
-// Inputs:
-//     c is the context of the method call, which includes the AWS Region.
-//     api is the interface that defines the method call.
-//     input defines the input arguments to the service call.
-// Output:
-//     If success, a SendMessageOutput object containing the result of the service call and nil.
-//     Otherwise, nil and an error from the call to SendMessage.
-func SendMsg(c context.Context, api SQSSendMessageAPI, input *sqs.SendMessageInput) (*sqs.SendMessageOutput, error) {
-	return api.SendMessage(c, input)
 }

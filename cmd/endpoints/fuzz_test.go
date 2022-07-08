@@ -14,7 +14,7 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/sqs"
-	"github.com/aws/aws-sdk-go-v2/service/sqs/types"
+	// "github.com/aws/aws-sdk-go-v2/service/sqs/types"
 )
 
 type SQSSendMessageImpl struct{}
@@ -49,9 +49,9 @@ type Config struct {
 	QueueName string `json:"QueueName"`
 }
 
-var configFileName = "config.json"
+// var configFileName = "config.json"
 
-var globalConfig Config
+// var globalConfig Config
 
 
 func TestPostFuzzValid(t *testing.T) {
@@ -103,6 +103,7 @@ func TestPostFuzzInvalid(t *testing.T) {
 	)
 }
 
+// TODO Implement this Error Check for a non-json input
 func TestPostFuzzNotOpenAPIJSON(t *testing.T) {
 	ws := web.DefaultService()
 
