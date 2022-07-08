@@ -1,5 +1,5 @@
 from fastapi import FastAPI, HTTPException, Depends
-from mangum import Mangum
+
 import uvicorn
 import os, binascii
 
@@ -8,7 +8,10 @@ from sqlmodel import create_engine, SQLModel, Session
 from db import engine, get_session
 from routers import blog, doc
 
-app = FastAPI(title="Demo Blog Server",root_path="/test")
+app = FastAPI(title="Demo Blog Server",
+    servers=[
+            {"url": "https://localhost:8888", "description": "Staging environment"}]
+)
 
 app.include_router(blog.router)
 app.include_router(doc.router)
@@ -33,5 +36,3 @@ if __name__ == "__main__":
 
     uvicorn.run("app:app", reload=True, host=app_host, port=app_port)
 
-
-handler = Mangum(app)
