@@ -82,6 +82,8 @@ func PostFuzz(service *web.Service) {
 
 		// TODO Error check if the recieved json file
 
+		// TODO Implement SQS SendMsg and GetQueueURL
+
 		logger.Infof("Received OpenAPI JSON request: Version of OpenAPI %s", in.OpenAPIVersion)
 		// Returning the json openapi file that has been received
 		out.OpenAPIVersion = in.OpenAPIVersion

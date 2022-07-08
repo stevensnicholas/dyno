@@ -57,9 +57,9 @@ resource "aws_apigatewayv2_route" "lambda_fuzz_request" {
 }
 
 # SQS Terraform Setup 
-
+# TODO Get the url of the SQS to allow for your lambda to write to it 
 resource "aws_sqs_queue" "fuzz_queue" {
-  name                      = "${var.deployment_id}-fuzz-request-queue-test" #TODO remove test when ready to deploy
+  name                      = "${var.deployment_id}-fuzz-request-test.fifo" #TODO remove test when ready to deploy
   delay_seconds             = 90
   max_message_size          = 2048
   message_retention_seconds = 86400
