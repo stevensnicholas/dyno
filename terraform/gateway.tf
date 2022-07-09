@@ -1,6 +1,6 @@
 resource "aws_apigatewayv2_api" "gateway" {
   name          = "${var.deployment_id}_gateway"
-  count = "${var.is_local ? 0 : 1}"
+  count         = var.is_local ? 0 : 1
   protocol_type = "HTTP"
   cors_configuration {
     allow_origins = ["https://${aws_cloudfront_distribution.frontend[0].domain_name}"]
@@ -10,13 +10,13 @@ resource "aws_apigatewayv2_api" "gateway" {
 }
 
 resource "aws_cloudwatch_log_group" "api_gw" {
-  count = "${var.is_local ? 0 : 1}"
+  count             = var.is_local ? 0 : 1
   name              = "/aws/api_gw/${aws_apigatewayv2_api.gateway[0].name}"
   retention_in_days = 30
 }
 
 resource "aws_apigatewayv2_stage" "lambda" {
-  count = "${var.is_local ? 0 : 1}"
+  count  = var.is_local ? 0 : 1
   api_id = aws_apigatewayv2_api.gateway[0].id
 
   name        = "api"
@@ -43,7 +43,7 @@ resource "aws_apigatewayv2_stage" "lambda" {
 
 
 resource "aws_apigatewayv2_stage" "lambda_test" {
-  count = "${var.is_local ? 0 : 1}"
+  count  = var.is_local ? 0 : 1
   api_id = aws_apigatewayv2_api.gateway[0].id
 
   name        = "test"

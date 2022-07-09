@@ -46,7 +46,7 @@ resource "aws_cloudwatch_log_group" "lambda" {
 }
 
 resource "aws_apigatewayv2_integration" "lambda" {
-  count = "${var.is_local ? 0 : 1}"
+  count  = var.is_local ? 0 : 1
   api_id = aws_apigatewayv2_api.gateway[0].id
 
   integration_uri    = aws_lambda_function.lambda.invoke_arn
@@ -55,7 +55,7 @@ resource "aws_apigatewayv2_integration" "lambda" {
 }
 
 resource "aws_apigatewayv2_route" "lambda" {
-  count = "${var.is_local ? 0 : 1}"
+  count  = var.is_local ? 0 : 1
   api_id = aws_apigatewayv2_api.gateway[0].id
 
   route_key = "$default"
@@ -63,7 +63,7 @@ resource "aws_apigatewayv2_route" "lambda" {
 }
 
 resource "aws_lambda_permission" "api_gw" {
-  count = "${var.is_local ? 0 : 1}"
+  count         = var.is_local ? 0 : 1
   statement_id  = "AllowExecutionFromAPIGateway"
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.lambda.function_name
