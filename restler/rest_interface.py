@@ -5,6 +5,7 @@ It is to be used via the backend interface
 TODO make the docker ephemeral not permanently running after each reqest
 """
 from flask import Flask, request
+from waitress import serve
 from subprocess import run
 import json
 
@@ -26,7 +27,6 @@ def fuzz_api():
     input_data = request.get_json()
     with open('/swagger.json', "w") as f:
         json.dump(input_data['swagger_file'],f)
-    app.logger.warning(run("ls /RESTler", shell=True))
     run(restler_compile_cmd, shell=True)
     run(restler_fuzz_cmd, shell=True)
     with open("/FuzzLean/ResponseBuckets/runSummary.json", "r") as f:
@@ -35,5 +35,4 @@ def fuzz_api():
 
 
 if __name__ == '__main__':
-    from waitress import serve
     serve(app, host="0.0.0.0", port=5000)
