@@ -47,9 +47,7 @@ data "aws_iam_policy_document" "static_react_bucket" {
 
     principals {
       type = "AWS"
-      identifiers = [
-        aws_cloudfront_origin_access_identity.oai.iam_arn,
-      ]
+      identifiers = [var.is_local ? "" : aws_cloudfront_origin_access_identity.oai[0].iam_arn,]
     }
   }
 }
@@ -71,25 +69,28 @@ resource "aws_s3_object" "frontend_object" {
 }
 
 resource "aws_s3_object" "frontend_settings_object" {
+  count = "${var.is_local ? 0 : 1}"
   key = "settings.json"
   content = jsonencode({
-    backend = aws_apigatewayv2_stage.lambda.invoke_url
+    backend = aws_apigatewayv2_stage.lambda[0].invoke_url
   })
   bucket       = aws_s3_bucket.static_react_bucket.bucket
   content_type = "application/json"
 }
 
 resource "aws_cloudfront_origin_access_identity" "oai" {
+  count = "${var.is_local ? 0 : 1}"
   comment = "my-react-app OAI"
 }
 
 resource "aws_cloudfront_distribution" "frontend" {
+    count = "${var.is_local ? 0 : 1}"
   origin {
     domain_name = aws_s3_bucket.static_react_bucket.bucket_regional_domain_name
     origin_id   = local.s3_origin_id
 
     s3_origin_config {
-      origin_access_identity = aws_cloudfront_origin_access_identity.oai.cloudfront_access_identity_path
+      origin_access_identity = aws_cloudfront_origin_access_identity.oai[0].cloudfront_access_identity_path
     }
   }
 

@@ -16,3 +16,13 @@ services:
     build:
       context: demo_server
     ports: [ 8888:8888 ]
+  localstack:
+    image: localstack/localstack:latest
+    environment: 
+      - AWS_DEFAULT_REGION=ap-southeast-2
+      - EDGE_PORT=4566
+    #  - SERVICES=lambda,s3,iam,dynamodb,sqs
+    #ports: ['4566:4566']
+    volumes: 
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    network_mode: host

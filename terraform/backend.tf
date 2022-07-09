@@ -46,7 +46,8 @@ resource "aws_cloudwatch_log_group" "lambda" {
 }
 
 resource "aws_apigatewayv2_integration" "lambda" {
-  api_id = aws_apigatewayv2_api.gateway.id
+  count = "${var.is_local ? 0 : 1}"
+  api_id = aws_apigatewayv2_api.gateway[0].id
 
   integration_uri    = aws_lambda_function.lambda.invoke_arn
   integration_type   = "AWS_PROXY"
@@ -54,17 +55,19 @@ resource "aws_apigatewayv2_integration" "lambda" {
 }
 
 resource "aws_apigatewayv2_route" "lambda" {
-  api_id = aws_apigatewayv2_api.gateway.id
+  count = "${var.is_local ? 0 : 1}"
+  api_id = aws_apigatewayv2_api.gateway[0].id
 
   route_key = "$default"
-  target    = "integrations/${aws_apigatewayv2_integration.lambda.id}"
+  target    = "integrations/${aws_apigatewayv2_integration.lambda[0].id}"
 }
 
 resource "aws_lambda_permission" "api_gw" {
+  count = "${var.is_local ? 0 : 1}"
   statement_id  = "AllowExecutionFromAPIGateway"
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.lambda.function_name
   principal     = "apigateway.amazonaws.com"
 
-  source_arn = "${aws_apigatewayv2_api.gateway.execution_arn}/*/*"
+  source_arn = "${aws_apigatewayv2_api.gateway[0].execution_arn}/*/*"
 }

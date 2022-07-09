@@ -1,26 +1,29 @@
 resource "aws_apigatewayv2_api" "gateway" {
   name          = "${var.deployment_id}_gateway"
+  count = "${var.is_local ? 0 : 1}"
   protocol_type = "HTTP"
   cors_configuration {
-    allow_origins = ["https://${aws_cloudfront_distribution.frontend.domain_name}"]
+    allow_origins = ["https://${aws_cloudfront_distribution.frontend[0].domain_name}"]
     allow_methods = ["*"]
     allow_headers = ["*"]
   }
 }
 
 resource "aws_cloudwatch_log_group" "api_gw" {
-  name              = "/aws/api_gw/${aws_apigatewayv2_api.gateway.name}"
+  count = "${var.is_local ? 0 : 1}"
+  name              = "/aws/api_gw/${aws_apigatewayv2_api.gateway[0].name}"
   retention_in_days = 30
 }
 
 resource "aws_apigatewayv2_stage" "lambda" {
-  api_id = aws_apigatewayv2_api.gateway.id
+  count = "${var.is_local ? 0 : 1}"
+  api_id = aws_apigatewayv2_api.gateway[0].id
 
   name        = "api"
   auto_deploy = true
 
   access_log_settings {
-    destination_arn = aws_cloudwatch_log_group.api_gw.arn
+    destination_arn = aws_cloudwatch_log_group.api_gw[0].arn
 
     format = jsonencode({
       requestId               = "$context.requestId"
@@ -40,13 +43,14 @@ resource "aws_apigatewayv2_stage" "lambda" {
 
 
 resource "aws_apigatewayv2_stage" "lambda_test" {
-  api_id = aws_apigatewayv2_api.gateway.id
+  count = "${var.is_local ? 0 : 1}"
+  api_id = aws_apigatewayv2_api.gateway[0].id
 
   name        = "test"
   auto_deploy = true
 
   access_log_settings {
-    destination_arn = aws_cloudwatch_log_group.api_gw.arn
+    destination_arn = aws_cloudwatch_log_group.api_gw[0].arn
 
     format = jsonencode({
       requestId               = "$context.requestId"
