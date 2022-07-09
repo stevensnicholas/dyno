@@ -1,7 +1,7 @@
 package main
 
 import (
-	"golambda/cmd/endpoints"
+	"golambda/cmd/web-server/endpoints"
 
 	"github.com/swaggest/rest/web"
 	swgui "github.com/swaggest/swgui/v4"
