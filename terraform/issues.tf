@@ -10,7 +10,7 @@ data "archive_file" "github_issues_lambda" {
 resource "aws_sqs_queue" "github_issues_queue" {
   name                      = "github_issues_queue.fifo"
   delay_seconds             = 90
-  max_message_size          = 2048
+  max_message_size          = 8192
   message_retention_seconds = 86400
   receive_wait_time_seconds = 10
   fifo_queue                  = true
