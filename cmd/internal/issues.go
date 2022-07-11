@@ -53,8 +53,3 @@ func CreateIssueRequest(title *string, body *string, labels *[]string, assignee 
 	}
 	return newIssueRequest
 }
-
-func ParseFuzz(f ) {
-	// TODO change the reading of a file to read from AWS SQS
-	
-}
