@@ -5,7 +5,7 @@ locals {
     js   = "text/javascript",
     css  = "text/css"
   }
-  frontend_build_path = "${path.module}/../frontend/build"
+  frontend_build_path = "${path.module}/../../frontend/build"
 }
 
 resource "aws_s3_bucket" "static_react_bucket" {
