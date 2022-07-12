@@ -30,7 +30,7 @@ resource "aws_iam_role_policy_attachment" "lambda_policy_testing" {
 
 resource "aws_lambda_function" "lambda_testing" {
   function_name    = "${var.deployment_id}-test-api"
-  filename         = "files/lambda_test_code.zip"
+  filename         = "${path.module}/files/lambda_test_code.zip"
   source_code_hash = data.archive_file.lambda_test_api.output_base64sha256
 
   runtime = "python3.9"

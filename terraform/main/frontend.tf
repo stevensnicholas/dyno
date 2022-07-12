@@ -33,24 +33,4 @@ resource "aws_s3_bucket_public_access_block" "static_react_bucket" {
   restrict_public_buckets = true
 }
 
-data "aws_iam_policy_document" "static_react_bucket" {
-
-}
-
-resource "aws_s3_bucket_policy" "static_react_bucket" {
-  bucket = aws_s3_bucket.static_react_bucket.id
-  policy = data.aws_iam_policy_document.static_react_bucket.json
-}
-
-resource "aws_s3_object" "frontend_object" {
-  for_each = fileset(local.frontend_build_path, "**")
-
-  key    = each.value
-  source = "${local.frontend_build_path}/${each.value}"
-  bucket = aws_s3_bucket.static_react_bucket.bucket
-
-  etag         = filemd5("${local.frontend_build_path}/${each.value}")
-  content_type = lookup(local.mime_type_mappings, concat(regexall("\\.([^\\.]*)$", each.value), [[""]])[0][0], "application/octet-stream")
-}
-
 

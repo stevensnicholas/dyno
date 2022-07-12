@@ -39,6 +39,23 @@ resource "aws_s3_object" "frontend_settings_object" {
   content_type = "application/json"
 }
 
+resource "aws_s3_bucket_policy" "static_react_bucket" {
+  bucket = var.static_react_bucket.id
+  policy = data.aws_iam_policy_document.static_react_bucket.json
+}
+
+resource "aws_s3_object" "frontend_object" {
+  for_each = fileset(local.frontend_build_path, "**")
+
+  key    = each.value
+  source = "${local.frontend_build_path}/${each.value}"
+  bucket = var.static_react_bucket.bucket
+
+  etag         = filemd5("${local.frontend_build_path}/${each.value}")
+  content_type = lookup(local.mime_type_mappings, concat(regexall("\\.([^\\.]*)$", each.value), [[""]])[0][0], "application/octet-stream")
+}
+
+
 resource "aws_cloudfront_origin_access_identity" "oai" {
   comment = "my-react-app OAI"
 }
