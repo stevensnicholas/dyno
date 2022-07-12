@@ -1,7 +1,6 @@
 # Infrastructure
 
-The Infrastructure takes the build artefacts from the backend and UI projects and deploys them to
-AWS using terraform.
+This module contains the core components and can be run in isolation  with free locastack resouces.
 
 ## Install
 

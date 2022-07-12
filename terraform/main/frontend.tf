@@ -34,22 +34,7 @@ resource "aws_s3_bucket_public_access_block" "static_react_bucket" {
 }
 
 data "aws_iam_policy_document" "static_react_bucket" {
-  statement {
-    sid = "AllowCloudFront"
 
-    actions = [
-      "s3:GetObject"
-    ]
-
-    resources = [
-      "${aws_s3_bucket.static_react_bucket.arn}/*"
-    ]
-
-    principals {
-      type        = "AWS"
-      identifiers = ["*", ]
-    }
-  }
 }
 
 resource "aws_s3_bucket_policy" "static_react_bucket" {

@@ -2,7 +2,7 @@ name: Terraform CI
 on:
   pull_request:
     paths:
-      - terraform/aws/**
+      - terraform/**
 jobs:
   tf-fmt-validate:
     runs-on: ubuntu-latest

@@ -4,7 +4,7 @@
 # Backend
 data "archive_file" "lambda_test_api" {
   type        = "zip"
-  source_dir  = "${path.module}/../demo_server/demo_server/"
+  source_dir  = "${path.module}/../../demo_server/demo_server/"
   output_path = "${path.module}/files/lambda_test_code.zip"
 }
 resource "aws_iam_role" "lambda_exec_test" {
