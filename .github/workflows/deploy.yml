@@ -62,7 +62,7 @@ jobs:
         run: |
           test -f bin/main
           test -f frontend/build/index.html
-          cd terraform
+          cd terraform/aws
           printf "terraform {\n  backend \"s3\" {}\n}" > state.tf
           terraform init \
             -backend-config="bucket=comp9447-state" \
