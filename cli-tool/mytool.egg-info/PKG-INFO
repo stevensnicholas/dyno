@@ -1,0 +1,13 @@
+Metadata-Version: 2.1
+Name: mytool
+Version: 0.0.1
+Summary: <short description for the tool>
+Home-page: <github url where the tool code will remain>
+Author: John Doe
+Author-email: john.doe@foo.com
+License: <the license you chose>
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
+License-File: LICENSE

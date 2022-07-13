@@ -1,0 +1,2 @@
+[console_scripts]
+dyno = my_tool:cli
