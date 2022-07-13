@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"strings"
 	"fmt"
 	"github.com/google/go-github/v45/github"
@@ -11,7 +12,9 @@ import (
 // TODO Change the process of reading file according to SQS and S3 Buckets
 const bugFile = 6
 
-func ParseFuzz(file string) {
+func ParseFuzz(token string, repoName string, owner string, file string) {
+	ctx := context.Background()
+	client := CreateClient(ctx, token)
 	f, err := os.Open(file)
 	if err != nil {
 		panic(err)
@@ -20,7 +23,7 @@ func ParseFuzz(file string) {
 	defer f.Close()
 
 	scanner := bufio.NewScanner(f)
-	// Categorizing Errors
+	// Sending an issue for each error found through fuzz 
 	for scanner.Scan() {
 		line := scanner.Text()
 		if line[:1]== "-" {
@@ -32,7 +35,7 @@ func ParseFuzz(file string) {
 				fuzzError := strings.Split(bugFileNames[bugFile], "_")
 				s := fmt.Sprintf("# %s Invalid %s Response\n", fuzzError[0], fuzzError[1])
 				body, endpoint := ReadBugFile(bugFileName, s)
-				errorCheck(fuzzError[0], body, endpoint, nil, nil, nil)
+				client.Issues.Create(ctx, owner, repoName, errorCheck(fuzzError[0], body, endpoint, nil, nil, nil))
 			}
 		}
 	}
@@ -58,7 +61,7 @@ func ReadBugFile(bugFileName string, body string) (string, string){
 		line := scanner.Text()
 		if len(line) > 0 && line[:1]== "-" {
 			requestSplit := strings.Split(line, "\\n")
-			
+			endpoint = strings.Split(requestSplit[0], " ")[2]
 			method := strings.Trim(requestSplit[0], "\\r")
 			accept := strings.Trim(requestSplit[1], "\\r")
 			host := strings.Trim(requestSplit[2], "\\r")
@@ -67,7 +70,9 @@ func ReadBugFile(bugFileName string, body string) (string, string){
 			for i := 4; i < len(requestSplit); i++ {
 				request = request + requestSplit[i]
 			}
-			request = strings.Trim(request, "\\r")
+			if request != "" {
+				request = "Request: " + strings.Trim(request, "\\r")
+			}
 			scanner.Scan()
 			timeDelay := scanner.Text()
 			scanner.Scan()
@@ -75,22 +80,25 @@ func ReadBugFile(bugFileName string, body string) (string, string){
 			scanner.Scan()
 			previousResponseText := scanner.Text()
 			previousResponseSplit := strings.Split(previousResponseText, "\\n")
-			prevresp := ""
+			prevrequest := ""
 			for i := 5; i < len(previousResponseSplit); i++ {
-				prevresp = prevresp + previousResponseSplit[i]
+				prevrequest = prevrequest + previousResponseSplit[i]
 			}
-			prevresp = strings.Trim(prevresp, "\\r")
-			previousResponse := strings.Trim(previousResponseSplit[0], "\\r") + " request:" + prevresp
+			if prevrequest != "" {
+				prevrequest = " request:" + strings.Trim(prevrequest, "\\r")
+			}
+			previousResponse := strings.Trim(previousResponseSplit[0], "\\r") + prevrequest
 			if contentType != ""{
-				body = body + method + accept + host + contentType
+				body = body + "\n" + method + "\n" + "\n" + "- " + accept + "\n" + "- " + host + "\n" + "- " + contentType
 			} else {
-				body = body + method + accept + host
+				body = body + "\n" + method + "\n" + "\n" + "- " + accept + "\n" + "- " + host
 			}
 			if request != "" {
-				body = body + request 
+				body = body + "\n" + "- " + request 
 			}
-			body = body + timeDelay + asyncTime + previousResponse
+			body = body + "\n" + "\n" + timeDelay + "\n" + asyncTime + "\n" + "\n" + previousResponse
 		}
+		body = body + "\n"
 	}
 	if err := scanner.Err(); err != nil {
 		panic(err)
@@ -98,34 +106,37 @@ func ReadBugFile(bugFileName string, body string) (string, string){
 	return body, endpoint
 }
 
-func errorCheck(s string, body string, endpoint string, assignee *string, state *string, milestone *int) {
-	if s == "InternalServerErrors" {
-		InternalServerErrors(body, endpoint, assignee, state, milestone)
+func errorCheck(fuzzError string, body string, endpoint string, assignee *string, state *string, milestone *int) *github.IssueRequest{
+	newIssueRequest := &github.IssueRequest{}
+	if fuzzError == "InternalServerErrors" {
+		newIssueRequest = InternalServerErrors(body, endpoint, assignee, state, milestone)
 	}
 
-	if s == "UseAfterFreeChecker" {
-		UseAfterFreeChecker(body, endpoint, assignee, state, milestone)
+	if fuzzError == "UseAfterFreeChecker" {
+		newIssueRequest = UseAfterFreeChecker(body, endpoint, assignee, state, milestone)
 	}
 
-	if s == "NameSpaceRuleChecker" {
-		NameSpaceRuleChecker(body, endpoint, assignee, state, milestone)
+	if fuzzError == "NameSpaceRuleChecker" {
+		newIssueRequest = NameSpaceRuleChecker(body, endpoint, assignee, state, milestone)
 	}
 
-	if s == "ResourceHierarchyChecker" {
-		ResourceHierarchyChecker(body, endpoint, assignee, state, milestone)
+	if fuzzError == "ResourceHierarchyChecker" {
+		newIssueRequest = ResourceHierarchyChecker(body, endpoint, assignee, state, milestone)
 	}
 
-	if s == "LeakageRuleChecker" {
-		LeakageRuleChecker(body, endpoint, assignee, state, milestone)
+	if fuzzError == "LeakageRuleChecker" {
+		newIssueRequest = LeakageRuleChecker(body, endpoint, assignee, state, milestone)
 	}
 
-	if s == "InvalidDynamicObjectChecker" {
-		InvalidDynamicObjectChecker(body, endpoint, assignee, state, milestone)
+	if fuzzError == "InvalidDynamicObjectChecker" {
+		newIssueRequest = InvalidDynamicObjectChecker(body, endpoint, assignee, state, milestone)
 	}
 
-	if s == "PayloadBodyChecker" {
-		PayloadBodyChecker(body, endpoint, assignee, state, milestone)
+	if fuzzError == "PayloadBodyChecker" {
+		newIssueRequest = PayloadBodyChecker(body, endpoint, assignee, state, milestone)
 	}
+
+	return newIssueRequest
 } 
 
 func InternalServerErrors(body string, endpoint string, assignee *string, state *string, milestone *int) *github.IssueRequest {
