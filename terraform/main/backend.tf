@@ -27,7 +27,7 @@ resource "aws_iam_role_policy_attachment" "lambda_policy" {
 
 resource "aws_lambda_function" "lambda" {
   function_name    = "${var.deployment_id}-server"
-  filename         = "files/backend.zip"
+  filename         = "${path.module}/files/backend.zip"
   source_code_hash = data.archive_file.lambda.output_base64sha256
 
   runtime = "go1.x"
