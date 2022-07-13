@@ -32,7 +32,6 @@ func ParseFuzz(file string) {
 				fuzzError := strings.Split(bugFileNames[bugFile], "_")
 				s := fmt.Sprintf("# %s Invalid %s Response\n", fuzzError[0], fuzzError[1])
 				body, endpoint := ReadBugFile(bugFileName, s)
-				println(body)
 				errorCheck(fuzzError[0], body, endpoint, nil, nil, nil)
 			}
 		}
@@ -100,58 +99,64 @@ func ReadBugFile(bugFileName string, body string) (string, string){
 }
 
 func errorCheck(s string, body string, endpoint string, assignee *string, state *string, milestone *int) {
-	// if s == "InternalServerErrors" {
-	// 	internalServerErrors = value
-	// }
+	if s == "InternalServerErrors" {
+		InternalServerErrors(body, endpoint, assignee, state, milestone)
+	}
 
-	// if s == "UseAfterFreeChecker" {
-	// 	useAfterFreeChecker = value
-	// }
+	if s == "UseAfterFreeChecker" {
+		UseAfterFreeChecker(body, endpoint, assignee, state, milestone)
+	}
 
-	// if s == "NameSpaceRuleChecker" {
-	// 	nameSpaceRuleChecker = value
-	// }
+	if s == "NameSpaceRuleChecker" {
+		NameSpaceRuleChecker(body, endpoint, assignee, state, milestone)
+	}
 
-	// if s == "ResourceHierarchyChecker" {
-	// 	resourceHierarchyChecker = value
-	// }
+	if s == "ResourceHierarchyChecker" {
+		ResourceHierarchyChecker(body, endpoint, assignee, state, milestone)
+	}
 
-	// if s == "LeakageRuleChecker" {
-	// 	leakageRuleChecker = value
-	// }
+	if s == "LeakageRuleChecker" {
+		LeakageRuleChecker(body, endpoint, assignee, state, milestone)
+	}
 
-	// if s == "InvalidDynamicObjectChecker" {
-	// 	InvalidDynamicObjectChecker(body, endpoint, assignee, state, milestone)
-	// }
+	if s == "InvalidDynamicObjectChecker" {
+		InvalidDynamicObjectChecker(body, endpoint, assignee, state, milestone)
+	}
 
-	// if s == "PayloadBodyChecker" {
-	// 	payloadBodyChecker = value
-	// }
+	if s == "PayloadBodyChecker" {
+		PayloadBodyChecker(body, endpoint, assignee, state, milestone)
+	}
 } 
 
-// func ResourceHierarchyChecker(body string, endpoint string, assignee *string, state *string, milestone *int) *github.IssueRequest {
-// 	title := fmt.Sprintf("DYNO Fuzz: ResourceHierarchyChecker at Endpoint %s",  endpoint)
-// 	labels := []string{"bug"}
-// 	return CreateIssueRequest(&title, &body, &labels, assignee, state, milestone);
-// }
+func InternalServerErrors(body string, endpoint string, assignee *string, state *string, milestone *int) *github.IssueRequest {
+	title := fmt.Sprintf("DYNO Fuzz: InternalServerErrors at Endpoint %s",  endpoint)
+	labels := []string{"bug"}
+	return CreateIssueRequest(&title, &body, &labels, assignee, state, milestone);
+}
 
-// func NameSpaceRuleChecker(body string, endpoint string, assignee *string, state *string, milestone *int) *github.IssueRequest {
-// 	title := fmt.Sprintf("DYNO Fuzz: NameSpaceRuleChecker at Endpoint %s",  endpoint)
-// 	labels := []string{"bug"}
-// 	return CreateIssueRequest(&title, &body, &labels, assignee, state, milestone);
-// }
+func ResourceHierarchyChecker(body string, endpoint string, assignee *string, state *string, milestone *int) *github.IssueRequest {
+	title := fmt.Sprintf("DYNO Fuzz: ResourceHierarchyChecker at Endpoint %s",  endpoint)
+	labels := []string{"bug"}
+	return CreateIssueRequest(&title, &body, &labels, assignee, state, milestone);
+}
 
-// func UseAfterFreeChecker(body string, endpoint string, assignee *string, state *string, milestone *int) *github.IssueRequest {
-// 	title := fmt.Sprintf("DYNO Fuzz: UseAfterFreeChecker at Endpoint %s",  endpoint)
-// 	labels := []string{"bug"}
-// 	return CreateIssueRequest(&title, &body, &labels, assignee, state, milestone);
-// }
+func NameSpaceRuleChecker(body string, endpoint string, assignee *string, state *string, milestone *int) *github.IssueRequest {
+	title := fmt.Sprintf("DYNO Fuzz: NameSpaceRuleChecker at Endpoint %s",  endpoint)
+	labels := []string{"bug"}
+	return CreateIssueRequest(&title, &body, &labels, assignee, state, milestone);
+}
 
-// func LeakageRuleChecker(body string, endpoint string, assignee *string, state *string, milestone *int) *github.IssueRequest {
-// 	title := fmt.Sprintf("DYNO Fuzz: LeakageRuleChecker at Endpoint %s",  endpoint)
-// 	labels := []string{"bug"}
-// 	return CreateIssueRequest(&title, &body, &labels, assignee, state, milestone);
-// }
+func UseAfterFreeChecker(body string, endpoint string, assignee *string, state *string, milestone *int) *github.IssueRequest {
+	title := fmt.Sprintf("DYNO Fuzz: UseAfterFreeChecker at Endpoint %s",  endpoint)
+	labels := []string{"bug"}
+	return CreateIssueRequest(&title, &body, &labels, assignee, state, milestone);
+}
+
+func LeakageRuleChecker(body string, endpoint string, assignee *string, state *string, milestone *int) *github.IssueRequest {
+	title := fmt.Sprintf("DYNO Fuzz: LeakageRuleChecker at Endpoint %s",  endpoint)
+	labels := []string{"bug"}
+	return CreateIssueRequest(&title, &body, &labels, assignee, state, milestone);
+}
 
 func InvalidDynamicObjectChecker(body string, endpoint string, assignee *string, state *string, milestone *int) *github.IssueRequest {
 	title := fmt.Sprintf("DYNO Fuzz: InvalidDynamicObjectChecker at Endpoint %s",  endpoint)
@@ -159,8 +164,8 @@ func InvalidDynamicObjectChecker(body string, endpoint string, assignee *string,
 	return CreateIssueRequest(&title, &body, &labels, assignee, state, milestone);
 }
 
-// func PayloadBodyChecker(body string, endpoint string, assignee *string, state *string, milestone *int) *github.IssueRequest {
-// 	title := fmt.Sprintf("DYNO Fuzz: PayloadBodyChecker at Endpoint %s",  endpoint)
-// 	labels := []string{"bug"}
-// 	return CreateIssueRequest(&title, &body, &labels, assignee, state, milestone);
-// }
+func PayloadBodyChecker(body string, endpoint string, assignee *string, state *string, milestone *int) *github.IssueRequest {
+	title := fmt.Sprintf("DYNO Fuzz: PayloadBodyChecker at Endpoint %s",  endpoint)
+	labels := []string{"bug"}
+	return CreateIssueRequest(&title, &body, &labels, assignee, state, milestone);
+}
