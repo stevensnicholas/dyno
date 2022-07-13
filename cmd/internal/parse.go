@@ -1,11 +1,14 @@
 package main
 
 import (
+	"strings"
 	"fmt"
 	"github.com/google/go-github/v45/github"
 	"bufio"
 	"os"
 )
+
+const bugFile = 6
 
 func ParseFuzz(file string) {
 	f, err := os.Open(file)
@@ -18,7 +21,15 @@ func ParseFuzz(file string) {
 	scanner := bufio.NewScanner(f)
 	// Categorizing Errors
 	for scanner.Scan() {
-		println(scanner.Text())
+		line := scanner.Text()
+		if line[:1]== "-" {
+			scanner.Scan()
+			line = scanner.Text()
+			fileNames := strings.Fields(line)
+			if len(fileNames) > 5 {
+				println(fileNames[bugFile])
+			}
+		}
 	}
 
 	if err := scanner.Err(); err != nil {

@@ -11,6 +11,6 @@ func main() {
 	// ctx := context.Background()
 	// client := CreateClient(ctx, token)
 	// client.Issues.Create(ctx, owner, repoName, InternalServerError(nil, nil, nil))
-	ParseFuzz("cmd/internal/tests/bug_buckets.txt")
+	ParseFuzz("cmd/internal/tests/bug_buckets/bug_buckets.txt")
 	println("done")
 }
