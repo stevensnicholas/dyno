@@ -7,6 +7,8 @@ import (
 )
 
 // Creates an Authenticated Client 
+// inputs: 
+//				token is the user token 
 // Returns the Client 
 func CreateClient(ctx context.Context, token string) *github.Client {
 	authToken := token
@@ -19,7 +21,11 @@ func CreateClient(ctx context.Context, token string) *github.Client {
 	return client
 }
 // Gets the specific repo provided by the owner and given repo name
-// Returns the specified repo
+// Inputs: 
+//				owner is the owner of the repo
+//				repoName is the name of the repo
+// Returns: 
+// 				the specified repo as a *github.Repository 
 func GetRepo(ctx context.Context, client *github.Client, owner string, repoName string) *github.Repository {
 	repo, _, err := client.Repositories.Get(ctx, owner, repoName)
 	if err != nil {
