@@ -40,7 +40,9 @@ func ReadBugFile(location string, bugFileName string, body string) (string, stri
 // 				milestone specifies if the issue should be linked to a certain milestone on the users repo  
 // Returns: 
 // 				*github.IssueRequest with all the relevant information regarding the certain bug
-func FuzzBugCheck(fuzzError string, body string, endpoint string, assignee *string, state *string, milestone *int) {
+func FuzzBugCheck(fuzzError string, body string, endpoint string, assignee *string, state *string, milestone *int) *github.IssueRequest{
+	newIssueRequest := &github.IssueRequest{}
+	return newIssueRequest
 }
 // AddDYNODetails adds the details and visualizer url to the body of the issue request that 
 // corresponds to the FuzzError that is received
