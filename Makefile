@@ -1,8 +1,8 @@
 .PHONY: build clean deploy
 
 build:
-	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o bin/main cmd/*.go
-
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o bin/main cmd/web-server/*.go
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o bin/issues cmd/internal/*.go
 docs: build
 	./bin/main -gendocs
 	(cd frontend && npm run gen)
