@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/google/go-github/v45/github"
 )
 
 // TODO Change the process of reading file according to SQS and S3 Buckets
@@ -62,7 +63,9 @@ func AddDYNODetails(fuzzError string) string{
 // Returns: 
 // 				*github.IssueRequest with all the relevant information regarding the certain bug
 
-func InternalServerErrors(body string, endpoint string, assignee *string, state *string, milestone *int)  {
+func InternalServerErrors(body string, endpoint string, assignee *string, state *string, milestone *int) *github.IssueRequest{
+	newIssueRequest := &github.IssueRequest{}
+	return newIssueRequest
 }
 // InternalServerErrors creates a github Issue Request for the categorized bug by restler
 // providing a description on what the bug is and how to possibly fix the bug 
@@ -75,7 +78,9 @@ func InternalServerErrors(body string, endpoint string, assignee *string, state 
 // Returns: 
 // 				*github.IssueRequest with all the relevant information regarding the certain bug
 
-func ResourceHierarchyChecker(body string, endpoint string, assignee *string, state *string, milestone *int)  {
+func ResourceHierarchyChecker(body string, endpoint string, assignee *string, state *string, milestone *int) *github.IssueRequest{
+	newIssueRequest := &github.IssueRequest{}
+	return newIssueRequest
 }
 // InternalServerErrors creates a github Issue Request for the categorized bug by restler
 // providing a description on what the bug is and how to possibly fix the bug 
@@ -88,7 +93,9 @@ func ResourceHierarchyChecker(body string, endpoint string, assignee *string, st
 // Returns: 
 // 				*github.IssueRequest with all the relevant information regarding the certain bug
 
-func NameSpaceRuleChecker(body string, endpoint string, assignee *string, state *string, milestone *int)  {
+func NameSpaceRuleChecker(body string, endpoint string, assignee *string, state *string, milestone *int) *github.IssueRequest{
+	newIssueRequest := &github.IssueRequest{}
+	return newIssueRequest
 }
 // InternalServerErrors creates a github Issue Request for the categorized bug by restler
 // providing a description on what the bug is and how to possibly fix the bug 
@@ -101,7 +108,9 @@ func NameSpaceRuleChecker(body string, endpoint string, assignee *string, state 
 // Returns: 
 // 				*github.IssueRequest with all the relevant information regarding the certain bug
 
-func UseAfterFreeChecker(body string, endpoint string, assignee *string, state *string, milestone *int)  {
+func UseAfterFreeChecker(body string, endpoint string, assignee *string, state *string, milestone *int) *github.IssueRequest{
+	newIssueRequest := &github.IssueRequest{}
+	return newIssueRequest
 }
 // InternalServerErrors creates a github Issue Request for the categorized bug by restler
 // providing a description on what the bug is and how to possibly fix the bug 
@@ -114,7 +123,9 @@ func UseAfterFreeChecker(body string, endpoint string, assignee *string, state *
 // Returns: 
 // 				*github.IssueRequest with all the relevant information regarding the certain bug
 
-func LeakageRuleChecker(body string, endpoint string, assignee *string, state *string, milestone *int)  {
+func LeakageRuleChecker(body string, endpoint string, assignee *string, state *string, milestone *int) *github.IssueRequest{
+	newIssueRequest := &github.IssueRequest{}
+	return newIssueRequest
 }
 // InternalServerErrors creates a github Issue Request for the categorized bug by restler
 // providing a description on what the bug is and how to possibly fix the bug 
@@ -127,7 +138,9 @@ func LeakageRuleChecker(body string, endpoint string, assignee *string, state *s
 // Returns: 
 // 				*github.IssueRequest with all the relevant information regarding the certain bug
 
-func InvalidDynamicObjectChecker(body string, endpoint string, assignee *string, state *string, milestone *int)  {
+func InvalidDynamicObjectChecker(body string, endpoint string, assignee *string, state *string, milestone *int) *github.IssueRequest{
+	newIssueRequest := &github.IssueRequest{}
+	return newIssueRequest
 }
 // InternalServerErrors creates a github Issue Request for the categorized bug by restler
 // providing a description on what the bug is and how to possibly fix the bug 
@@ -140,5 +153,7 @@ func InvalidDynamicObjectChecker(body string, endpoint string, assignee *string,
 // Returns: 
 // 				*github.IssueRequest with all the relevant information regarding the certain bug
 
-func PayloadBodyChecker(body string, endpoint string, assignee *string, state *string, milestone *int)  {
+func PayloadBodyChecker(body string, endpoint string, assignee *string, state *string, milestone *int)  *github.IssueRequest{
+	newIssueRequest := &github.IssueRequest{}
+	return newIssueRequest
 }
