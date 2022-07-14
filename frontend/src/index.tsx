@@ -5,21 +5,32 @@ import { App } from './App';
 import { Navigation } from './navigation';
 import reportWebVitals from './reportWebVitals';
 import { createRoot } from 'react-dom/client';
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom/client';
 import {BrowserRouter} from 'react-router-dom'
 
 /* eslint-disable */
 
-const container = document.getElementById('root');
-const root = createRoot(container!); 
+// const container = document.getElementById('root');
+// const root = createRoot(container!); 
+// root.render(
+//   // <React.StrictMode>
+//   //   <Navigation />
+//   // </React.StrictMode>
+//   <React.StrictMode>
+//     <BrowserRouter>
+//       <Navigation />
+//     </BrowserRouter>
+//   </React.StrictMode>
+// );
+
+const root = ReactDOM.createRoot(
+  document.getElementById('root') as HTMLElement
+);
 root.render(
-  // <React.StrictMode>
-  //   <Navigation />
-  // </React.StrictMode>
   <React.StrictMode>
-    <BrowserRouter>
-      <Navigation />
-    </BrowserRouter>
+     <BrowserRouter>
+       <Navigation />
+     </BrowserRouter>
   </React.StrictMode>
 );
 
