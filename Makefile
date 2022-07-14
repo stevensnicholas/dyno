@@ -2,7 +2,7 @@
 
 build:
 	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o bin/main cmd/*.go
-	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o bin/issue cmd/internal/*.go
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o bin/issue cmd/internal/lambda-issue/*.go
 
 docs: build
 	./bin/main -gendocs
