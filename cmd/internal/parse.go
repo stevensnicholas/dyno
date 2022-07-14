@@ -27,7 +27,7 @@ func ParseFuzz(token string, repoName string, owner string, file string) {
 	}
 
 	defer f.Close()
-
+	location := "cmd/internal/tests/bug_buckets/"
 	scanner := bufio.NewScanner(f)
 	// Sending an issue for each error found through fuzz 
 	for scanner.Scan() {
@@ -39,11 +39,11 @@ func ParseFuzz(token string, repoName string, owner string, file string) {
 			if len(bugFileNames) > 5 {
 				bugFileName := bugFileNames[bugFile]
 				fuzzError := strings.Split(bugFileNames[bugFile], "_")
-				s := fmt.Sprintf("# %s Invalid %s Response\n", fuzzError[0], fuzzError[1])
-				body, endpoint, err := ReadBugFile(bugFileName, s)
-				if err != nil {
-					panic(err)
-				}
+				bodyTitle := fmt.Sprintf("# %s Invalid %s Response\n", fuzzError[0], fuzzError[1])
+				details := AddDYNODetails(fuzzError[0])
+				body := bodyTitle + details
+				body, endpoint := ReadBugFile(location, bugFileName, body)
+				println(body)
 				client.Issues.Create(ctx, owner, repoName, FuzzBugCheck(fuzzError[0], body, endpoint, nil, nil, nil))
 			}
 		}
@@ -57,25 +57,24 @@ func ParseFuzz(token string, repoName string, owner string, file string) {
 // Reads the a bug_bucket file that is specified by the category of the bug found by restler
 // Creates the body of the issue in regards to the bug found by the fuzzer with details on the bug and how to fix itInternalServerErrors creates a github Issue Request for the categorized bug by restler
 // providing a description on what the bug is and how to possibly fix the bug 
-
+// 
 // Inputs: 
 //				bugFileName is the name of the file that has the logs of the bug 
 //        body is the start of the body for the github issue
 // Returns: 
 // 				body is the body of the issue 
 // 				endpoint is the endpoint that has the bug 
-// 				error is if there is an error with the function 
-func ReadBugFile(bugFileName string, body string) (string, string, error){
+func ReadBugFile(location string, bugFileName string, body string) (string, string){
 	endpoint := ""
-	f, err := os.Open(fmt.Sprintf("cmd/internal/tests/bug_buckets/%s", bugFileName))
+	f, err := os.Open(fmt.Sprintf(location + "%s", bugFileName))
 	if err != nil {
 		panic(err)
 	}
-
 	defer f.Close()
 
 	scanner := bufio.NewScanner(f)
-
+	
+	// Creating body for IssueRequest in Github
 	for scanner.Scan() {
 		line := scanner.Text()
 		if len(line) > 0 && line[:1]== "-" {
@@ -116,15 +115,15 @@ func ReadBugFile(bugFileName string, body string) (string, string, error){
 				body = body + "\n" + "- " + request 
 			}
 			body = body + "\n" + "\n" + timeDelay + "\n" + asyncTime + "\n" + "\n" + previousResponse
+			body = body + "\n"
 		}
-		body = body + "\n"
 	}
 
 	if err := scanner.Err(); err != nil {
 		panic(err)
 	}
 	
-	return body, endpoint, err
+	return body, endpoint
 }
 
 // FuzzBugCheck sorts the bugs found by the fuzzer by there categories and creates a new github issueRequest
@@ -169,6 +168,44 @@ func FuzzBugCheck(fuzzError string, body string, endpoint string, assignee *stri
 
 	return newIssueRequest
 } 
+// AddDYNODetails adds the details and visualizer url to the body of the issue request that 
+// corresponds to the FuzzError that is received
+// Inputs: 
+//				fuzzError is the type of bug that has been found by the fuzzer
+// Returns: 
+// 				details a string with the specified details 
+// 				If not details are created leaves an empty string
+func AddDYNODetails(fuzzError string) string{
+	details := ""
+	if fuzzError == "InternalServerErrors" {
+		details = "\nDetails: '500 Internal Server' Errors and any other 5xx errors are detected.\n\nVisualizer: [DYNO](the web url)\n"
+	}
+
+	if fuzzError == "UseAfterFreeChecker" {
+		details = "\nDetails: Detects that a deleted resource can still being accessed after deletion.\n\nVisualizer: [DYNO](the web url)\n"
+	}
+
+	if fuzzError == "NameSpaceRuleChecker" {
+		details = "\nDetails: Detects that an unauthorized user can access service resources.\n\nVisualizer: [DYNO](the web url)\n"
+	}
+
+	if fuzzError == "ResourceHierarchyChecker" {
+		details = "\nDetails: Detects that a child resource can be accessed from a non-parent resource.\n\nVisualizer: [DYNO](the web url)\n"
+	}
+
+	if fuzzError == "LeakageRuleChecker" {
+		details = "\nDetails: Detects that a failed resource creation leaks data in subsequent requests.\n\nVisualizer: [DYNO](the web url)\n"
+	}
+
+	if fuzzError == "InvalidDynamicObjectChecker" {
+		details = "\nDetails: Detects 500 errors or unexpected success status codes when invalid dynamic objects are sent in requests.\n\nVisualizer: [DYNO](the web url)\n"
+	}
+
+	if fuzzError == "PayloadBodyChecker" {
+		details = "\nDetails: Detects 500 errors when fuzzing the JSON bodies of requests.\n\nVisualizer: [DYNO](the web url)\n"
+	}
+	return details
+}
 // InternalServerErrors creates a github Issue Request for the categorized bug by restler
 // providing a description on what the bug is and how to possibly fix the bug 
 // Inputs:
