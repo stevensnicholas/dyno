@@ -1,16 +1,10 @@
 package main
 
 import (
-	"context"
-	"strings"
-	"fmt"
-	"github.com/google/go-github/v45/github"
-	"bufio"
-	"os"
 )
 
 // TODO Change the process of reading file according to SQS and S3 Buckets
-const bugFile = 6
+// const bugFile = 6
 
 // Parses the fuzzing files from the bug_buckets folder and creates github issues 
 // Inputs: 
@@ -32,6 +26,7 @@ func ParseFuzz(token string, repoName string, owner string, file string) {
 // 				body is the body of the issue 
 // 				endpoint is the endpoint that has the bug 
 func ReadBugFile(location string, bugFileName string, body string) (string, string){
+	return "", ""
 }
 
 // FuzzBugCheck sorts the bugs found by the fuzzer by there categories and creates a new github issueRequest
@@ -44,8 +39,8 @@ func ReadBugFile(location string, bugFileName string, body string) (string, stri
 // 				milestone specifies if the issue should be linked to a certain milestone on the users repo  
 // Returns: 
 // 				*github.IssueRequest with all the relevant information regarding the certain bug
-func FuzzBugCheck(fuzzError string, body string, endpoint string, assignee *string, state *string, milestone *int) *github.IssueRequest{
-} 
+func FuzzBugCheck(fuzzError string, body string, endpoint string, assignee *string, state *string, milestone *int) {
+}
 // AddDYNODetails adds the details and visualizer url to the body of the issue request that 
 // corresponds to the FuzzError that is received
 // Inputs: 
@@ -54,6 +49,7 @@ func FuzzBugCheck(fuzzError string, body string, endpoint string, assignee *stri
 // 				details a string with the specified details 
 // 				If not details are created leaves an empty string
 func AddDYNODetails(fuzzError string) string{
+	return ""
 }
 // InternalServerErrors creates a github Issue Request for the categorized bug by restler
 // providing a description on what the bug is and how to possibly fix the bug 
@@ -66,7 +62,7 @@ func AddDYNODetails(fuzzError string) string{
 // Returns: 
 // 				*github.IssueRequest with all the relevant information regarding the certain bug
 
-func InternalServerErrors(body string, endpoint string, assignee *string, state *string, milestone *int) *github.IssueRequest {
+func InternalServerErrors(body string, endpoint string, assignee *string, state *string, milestone *int)  {
 }
 // InternalServerErrors creates a github Issue Request for the categorized bug by restler
 // providing a description on what the bug is and how to possibly fix the bug 
@@ -79,7 +75,7 @@ func InternalServerErrors(body string, endpoint string, assignee *string, state 
 // Returns: 
 // 				*github.IssueRequest with all the relevant information regarding the certain bug
 
-func ResourceHierarchyChecker(body string, endpoint string, assignee *string, state *string, milestone *int) *github.IssueRequest {
+func ResourceHierarchyChecker(body string, endpoint string, assignee *string, state *string, milestone *int)  {
 }
 // InternalServerErrors creates a github Issue Request for the categorized bug by restler
 // providing a description on what the bug is and how to possibly fix the bug 
@@ -92,19 +88,7 @@ func ResourceHierarchyChecker(body string, endpoint string, assignee *string, st
 // Returns: 
 // 				*github.IssueRequest with all the relevant information regarding the certain bug
 
-func NameSpaceRuleChecker(body string, endpoint string, assignee *string, state *string, milestone *int) *github.IssueRequest {
-// InternalServerErrors creates a github Issue Request for the categorized bug by restler
-// providing a description on what the bug is and how to possibly fix the bug 
-// Inputs:
-//        body is the body of the github issue
-// 				endpoint is the endpoint that has the bug 
-// 				assignee is if there is a specified github user that should be assigned for checking this certain type of bug
-// 				state is the current state of the issue 
-// 				milestone specifies if the issue should be linked to a certain milestone on the users repo  
-// Returns: 
-// 				*github.IssueRequest with all the relevant information regarding the certain bug
-
-func UseAfterFreeChecker(body string, endpoint string, assignee *string, state *string, milestone *int) *github.IssueRequest {
+func NameSpaceRuleChecker(body string, endpoint string, assignee *string, state *string, milestone *int)  {
 }
 // InternalServerErrors creates a github Issue Request for the categorized bug by restler
 // providing a description on what the bug is and how to possibly fix the bug 
@@ -117,7 +101,7 @@ func UseAfterFreeChecker(body string, endpoint string, assignee *string, state *
 // Returns: 
 // 				*github.IssueRequest with all the relevant information regarding the certain bug
 
-func LeakageRuleChecker(body string, endpoint string, assignee *string, state *string, milestone *int) *github.IssueRequest {
+func UseAfterFreeChecker(body string, endpoint string, assignee *string, state *string, milestone *int)  {
 }
 // InternalServerErrors creates a github Issue Request for the categorized bug by restler
 // providing a description on what the bug is and how to possibly fix the bug 
@@ -130,7 +114,7 @@ func LeakageRuleChecker(body string, endpoint string, assignee *string, state *s
 // Returns: 
 // 				*github.IssueRequest with all the relevant information regarding the certain bug
 
-func InvalidDynamicObjectChecker(body string, endpoint string, assignee *string, state *string, milestone *int) *github.IssueRequest {
+func LeakageRuleChecker(body string, endpoint string, assignee *string, state *string, milestone *int)  {
 }
 // InternalServerErrors creates a github Issue Request for the categorized bug by restler
 // providing a description on what the bug is and how to possibly fix the bug 
@@ -143,5 +127,18 @@ func InvalidDynamicObjectChecker(body string, endpoint string, assignee *string,
 // Returns: 
 // 				*github.IssueRequest with all the relevant information regarding the certain bug
 
-func PayloadBodyChecker(body string, endpoint string, assignee *string, state *string, milestone *int) *github.IssueRequest {
+func InvalidDynamicObjectChecker(body string, endpoint string, assignee *string, state *string, milestone *int)  {
+}
+// InternalServerErrors creates a github Issue Request for the categorized bug by restler
+// providing a description on what the bug is and how to possibly fix the bug 
+// Inputs:
+//        body is the body of the github issue
+// 				endpoint is the endpoint that has the bug 
+// 				assignee is if there is a specified github user that should be assigned for checking this certain type of bug
+// 				state is the current state of the issue 
+// 				milestone specifies if the issue should be linked to a certain milestone on the users repo  
+// Returns: 
+// 				*github.IssueRequest with all the relevant information regarding the certain bug
+
+func PayloadBodyChecker(body string, endpoint string, assignee *string, state *string, milestone *int)  {
 }
