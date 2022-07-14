@@ -10,7 +10,6 @@ import { BrowserRouter } from 'react-router-dom';
 
 /* eslint-disable */
 
-
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
