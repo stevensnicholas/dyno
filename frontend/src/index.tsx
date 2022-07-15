@@ -2,16 +2,22 @@ import React from 'react';
 import './index.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { App } from './App';
+import { Navigation } from './navigation';
 import reportWebVitals from './reportWebVitals';
 import { createRoot } from 'react-dom/client';
+import ReactDOM from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
 
 /* eslint-disable */
 
-const container = document.getElementById('root');
-const root = createRoot(container!); 
+const root = ReactDOM.createRoot(
+  document.getElementById('root') as HTMLElement
+);
 root.render(
   <React.StrictMode>
-    <App />
+     <BrowserRouter>
+       <Navigation />
+     </BrowserRouter>
   </React.StrictMode>
 );
 
