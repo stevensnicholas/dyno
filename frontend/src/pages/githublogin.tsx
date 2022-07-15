@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Route, Routes, useNavigate, useLocation } from 'react-router-dom';
 
-const GitHublogin = () => {
+const GitHubLogin = () => {
   return (
     <div>
       <p>Login with Github</p>
@@ -9,4 +9,4 @@ const GitHublogin = () => {
   );
 };
 
-export default GitHublogin;
+export default GitHubLogin;
