@@ -49,7 +49,7 @@ func GetGitHubOauthToken(c_id string, c_secret string) (string, error) {
 
 	tokenBody := parsedQuery["access_token"][0]
 
-	return string(resBody), nil
+	return tokenBody, nil
 }
 
 func main() {
