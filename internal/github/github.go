@@ -32,6 +32,7 @@ func GetRepo(ctx context.Context, client *github.Client, owner string, repoName 
 // Creates an IssueRequest that provides the body of the vulnerabilities within the software.
 // Parses the files from fuzzing into an IssueRequest.
 // Returns an IssueRequest.
+// I think this function is redundant and actually dont need it
 func CreateIssueRequest(title *string, body *string, labels *[]string, assignee *string, state *string, milestone *int) *github.IssueRequest {
 	newIssueRequest := &github.IssueRequest{}
 	
