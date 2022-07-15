@@ -2,12 +2,13 @@ package github_test
 
 import (
 	"context"
-	"testing"
 	"github.com/joho/godotenv"
-	"os"
-	"golambda/internal/github"
 	"github.com/stretchr/testify/assert"
+	"golambda/internal/github"
+	"os"
+	"testing"
 )
+
 func getEnv() string {
 	err := godotenv.Load("../../.env")
 	if err != nil {
@@ -27,9 +28,8 @@ func TestValidClient(t *testing.T) {
 func TestInvalidClient(t *testing.T) {
 	var token *string = nil
 	ctx := context.Background()
-	assert.Panics(t, func() {github.CreateClient(ctx, token)}, "Nil passed as token")
+	assert.Panics(t, func() { github.CreateClient(ctx, token) }, "Nil passed as token")
 }
-
 
 func TestValidGetRepo(t *testing.T) {
 	token := getEnv()
