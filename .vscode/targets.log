@@ -1,4 +1,6 @@
 make all --print-data-base --no-builtin-variables --no-builtin-rules --question
+make: *** No rule to make target 'all'.  Stop.
+
 # GNU Make 4.2.1
 # Built for x86_64-pc-linux-gnu
 # Copyright (C) 1988-2016 Free Software Foundation, Inc.
@@ -6,7 +8,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Thu Jul 14 16:02:55 2022
+# Make data base, printed on Fri Jul 15 15:37:14 2022
 
 # Variables
 
@@ -55,7 +57,7 @@ NVM_BIN = /home/youngju/.nvm/versions/node/v16.15.1/bin
 # environment
 ELECTRON_RUN_AS_NODE = 1
 # environment
-VSCODE_IPC_HOOK_CLI = /tmp/vscode-ipc-778c03d2-02f5-4d88-a93f-6579e389a738.sock
+VSCODE_IPC_HOOK_CLI = /tmp/vscode-ipc-ef737ffa-50f0-436b-8c0c-c9d244ccd06f.sock
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
 # environment
@@ -64,6 +66,7 @@ LS_COLORS = rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:
 %F = $(notdir $%)
 # environment
 PWD = /home/youngju/comp9447-team2
+ 
 # default
 .LOADED := 
 # environment
@@ -81,9 +84,13 @@ APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
 # environment
 NVM_CD_FLAGS = 
 # environment
+ 
 VSCODE_HANDLES_UNCAUGHT_ERRORS = true
+ 
 # automatic
+ 
 ^D = $(patsubst %/,%,$(dir $^))
+ 
 # environment
 MAKELEVEL := 0
 # default
@@ -148,8 +155,10 @@ LANG = C
 TERM = xterm-256color
 # environment
 WSL_DISTRO_NAME = Ubuntu
+# environment
+MOTD_SHOWN = update-motd
 # variable set hash-table stats:
-# Load=69/1024=7%, Rehash=0, Collisions=4/94=4%
+# Load=70/1024=7%, Rehash=0, Collisions=4/95=4%
 
 # Pattern-specific Variable Values
 
@@ -274,9 +283,6 @@ deploy:
 # strcache performance: lookups = 57 / hit rate = 28%
 # hash-table stats:
 # Load=41/8192=1%, Rehash=0, Collisions=1/57=2%
- 
-make: *** No rule to make target 'all'.  Stop.
-
-# Finished Make data base on Thu Jul 14 16:02:55 2022
+# Finished Make data base on Fri Jul 15 15:37:14 2022
 
  
