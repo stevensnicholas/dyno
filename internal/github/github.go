@@ -9,10 +9,10 @@ import (
 // Creates an Authenticated Client 
 // Inputs: token is the user token 
 // Returns the Client 
-func CreateClient(ctx context.Context, token string) *github.Client {
+func CreateClient(ctx context.Context, token *string) *github.Client {
 	authToken := token
 	ts := oauth2.StaticTokenSource(
-		&oauth2.Token{AccessToken: authToken},
+		&oauth2.Token{AccessToken: *authToken},
 	)
 	tc := oauth2.NewClient(ctx, ts)
 	client := github.NewClient(tc)
@@ -28,31 +28,4 @@ func GetRepo(ctx context.Context, client *github.Client, owner string, repoName 
 		panic(err)
 	}
 	return repo
-}
-// Creates an IssueRequest that provides the body of the vulnerabilities within the software.
-// Parses the files from fuzzing into an IssueRequest.
-// Returns an IssueRequest.
-// I think this function is redundant and actually dont need it
-func CreateIssueRequest(title *string, body *string, labels *[]string, assignee *string, state *string, milestone *int) *github.IssueRequest {
-	newIssueRequest := &github.IssueRequest{}
-	
-	if title != nil {
-		newIssueRequest.Title = title
-	}
-	if body != nil {
-		newIssueRequest.Body = body
-	}
-	if labels != nil {
-		newIssueRequest.Labels = labels
-	}
-	if assignee != nil {
-		newIssueRequest.Assignee = assignee
-	}
-	if state != nil {
-		newIssueRequest.State = state
-	}
-	if milestone != nil {
-		newIssueRequest.Milestone = milestone
-	}
-	return newIssueRequest
 }
