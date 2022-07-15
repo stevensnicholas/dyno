@@ -6,7 +6,7 @@ import (
 	"golang.org/x/oauth2"
 )
 
-// Creates an Authenticated Client
+// Creates an Authenticated Client for communitcation with github
 // Inputs: token is the user token
 // Returns the Client
 func CreateClient(ctx context.Context, token *string) *github.Client {
