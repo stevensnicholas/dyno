@@ -1,62 +1,108 @@
+
+
 package main
 import (
     "fmt"
     "net/http"
-    "net/url"
-    "io/ioutil"
-    "bytes"
     "errors"
+	"html/template"
+	"encoding/json"
 
 )
 
-func GetGitHubOauthToken(c_id string, c_secret string) (string, error) {
-	const rootURl = "https://github.com/login/oauth/access_token"
+type Conf struct {
+	ClientId     string // Client ID
+	ClientSecret string // Client Secret
+	RedirectUrl  string // Authorization callback URL
+}
 
-	values := url.Values{}
-	// values.Add("code", code)
-	values.Add("client_id", c_id)
-	values.Add("client_secret", c_secret)
+var conf = Conf{
+	ClientId:     "",  	// fill in with your id before test
+	ClientSecret: "",   // fill in with your secret before test
+	RedirectUrl:  "http://localhost:3000/login",
+}
 
-	query := values.Encode()
+type Token struct {
+	AccessToken string `json:"access_token"`
+	TokenType   string `json:"token_type"` 
+	Scope       string `json:"scope"`     
+}
 
-	queryString := fmt.Sprintf("%s?%s", rootURl, bytes.NewBufferString(query))
-	req, err := http.NewRequest("POST", queryString, nil)
-	if err != nil {
-		return "", err
+func Hello(w http.ResponseWriter, r *http.Request) {
+
+	var temp *template.Template
+	var err error
+	if temp, err = template.ParseFiles("test-frontend.html"); err != nil {
+		fmt.Println("read frontend failed, error:", err)
+		return
 	}
 
-	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-	
 
-	res, err := http.DefaultClient.Do(req)
-	if err != nil {
-		return "", err
+	if err = temp.Execute(w, conf); err != nil {
+		fmt.Println("read html page failed, error:", err)
+		return
+	}
+}
+
+
+func GetTokenAuthUrl(code string) string {
+	return fmt.Sprintf(
+		"https://github.com/login/oauth/access_token?client_id=%s&client_secret=%s&code=%s",
+		conf.ClientId, conf.ClientSecret, code,
+	)
+}
+
+func GetToken(url string) (*Token, error) {
+
+	var req *http.Request
+	var err error
+	if req, err = http.NewRequest(http.MethodGet, url, nil); err != nil {
+		return nil, err
+	}
+	req.Header.Set("accept", "application/json")
+
+	var httpClient = http.Client{}
+	var res *http.Response
+	if res, err = httpClient.Do(req); err != nil {
+		return nil, err
 	}
 
 	if res.StatusCode != http.StatusOK {
-		return "", errors.New("could not retrieve token")
+	return nil, errors.New("could not retrieve token")
 	}
 
-	resBody, err := ioutil.ReadAll(res.Body)
-	if err != nil {
-		return "", err
+	var token Token
+	if err = json.NewDecoder(res.Body).Decode(&token); err != nil {
+		return nil, err
 	}
-
-	parsedQuery, err := url.ParseQuery(string(resBody))
-	if err != nil {
-		return "", err
-	}
-
-	tokenBody := parsedQuery["access_token"][0]
-
-	return tokenBody, nil
+	return &token, nil
 }
 
+
+func Oauth(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	
+	// get code
+	var code = r.URL.Query().Get("code")
+
+	// get token
+	var tokenAuthUrl = GetTokenAuthUrl(code)
+	var token *Token	
+	if token, err = GetToken(tokenAuthUrl); err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Printf("%+v",token)
+	
+}
+
+
 func main() {
-
-    var GITHUB_OAUTH_CLIENT_ID = 
-    var GITHUB_OAUTH_CLIENT_SECRET = 
-
-    token, erro := GetGitHubOauthToken(GITHUB_OAUTH_CLIENT_ID, GITHUB_OAUTH_CLIENT_SECRET)
-    fmt.Println(token, erro)
+	http.HandleFunc("/", Hello)
+	http.HandleFunc("/login", Oauth)
+	if err := http.ListenAndServe(":3000", nil); err != nil {
+		fmt.Println("listening error:", err)
+		return
+	}
 }
