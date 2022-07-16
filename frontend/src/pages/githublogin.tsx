@@ -1,11 +1,37 @@
 import React, { useEffect, useState } from 'react';
 import { Route, Routes, useNavigate, useLocation } from 'react-router-dom';
+import "../themes/style/materialize.css";
+import "../themes/style/style.css";
+import "../themes/style/page-center.css";
+import Photo from "../images/logo/login-logo.png";
+
 
 const GitHubLogin = () => {
   return (
-    <div>
-      <p>Login with Github</p>
-    </div>
+    <html>
+      <body className="login-background">
+        <div id="login-page" className="row">
+          <div className="col s12 z-depth-4 card-panel">
+            <div className="row">
+              <div className="input-field col s12 center">
+                <img src={Photo} alt="" className="circle responsive-img valign profile-image-login" />
+                <p className="center login-form-text">Sign In</p>
+                <h4 className="login-form-text">Use your Github Account</h4>
+              </div>
+            </div>
+            <div className="row">
+              <div className="login-box">
+                <a href="#" className="btn-large waves-effect waves-teal col s12">
+                  <span />
+                  <span />
+                  <span />
+                  <span />Login</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </body>
+    </html>
   );
 };
 

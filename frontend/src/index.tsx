@@ -7,6 +7,8 @@ import reportWebVitals from './reportWebVitals';
 import { createRoot } from 'react-dom/client';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
+import GitHubLogin from './pages/githublogin';
+
 
 /* eslint-disable */
 
@@ -15,9 +17,9 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-     <BrowserRouter>
-       <Navigation />
-     </BrowserRouter>
+    <BrowserRouter>
+      <GitHubLogin />
+    </BrowserRouter>
   </React.StrictMode>
 );
 
