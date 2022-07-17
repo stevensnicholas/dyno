@@ -45,8 +45,6 @@ const UserPage = () => {
       {datafetched === false ? <h1>Loading User Data...</h1> :
         <>
         <p>{userData}</p>
-        {/* <Avatar avatar={userData.avatar_url} name={userData.name} />
-        <Repo username= {username} /> */}
         </>
       }
     </div>
