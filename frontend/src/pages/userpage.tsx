@@ -23,6 +23,7 @@ const UserPage = () => {
 
   }
 
+
   useEffect(() => {
     fetch('/api')
         .then(res => res.json())
