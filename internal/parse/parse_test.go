@@ -1,5 +1,7 @@
 package parse_test
 
+//TODO Talk about what to do when the file is wrong
+
 import (
 	"testing"
 	"github.com/stretchr/testify/assert"
@@ -153,14 +155,6 @@ func TestReadBugFileValidUseAfterFreeChecker(t *testing.T) {
 	assert.Equal(t, expectedEndpoint, string(endpointCheck))
 	assert.Equal(t, expectedBody, string(bodyCheck))
 }
-
-// func TestReadBugFileInvalidFile(t *testing.T) { //TODO Talk about what to do when the file is wrong
-// 	location := "tests/bug_buckets/"
-// 	testBugFile := "empty.txt"
-// 	body := ""
-// 	bodyCheck, endpointCheck := ReadBugFile(location, testBugFile, body)
-// 	println(bodyCheck, endpointCheck)
-// }
 
 func TestFuzzBugCheckInvalid(t *testing.T) {
 	fuzzError := "InternalServerErrors"
