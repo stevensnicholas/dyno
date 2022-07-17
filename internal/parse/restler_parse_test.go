@@ -1,5 +1,6 @@
 package parse_test
 
+
 //TODO Talk about what to do when the file is wrong
 
 import (
@@ -182,70 +183,55 @@ func TestFuzzBugCheckValid(t *testing.T) {
 								"InvalidDynamicObjectChecker",
 								"PayloadBodyChecker",
 							}
-	for _, fuzzError := range fuzzErrorList {
-		if fuzzError == "InternalServerErrors" {
-			newIssueRequest := FuzzBugCheck(fuzzError, body, endpoint, &assignee, &state, &milestone)
-			assert.Equal(t, "DYNO Fuzz: InternalServerErrors at Endpoint /endpoint", *newIssueRequest.Title)
-			assert.Equal(t, "body", *newIssueRequest.Body)
-			assert.Equal(t, "fishua", *newIssueRequest.Assignee)
-			assert.Equal(t, "state", *newIssueRequest.State)
-			assert.Equal(t, 1, *newIssueRequest.Milestone)
-		}
+			
+	newIssueRequest := FuzzBugCheck(fuzzErrorList[0], body, endpoint, &assignee, &state, &milestone)
+	assert.Equal(t, "DYNO Fuzz: InternalServerErrors at Endpoint /endpoint", *newIssueRequest.Title)
+	assert.Equal(t, "body", *newIssueRequest.Body)
+	assert.Equal(t, "fishua", *newIssueRequest.Assignee)
+	assert.Equal(t, "state", *newIssueRequest.State)
+	assert.Equal(t, 1, *newIssueRequest.Milestone)
 	
-		if fuzzError == "UseAfterFreeChecker" {
-			newIssueRequest := FuzzBugCheck(fuzzError, body, endpoint, &assignee, &state, &milestone)
-			assert.Equal(t, "DYNO Fuzz: UseAfterFreeChecker at Endpoint /endpoint", *newIssueRequest.Title)
-			assert.Equal(t, "body", *newIssueRequest.Body)
-			assert.Equal(t, "fishua", *newIssueRequest.Assignee)
-			assert.Equal(t, "state", *newIssueRequest.State)
-			assert.Equal(t, 1, *newIssueRequest.Milestone)
-		}
+	newIssueRequest := FuzzBugCheck(fuzzErrorList[1], body, endpoint, &assignee, &state, &milestone)
+	assert.Equal(t, "DYNO Fuzz: UseAfterFreeChecker at Endpoint /endpoint", *newIssueRequest.Title)
+	assert.Equal(t, "body", *newIssueRequest.Body)
+	assert.Equal(t, "fishua", *newIssueRequest.Assignee)
+	assert.Equal(t, "state", *newIssueRequest.State)
+	assert.Equal(t, 1, *newIssueRequest.Milestone)
 	
-		if fuzzError == "NameSpaceRuleChecker" {
-			newIssueRequest := FuzzBugCheck(fuzzError, body, endpoint, &assignee, &state, &milestone)
-			assert.Equal(t, "DYNO Fuzz: NameSpaceRuleChecker at Endpoint /endpoint", *newIssueRequest.Title)
-			assert.Equal(t, "body", *newIssueRequest.Body)
-			assert.Equal(t, "fishua", *newIssueRequest.Assignee)
-			assert.Equal(t, "state", *newIssueRequest.State)
-			assert.Equal(t, 1, *newIssueRequest.Milestone)
-		}
+	newIssueRequest := FuzzBugCheck(fuzzErrorList[2], body, endpoint, &assignee, &state, &milestone)
+	assert.Equal(t, "DYNO Fuzz: NameSpaceRuleChecker at Endpoint /endpoint", *newIssueRequest.Title)
+	assert.Equal(t, "body", *newIssueRequest.Body)
+	assert.Equal(t, "fishua", *newIssueRequest.Assignee)
+	assert.Equal(t, "state", *newIssueRequest.State)
+	assert.Equal(t, 1, *newIssueRequest.Milestone)
 	
-		if fuzzError == "ResourceHierarchyChecker" {
-			newIssueRequest := FuzzBugCheck(fuzzError, body, endpoint, &assignee, &state, &milestone)
-			assert.Equal(t, "DYNO Fuzz: ResourceHierarchyChecker at Endpoint /endpoint", *newIssueRequest.Title)
-			assert.Equal(t, "body", *newIssueRequest.Body)
-			assert.Equal(t, "fishua", *newIssueRequest.Assignee)
-			assert.Equal(t, "state", *newIssueRequest.State)
-			assert.Equal(t, 1, *newIssueRequest.Milestone)
-		}
+	newIssueRequest := FuzzBugCheck(fuzzErrorList[3], body, endpoint, &assignee, &state, &milestone)
+	assert.Equal(t, "DYNO Fuzz: ResourceHierarchyChecker at Endpoint /endpoint", *newIssueRequest.Title)
+	assert.Equal(t, "body", *newIssueRequest.Body)
+	assert.Equal(t, "fishua", *newIssueRequest.Assignee)
+	assert.Equal(t, "state", *newIssueRequest.State)
+	assert.Equal(t, 1, *newIssueRequest.Milestone)
 	
-		if fuzzError == "LeakageRuleChecker" {
-			newIssueRequest := FuzzBugCheck(fuzzError, body, endpoint, &assignee, &state, &milestone)
-			assert.Equal(t, "DYNO Fuzz: LeakageRuleChecker at Endpoint /endpoint", *newIssueRequest.Title)
-			assert.Equal(t, "body", *newIssueRequest.Body)
-			assert.Equal(t, "fishua", *newIssueRequest.Assignee)
-			assert.Equal(t, "state", *newIssueRequest.State)
-			assert.Equal(t, 1, *newIssueRequest.Milestone)
-		}
+	newIssueRequest := FuzzBugCheck(fuzzErrorList[4], body, endpoint, &assignee, &state, &milestone)
+	assert.Equal(t, "DYNO Fuzz: LeakageRuleChecker at Endpoint /endpoint", *newIssueRequest.Title)
+	assert.Equal(t, "body", *newIssueRequest.Body)
+	assert.Equal(t, "fishua", *newIssueRequest.Assignee)
+	assert.Equal(t, "state", *newIssueRequest.State)
+	assert.Equal(t, 1, *newIssueRequest.Milestone)
 	
-		if fuzzError == "InvalidDynamicObjectChecker" {
-			newIssueRequest := FuzzBugCheck(fuzzError, body, endpoint, &assignee, &state, &milestone)
-			assert.Equal(t, "DYNO Fuzz: InvalidDynamicObjectChecker at Endpoint /endpoint", *newIssueRequest.Title)
-			assert.Equal(t, "body", *newIssueRequest.Body)
-			assert.Equal(t, "fishua", *newIssueRequest.Assignee)
-			assert.Equal(t, "state", *newIssueRequest.State)
-			assert.Equal(t, 1, *newIssueRequest.Milestone)
-		}
+	newIssueRequest := FuzzBugCheck(fuzzErrorList[5], body, endpoint, &assignee, &state, &milestone)
+	assert.Equal(t, "DYNO Fuzz: InvalidDynamicObjectChecker at Endpoint /endpoint", *newIssueRequest.Title)
+	assert.Equal(t, "body", *newIssueRequest.Body)
+	assert.Equal(t, "fishua", *newIssueRequest.Assignee)
+	assert.Equal(t, "state", *newIssueRequest.State)
+	assert.Equal(t, 1, *newIssueRequest.Milestone)
 	
-		if fuzzError == "PayloadBodyChecker" {
-			newIssueRequest := FuzzBugCheck(fuzzError, body, endpoint, &assignee, &state, &milestone)
-			assert.Equal(t, "DYNO Fuzz: PayloadBodyChecker at Endpoint /endpoint", *newIssueRequest.Title)
-			assert.Equal(t, "body", *newIssueRequest.Body)
-			assert.Equal(t, "fishua", *newIssueRequest.Assignee)
-			assert.Equal(t, "state", *newIssueRequest.State)
-			assert.Equal(t, 1, *newIssueRequest.Milestone)
-		}
-	}
+	newIssueRequest := FuzzBugCheck(fuzzErrorList[6], body, endpoint, &assignee, &state, &milestone)
+	assert.Equal(t, "DYNO Fuzz: PayloadBodyChecker at Endpoint /endpoint", *newIssueRequest.Title)
+	assert.Equal(t, "body", *newIssueRequest.Body)
+	assert.Equal(t, "fishua", *newIssueRequest.Assignee)
+	assert.Equal(t, "state", *newIssueRequest.State)
+	assert.Equal(t, 1, *newIssueRequest.Milestone)
 }
 
 func TestDYNODetailsValid(t *testing.T) {
@@ -257,41 +243,23 @@ func TestDYNODetailsValid(t *testing.T) {
 								"InvalidDynamicObjectChecker",
 								"PayloadBodyChecker",
 							}
-	actualDetails := ""
-	for _, fuzzError := range fuzzErrorList {
-		actualDetails = AddDYNODetails(fuzzError)
-		if fuzzError == "InternalServerErrors" {
-			assert.Equal(t, "\nDetails: '500 Internal Server' Errors and any other 5xx errors are detected.\n\nVisualizer: [DYNO](the web url)\n", actualDetails)
-		}
-	
-		if fuzzError == "UseAfterFreeChecker" {
-			assert.Equal(t, "\nDetails: Detects that a deleted resource can still being accessed after deletion.\n\nVisualizer: [DYNO](the web url)\n", actualDetails)
-		}
-	
-		if fuzzError == "NameSpaceRuleChecker" {
-			assert.Equal(t, "\nDetails: Detects that an unauthorized user can access service resources.\n\nVisualizer: [DYNO](the web url)\n", actualDetails)
-		}
-	
-		if fuzzError == "ResourceHierarchyChecker" {
-			assert.Equal(t, "\nDetails: Detects that a child resource can be accessed from a non-parent resource.\n\nVisualizer: [DYNO](the web url)\n", actualDetails)
-		}
-	
-		if fuzzError == "LeakageRuleChecker" {
-			assert.Equal(t, "\nDetails: Detects that a failed resource creation leaks data in subsequent requests.\n\nVisualizer: [DYNO](the web url)\n", actualDetails)
-		}
-	
-		if fuzzError == "InvalidDynamicObjectChecker" {
-			assert.Equal(t, "\nDetails: Detects 500 errors or unexpected success status codes when invalid dynamic objects are sent in requests.\n\nVisualizer: [DYNO](the web url)\n", actualDetails)
-		}
-	
-		if fuzzError == "PayloadBodyChecker" {
-			assert.Equal(t, "\nDetails: Detects 500 errors when fuzzing the JSON bodies of requests.\n\nVisualizer: [DYNO](the web url)\n", actualDetails)
-		}
-	}
+	actualDetails := AddDYNODetails(fuzzErrorList[0])
+	assert.Equal(t, "\nDetails: '500 Internal Server' Errors and any other 5xx errors are detected.\n\nVisualizer: [DYNO](the web url)\n", actualDetails)
+	actualDetails = AddDYNODetails(fuzzErrorList[1])
+	assert.Equal(t, "\nDetails: Detects that a deleted resource can still being accessed after deletion.\n\nVisualizer: [DYNO](the web url)\n", actualDetails)
+	actualDetails = AddDYNODetails(fuzzErrorList[2])
+	assert.Equal(t, "\nDetails: Detects that an unauthorized user can access service resources.\n\nVisualizer: [DYNO](the web url)\n", actualDetails)
+	actualDetails = AddDYNODetails(fuzzErrorList[3])
+	assert.Equal(t, "\nDetails: Detects that a child resource can be accessed from a non-parent resource.\n\nVisualizer: [DYNO](the web url)\n", actualDetails)
+	actualDetails = AddDYNODetails(fuzzErrorList[4])
+	assert.Equal(t, "\nDetails: Detects that a failed resource creation leaks data in subsequent requests.\n\nVisualizer: [DYNO](the web url)\n", actualDetails)
+	actualDetails = AddDYNODetails(fuzzErrorList[5])
+	assert.Equal(t, "\nDetails: Detects 500 errors or unexpected success status codes when invalid dynamic objects are sent in requests.\n\nVisualizer: [DYNO](the web url)\n", actualDetails)
+	actualDetails = AddDYNODetails(fuzzErrorList[6])
+	assert.Equal(t, "\nDetails: Detects 500 errors when fuzzing the JSON bodies of requests.\n\nVisualizer: [DYNO](the web url)\n", actualDetails)
 }
 
 func TestDYNODetailsInvalid(t *testing.T) {
 	actualDetails := AddDYNODetails("")
 	assert.Equal(t, "", actualDetails)
-
 }

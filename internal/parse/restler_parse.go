@@ -138,34 +138,24 @@ func ReadBugFile(location string, bugFileName string, body string) (string, stri
 // 				*github.IssueRequest with all the relevant information regarding the certain bug
 func FuzzBugCheck(fuzzError string, body string, endpoint string, assignee *string, state *string, milestone *int) *github.IssueRequest{
 	newIssueRequest := &github.IssueRequest{}
-	if fuzzError == "InternalServerErrors" {
+	switch fuzzError {
+	case "InternalServerErrors":
 		newIssueRequest = InternalServerErrors(body, endpoint, assignee, state, milestone)
-	}
-
-	if fuzzError == "UseAfterFreeChecker" {
+	case "UseAfterFreeChecker":
 		newIssueRequest = UseAfterFreeChecker(body, endpoint, assignee, state, milestone)
-	}
-
-	if fuzzError == "NameSpaceRuleChecker" {
+	case "NameSpaceRuleChecker":
 		newIssueRequest = NameSpaceRuleChecker(body, endpoint, assignee, state, milestone)
-	}
-
-	if fuzzError == "ResourceHierarchyChecker" {
+	case "ResourceHierarchyChecker":
 		newIssueRequest = ResourceHierarchyChecker(body, endpoint, assignee, state, milestone)
-	}
-
-	if fuzzError == "LeakageRuleChecker" {
+	case "LeakageRuleChecker":
 		newIssueRequest = LeakageRuleChecker(body, endpoint, assignee, state, milestone)
-	}
-
-	if fuzzError == "InvalidDynamicObjectChecker" {
+	case "InvalidDynamicObjectChecker":
 		newIssueRequest = InvalidDynamicObjectChecker(body, endpoint, assignee, state, milestone)
-	}
-
-	if fuzzError == "PayloadBodyChecker" {
+	case "PayloadBodyChecker":
 		newIssueRequest = PayloadBodyChecker(body, endpoint, assignee, state, milestone)
+	default :
+		newIssueRequest = nil
 	}
-
 	return newIssueRequest
 } 
 // AddDYNODetails adds the details and visualizer url to the body of the issue request that 
@@ -177,35 +167,25 @@ func FuzzBugCheck(fuzzError string, body string, endpoint string, assignee *stri
 // 				If not details are created leaves an empty string
 func AddDYNODetails(fuzzError string) string{
 	details := ""
-	if fuzzError == "InternalServerErrors" {
+	switch fuzzError {
+	case "InternalServerErrors":
 		details = "\nDetails: '500 Internal Server' Errors and any other 5xx errors are detected.\n\nVisualizer: [DYNO](the web url)\n"
-	}
-
-	if fuzzError == "UseAfterFreeChecker" {
+	case "UseAfterFreeChecker":
 		details = "\nDetails: Detects that a deleted resource can still being accessed after deletion.\n\nVisualizer: [DYNO](the web url)\n"
-	}
-
-	if fuzzError == "NameSpaceRuleChecker" {
+	case "NameSpaceRuleChecker":
 		details = "\nDetails: Detects that an unauthorized user can access service resources.\n\nVisualizer: [DYNO](the web url)\n"
-	}
-
-	if fuzzError == "ResourceHierarchyChecker" {
+	case "ResourceHierarchyChecker":
 		details = "\nDetails: Detects that a child resource can be accessed from a non-parent resource.\n\nVisualizer: [DYNO](the web url)\n"
-	}
-
-	if fuzzError == "LeakageRuleChecker" {
+	case "LeakageRuleChecker":
 		details = "\nDetails: Detects that a failed resource creation leaks data in subsequent requests.\n\nVisualizer: [DYNO](the web url)\n"
-	}
-
-	if fuzzError == "InvalidDynamicObjectChecker" {
+	case "InvalidDynamicObjectChecker":
 		details = "\nDetails: Detects 500 errors or unexpected success status codes when invalid dynamic objects are sent in requests.\n\nVisualizer: [DYNO](the web url)\n"
-	}
-
-	if fuzzError == "PayloadBodyChecker" {
+	default :
 		details = "\nDetails: Detects 500 errors when fuzzing the JSON bodies of requests.\n\nVisualizer: [DYNO](the web url)\n"
 	}
 	return details
 }
+
 // InternalServerErrors creates a github Issue Request for the categorized bug by restler
 // providing a description on what the bug is and how to possibly fix the bug 
 // Inputs:
@@ -216,12 +196,12 @@ func AddDYNODetails(fuzzError string) string{
 // 				milestone specifies if the issue should be linked to a certain milestone on the users repo  
 // Returns: 
 // 				*github.IssueRequest with all the relevant information regarding the certain bug
-
 func InternalServerErrors(body string, endpoint string, assignee *string, state *string, milestone *int) *github.IssueRequest {
 	title := fmt.Sprintf("DYNO Fuzz: InternalServerErrors at Endpoint %s",  endpoint)
 	labels := []string{"bug"}
 	return CreateIssueRequest(&title, &body, &labels, assignee, state, milestone);
 }
+
 // InternalServerErrors creates a github Issue Request for the categorized bug by restler
 // providing a description on what the bug is and how to possibly fix the bug 
 // Inputs:
@@ -232,12 +212,12 @@ func InternalServerErrors(body string, endpoint string, assignee *string, state 
 // 				milestone specifies if the issue should be linked to a certain milestone on the users repo  
 // Returns: 
 // 				*github.IssueRequest with all the relevant information regarding the certain bug
-
 func ResourceHierarchyChecker(body string, endpoint string, assignee *string, state *string, milestone *int) *github.IssueRequest {
 	title := fmt.Sprintf("DYNO Fuzz: ResourceHierarchyChecker at Endpoint %s",  endpoint)
 	labels := []string{"bug"}
 	return CreateIssueRequest(&title, &body, &labels, assignee, state, milestone);
 }
+
 // InternalServerErrors creates a github Issue Request for the categorized bug by restler
 // providing a description on what the bug is and how to possibly fix the bug 
 // Inputs:
@@ -248,12 +228,12 @@ func ResourceHierarchyChecker(body string, endpoint string, assignee *string, st
 // 				milestone specifies if the issue should be linked to a certain milestone on the users repo  
 // Returns: 
 // 				*github.IssueRequest with all the relevant information regarding the certain bug
-
 func NameSpaceRuleChecker(body string, endpoint string, assignee *string, state *string, milestone *int) *github.IssueRequest {
 	title := fmt.Sprintf("DYNO Fuzz: NameSpaceRuleChecker at Endpoint %s",  endpoint)
 	labels := []string{"bug"}
 	return CreateIssueRequest(&title, &body, &labels, assignee, state, milestone);
 }
+
 // InternalServerErrors creates a github Issue Request for the categorized bug by restler
 // providing a description on what the bug is and how to possibly fix the bug 
 // Inputs:
@@ -264,12 +244,12 @@ func NameSpaceRuleChecker(body string, endpoint string, assignee *string, state 
 // 				milestone specifies if the issue should be linked to a certain milestone on the users repo  
 // Returns: 
 // 				*github.IssueRequest with all the relevant information regarding the certain bug
-
 func UseAfterFreeChecker(body string, endpoint string, assignee *string, state *string, milestone *int) *github.IssueRequest {
 	title := fmt.Sprintf("DYNO Fuzz: UseAfterFreeChecker at Endpoint %s",  endpoint)
 	labels := []string{"bug"}
 	return CreateIssueRequest(&title, &body, &labels, assignee, state, milestone);
 }
+
 // InternalServerErrors creates a github Issue Request for the categorized bug by restler
 // providing a description on what the bug is and how to possibly fix the bug 
 // Inputs:
@@ -280,12 +260,12 @@ func UseAfterFreeChecker(body string, endpoint string, assignee *string, state *
 // 				milestone specifies if the issue should be linked to a certain milestone on the users repo  
 // Returns: 
 // 				*github.IssueRequest with all the relevant information regarding the certain bug
-
 func LeakageRuleChecker(body string, endpoint string, assignee *string, state *string, milestone *int) *github.IssueRequest {
 	title := fmt.Sprintf("DYNO Fuzz: LeakageRuleChecker at Endpoint %s",  endpoint)
 	labels := []string{"bug"}
 	return CreateIssueRequest(&title, &body, &labels, assignee, state, milestone);
 }
+
 // InternalServerErrors creates a github Issue Request for the categorized bug by restler
 // providing a description on what the bug is and how to possibly fix the bug 
 // Inputs:
@@ -296,12 +276,12 @@ func LeakageRuleChecker(body string, endpoint string, assignee *string, state *s
 // 				milestone specifies if the issue should be linked to a certain milestone on the users repo  
 // Returns: 
 // 				*github.IssueRequest with all the relevant information regarding the certain bug
-
 func InvalidDynamicObjectChecker(body string, endpoint string, assignee *string, state *string, milestone *int) *github.IssueRequest {
 	title := fmt.Sprintf("DYNO Fuzz: InvalidDynamicObjectChecker at Endpoint %s",  endpoint)
 	labels := []string{"bug"}
 	return CreateIssueRequest(&title, &body, &labels, assignee, state, milestone);
 }
+
 // InternalServerErrors creates a github Issue Request for the categorized bug by restler
 // providing a description on what the bug is and how to possibly fix the bug 
 // Inputs:
@@ -312,7 +292,6 @@ func InvalidDynamicObjectChecker(body string, endpoint string, assignee *string,
 // 				milestone specifies if the issue should be linked to a certain milestone on the users repo  
 // Returns: 
 // 				*github.IssueRequest with all the relevant information regarding the certain bug
-
 func PayloadBodyChecker(body string, endpoint string, assignee *string, state *string, milestone *int) *github.IssueRequest {
 	title := fmt.Sprintf("DYNO Fuzz: PayloadBodyChecker at Endpoint %s",  endpoint)
 	labels := []string{"bug"}
