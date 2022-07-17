@@ -12,7 +12,7 @@ const Avatar = (props: AvatarProps) => {
         <h2>{props.name}</h2>
         <img className="avatar" src={props.avatar} alt="user image" />
         <a className="logout"
-          href={`http://localhost:5000/logout`}
+          href={`http://localhost:8080/logout`}
         >Logout</a>
       </>
     </div>

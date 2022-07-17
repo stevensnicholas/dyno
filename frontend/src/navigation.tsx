@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Route, Routes, Navigate } from 'react-router-dom';
-import Home from './pages/home';
-import UserPage from './pages/userpage';
-import Login from './pages/login';
+import Home from './pages/Home';
+import UserPage from './pages/UserPage';
+import Login from './pages/Login';
 
 export function Navigation() {
   return (
