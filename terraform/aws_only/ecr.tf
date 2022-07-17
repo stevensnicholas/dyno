@@ -1,6 +1,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> Add Kms ley
 =======
@@ -18,10 +19,12 @@ resource "aws_ecr_repository" "image_repository" {
 <<<<<<< HEAD
 =======
 >>>>>>> Add Kms ley
+=======
+>>>>>>> Add Kms ley
 resource "aws_ecr_repository" "image_repository" {
   name                 = "dyno_image_repository"
-<<<<<<< HEAD
   image_tag_mutability = "MUTABLE"
+<<<<<<< HEAD
 >>>>>>> Add ecr so we can push docker images for lambda
 =======
   image_tag_mutability = "IMMUTABLE"
@@ -35,10 +38,13 @@ resource "aws_ecr_repository" "image_repository" {
 >>>>>>> Add ecr so we can push docker images for lambda
 =======
 >>>>>>> Fix secreity issue - make immutable
+=======
+>>>>>>> Add Kms ley
 
   image_scanning_configuration {
     scan_on_push = true
   }
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -77,3 +83,6 @@ resource "aws_ecr_repository" "image_repository" {
 }
 >>>>>>> Fix secreity issue - make immutable
 >>>>>>> Fix secreity issue - make immutable
+=======
+}
+>>>>>>> Add Kms ley
