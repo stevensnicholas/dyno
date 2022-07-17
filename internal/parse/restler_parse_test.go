@@ -15,6 +15,12 @@ func TestReadBugFileInvalidNoFile(t *testing.T) {
 	assert.Panics(t, func() { parse.ReadBugFile(location, testBugFile, body) }, "Panics as there is no file")
 }
 
+// TODO Fix this as need a check for the correct file
+func TestReadBugFileInvalidBinaryFile(t *testing.T) {
+	parse.ReadBugFile("../../bin/", "lambda-issue", "Issue Title")
+	assert.Equal(t, "", "")
+}
+
 func TestReadBugFileValidInvalidDynamicObjectChecker_1(t *testing.T) {
 	location := "../tests/bug_buckets/"
 	testBugFile := "InvalidDynamicObjectChecker_20x_1.txt"
