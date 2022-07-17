@@ -1,1 +1,0 @@
-{"buildTargets":["build","clean","cov","deploy","docs","format","integration","lint","test"],"launchTargets":[],"customConfigurationProvider":{"workspaceBrowse":{"browsePath":[],"compilerArgs":[]},"fileIndex":[]}}
