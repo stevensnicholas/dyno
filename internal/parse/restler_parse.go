@@ -201,6 +201,8 @@ func AddDYNODetails(fuzzError string) string{
 func InternalServerErrors(body string, endpoint string, assignee *string, state *string, milestone *int) *github.IssueRequest {
 	title := fmt.Sprintf("DYNO Fuzz: InternalServerErrors at Endpoint %s",  endpoint)
 	labels := []string{"bug"}
+	return *github.IssueRequest{
+	}
 	return CreateIssueRequest(&title, &body, &labels, assignee, state, milestone);
 }
 
