@@ -23,8 +23,8 @@ func CreateClient(ctx context.Context, token *string) *github.Client {
 // Gets the specific repo provided by the owner and given repo name.
 // Inputs: owner is the owner of the repo, repoName is the name of the repo.
 // Returns: the specified repo as a *github.Repository
-func GetRepo(ctx context.Context, client *github.Client, owner string, repoName string) *github.Repository {
-	repo, _, err := client.Repositories.Get(ctx, owner, repoName)
+func GetRepo(ctx context.Context, client *github.Client, owner *string, repoName *string) *github.Repository {
+	repo, _, err := client.Repositories.Get(ctx, *owner, *repoName)
 	if err != nil {
 		panic(err)
 	}

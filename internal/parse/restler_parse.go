@@ -180,8 +180,10 @@ func AddDYNODetails(fuzzError string) string{
 		details = "\nDetails: Detects that a failed resource creation leaks data in subsequent requests.\n\nVisualizer: [DYNO](the web url)\n"
 	case "InvalidDynamicObjectChecker":
 		details = "\nDetails: Detects 500 errors or unexpected success status codes when invalid dynamic objects are sent in requests.\n\nVisualizer: [DYNO](the web url)\n"
-	default :
+	case "PayloadBodyChecker":
 		details = "\nDetails: Detects 500 errors when fuzzing the JSON bodies of requests.\n\nVisualizer: [DYNO](the web url)\n"
+	default  :
+		details = ""
 	}
 	return details
 }

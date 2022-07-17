@@ -33,17 +33,16 @@ func TestInvalidClient(t *testing.T) {
 }
 
 func TestValidGetRepo(t *testing.T) {
+	owner := "thefishua"
+	repoName := "Demo-Server"
 	token := getEnv()
 	ctx := context.Background()
 	client := platform.CreateClient(ctx, &token)
-	actualRepo := platform.GetRepo(ctx, client, "thefishua", "Demo-Server")
+	actualRepo := platform.GetRepo(ctx, client, &owner, &repoName)
 	assert.Equal(t, "thefishua/Demo-Server", *actualRepo.FullName)
 }
 
 func TestInvalidGetRepo(t *testing.T) {
-	token := getEnv()
 	ctx := context.Background()
-	client := platform.CreateClient(ctx, &token)
-	actualRepo := platform.GetRepo(ctx, client, "thefishua", "Demo-Server")
-	assert.Equal(t, "thefishua/Demo-Server", *actualRepo.FullName)
+	assert.Panics(t, func () {platform.GetRepo(ctx, nil, nil, nil)}, "Error Panic as there is no repo suggested by the user")
 }

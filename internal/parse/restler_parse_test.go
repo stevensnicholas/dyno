@@ -17,7 +17,7 @@ func TestReadBugFileInvalidNoFile(t *testing.T) {
 }
 
 func TestReadBugFileValidInvalidDynamicObjectChecker_1(t *testing.T) {
-	location := "tests/bug_buckets/"
+	location := "../tests/bug_buckets/"
 	testBugFile := "InvalidDynamicObjectChecker_20x_1.txt"
 	body := "# InvalidDynamicObjectChecker Invalid 200 Response"
 	bodyCheck, endpointCheck := parse.ReadBugFile(location, testBugFile, body)
@@ -42,7 +42,7 @@ func TestReadBugFileValidInvalidDynamicObjectChecker_1(t *testing.T) {
 	assert.Equal(t, expectedBody, string(bodyCheck))
 }
 func TestReadBugFileValidInvalidDynamicObjectChecker_2(t *testing.T) {
-	location := "tests/bug_buckets/"
+	location := "../tests/bug_buckets/"
 	testBugFile := "InvalidDynamicObjectChecker_20x_2.txt"
 	body := "# InvalidDynamicObjectChecker Invalid 200 Response"
 	bodyCheck, endpointCheck := parse.ReadBugFile(location, testBugFile, body)
@@ -70,7 +70,7 @@ func TestReadBugFileValidInvalidDynamicObjectChecker_2(t *testing.T) {
 }
 
 func TestReadBugFileValidPayloadBodyChecker_1(t *testing.T) {
-	location := "tests/bug_buckets/"
+	location := "../tests/bug_buckets/"
 	testBugFile := "PayloadBodyChecker_500_1.txt"
 	body := "# PayloadBodyChecker Invalid 500 Response"
 	bodyCheck, endpointCheck := parse.ReadBugFile(location, testBugFile, body)
@@ -98,7 +98,7 @@ func TestReadBugFileValidPayloadBodyChecker_1(t *testing.T) {
 }
 
 func TestReadBugFileValidPayloadBodyChecker_2(t *testing.T) {
-	location := "tests/bug_buckets/"
+	location := "../tests/bug_buckets/"
 	testBugFile := "PayloadBodyChecker_500_2.txt"
 	body := "# PayloadBodyChecker Invalid 500 Response"
 	bodyCheck, endpointCheck := parse.ReadBugFile(location, testBugFile, body)
@@ -126,7 +126,7 @@ func TestReadBugFileValidPayloadBodyChecker_2(t *testing.T) {
 }
 
 func TestReadBugFileValidUseAfterFreeChecker(t *testing.T) {
-	location := "tests/bug_buckets/"
+	location := "../tests/bug_buckets/"
 	testBugFile := "UseAfterFreeChecker_20x_1.txt"
 	body := "# UseAfterFreeChecker Invalid 200 Response"
 	bodyCheck, endpointCheck := parse.ReadBugFile(location, testBugFile, body)
@@ -162,9 +162,9 @@ func TestFuzzBugCheckInvalid(t *testing.T) {
 	newIssueRequest := parse.FuzzBugCheck(fuzzError, "body", "/endpoint", nil, nil, nil)
 	assert.Equal(t, "DYNO Fuzz: InternalServerErrors at Endpoint /endpoint", *newIssueRequest.Title)
 	assert.Equal(t, "body", *newIssueRequest.Body)
-	assert.Equal(t, nil, newIssueRequest.Assignee)
-	assert.Equal(t, nil, newIssueRequest.State)
-	assert.Equal(t, nil, newIssueRequest.Milestone)
+	assert.Nil(t, newIssueRequest.Assignee)
+	assert.Nil(t, newIssueRequest.State)
+	assert.Nil(t, newIssueRequest.Milestone)
 } 
 
 func TestFuzzBugCheckValid(t *testing.T) {
