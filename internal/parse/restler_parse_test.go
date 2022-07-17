@@ -7,7 +7,6 @@ import (
 	"testing"
 	"github.com/stretchr/testify/assert"
 	"golambda/internal/parse"
-	"golambda/internal/github"
 )
 
 func TestReadBugFileInvalidNoFile(t *testing.T) {

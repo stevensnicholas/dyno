@@ -1,13 +1,14 @@
 package parse
 
 import (
+	"golambda/internal/platform"
 	"context"
 	"strings"
 	"fmt"
 	"github.com/google/go-github/v45/github"
 	"bufio"
 	"os"
-	"golambda/internal/github"
+
 )
 
 // TODO Change the process of reading file according to SQS and S3 Buckets
@@ -21,7 +22,7 @@ const bugFile = 6
 //				file is filepath to the bug_buckets.txt file that stores all the bugs that has occured
 func ParseFuzz(token string, repoName string, owner string, file string) {
 	ctx := context.Background()
-	client := CreateClient(ctx, token)
+	client := platform.CreateClient(ctx, &token)
 	f, err := os.Open(file)
 	if err != nil {
 		panic(err)
