@@ -1,19 +1,18 @@
 package parse_test
 
-
 //TODO Talk about what to do when the file is wrong
 
 import (
-	"testing"
 	"github.com/stretchr/testify/assert"
 	"golambda/internal/parse"
+	"testing"
 )
 
 func TestReadBugFileInvalidNoFile(t *testing.T) {
 	location := ""
 	testBugFile := ""
 	body := ""
-	assert.Panics(t, func() {parse.ReadBugFile(location, testBugFile, body)}, "Panics as there is no file")
+	assert.Panics(t, func() { parse.ReadBugFile(location, testBugFile, body) }, "Panics as there is no file")
 }
 
 func TestReadBugFileValidInvalidDynamicObjectChecker_1(t *testing.T) {
@@ -22,21 +21,21 @@ func TestReadBugFileValidInvalidDynamicObjectChecker_1(t *testing.T) {
 	body := "# InvalidDynamicObjectChecker Invalid 200 Response"
 	bodyCheck, endpointCheck := parse.ReadBugFile(location, testBugFile, body)
 
-	expectedBody := "# InvalidDynamicObjectChecker Invalid 200 Response\n" + 
-									"-> POST /api/blog/posts HTTP/1.1\n\n" + 
-									"- Accept: application/json\n" +
-									"- Host: localhost:8888\n" +
-									"- Content-Type: application/json\n" +
-									"- Request: {    \"id\":99,    \"body\":\"my first blog post\"}\n\n" +
-									"! producer_timing_delay 0\n" +
-									"! max_async_wait_time 20\n\n" +
-									"PREVIOUS RESPONSE: 'HTTP/1.1 201 Created request:{\"id\":10,\"body\":\"my first blog post\"}'\n\n" + 
-									"-> GET /api/blog/posts/10?injected_query_string=123 HTTP/1.1\n\n" +
-									"- Accept: application/json\n" +
-									"- Host: localhost:8888\n\n" +
-									"! producer_timing_delay 0\n" +
-									"! max_async_wait_time 0\n\n" +
-									"PREVIOUS RESPONSE: 'HTTP/1.1 200 OK request:{\"id\":10,\"body\":\"my first blog post\"}'\n"
+	expectedBody := "# InvalidDynamicObjectChecker Invalid 200 Response\n" +
+		"-> POST /api/blog/posts HTTP/1.1\n\n" +
+		"- Accept: application/json\n" +
+		"- Host: localhost:8888\n" +
+		"- Content-Type: application/json\n" +
+		"- Request: {    \"id\":99,    \"body\":\"my first blog post\"}\n\n" +
+		"! producer_timing_delay 0\n" +
+		"! max_async_wait_time 20\n\n" +
+		"PREVIOUS RESPONSE: 'HTTP/1.1 201 Created request:{\"id\":10,\"body\":\"my first blog post\"}'\n\n" +
+		"-> GET /api/blog/posts/10?injected_query_string=123 HTTP/1.1\n\n" +
+		"- Accept: application/json\n" +
+		"- Host: localhost:8888\n\n" +
+		"! producer_timing_delay 0\n" +
+		"! max_async_wait_time 0\n\n" +
+		"PREVIOUS RESPONSE: 'HTTP/1.1 200 OK request:{\"id\":10,\"body\":\"my first blog post\"}'\n"
 	expectedEndpoint := "/api/blog/posts/10?injected_query_string=123"
 	assert.Equal(t, expectedEndpoint, string(endpointCheck))
 	assert.Equal(t, expectedBody, string(bodyCheck))
@@ -47,23 +46,23 @@ func TestReadBugFileValidInvalidDynamicObjectChecker_2(t *testing.T) {
 	body := "# InvalidDynamicObjectChecker Invalid 200 Response"
 	bodyCheck, endpointCheck := parse.ReadBugFile(location, testBugFile, body)
 
-	expectedBody := "# InvalidDynamicObjectChecker Invalid 200 Response\n" + 
-									"-> POST /api/blog/posts HTTP/1.1\n\n" + 
-									"- Accept: application/json\n" +
-									"- Host: localhost:8888\n" +
-									"- Content-Type: application/json\n" +
-									"- Request: {    \"id\":99,    \"body\":\"my first blog post\"}\n\n" +
-									"! producer_timing_delay 0\n" +
-									"! max_async_wait_time 20\n\n" +
-									"PREVIOUS RESPONSE: 'HTTP/1.1 201 Created request:{\"id\":13,\"body\":\"my first blog post\"}'\n\n" + 
-									"-> PUT /api/blog/posts/13?injected_query_string=123 HTTP/1.1\n\n" +
-									"- Accept: application/json\n" +
-									"- Host: localhost:8888\n\n" + 
-									"- Content-Type: application/json\n" +
-									"- Request: {    \"id\":13,    \"body\":\"my first blog post?injected_query_string=123\",    \"checksum\":\"abcde\"}\n\n" +
-									"! producer_timing_delay 0\n" +
-									"! max_async_wait_time 0\n\n" +
-									"PREVIOUS RESPONSE: 'HTTP/1.1 204 No Content\n"
+	expectedBody := "# InvalidDynamicObjectChecker Invalid 200 Response\n" +
+		"-> POST /api/blog/posts HTTP/1.1\n\n" +
+		"- Accept: application/json\n" +
+		"- Host: localhost:8888\n" +
+		"- Content-Type: application/json\n" +
+		"- Request: {    \"id\":99,    \"body\":\"my first blog post\"}\n\n" +
+		"! producer_timing_delay 0\n" +
+		"! max_async_wait_time 20\n\n" +
+		"PREVIOUS RESPONSE: 'HTTP/1.1 201 Created request:{\"id\":13,\"body\":\"my first blog post\"}'\n\n" +
+		"-> PUT /api/blog/posts/13?injected_query_string=123 HTTP/1.1\n\n" +
+		"- Accept: application/json\n" +
+		"- Host: localhost:8888\n\n" +
+		"- Content-Type: application/json\n" +
+		"- Request: {    \"id\":13,    \"body\":\"my first blog post?injected_query_string=123\",    \"checksum\":\"abcde\"}\n\n" +
+		"! producer_timing_delay 0\n" +
+		"! max_async_wait_time 0\n\n" +
+		"PREVIOUS RESPONSE: 'HTTP/1.1 204 No Content\n"
 	expectedEndpoint := "/api/blog/posts/13?injected_query_string=123"
 	assert.Equal(t, expectedEndpoint, string(endpointCheck))
 	assert.Equal(t, expectedBody, string(bodyCheck))
@@ -75,23 +74,23 @@ func TestReadBugFileValidPayloadBodyChecker_1(t *testing.T) {
 	body := "# PayloadBodyChecker Invalid 500 Response"
 	bodyCheck, endpointCheck := parse.ReadBugFile(location, testBugFile, body)
 
-	expectedBody := "# PayloadBodyChecker Invalid 500 Response\n" + 
-									"-> POST /api/blog/posts HTTP/1.1\n\n" + 
-									"- Accept: application/json\n" +
-									"- Host: localhost:8888\n" +
-									"- Content-Type: application/json\n" +
-									"- Request: {    \"id\":99,    \"body\":\"my first blog post\"}\n\n" +
-									"! producer_timing_delay 0\n" +
-									"! max_async_wait_time 0\n\n" +
-									"PREVIOUS RESPONSE: 'HTTP/1.1 201 Created request:{\"id\":12,\"body\":\"my first blog post\"}'\n\n" + 
-									"-> PUT /api/blog/posts/14 HTTP/1.1\n\n" +
-									"- Accept: application/json\n" +
-									"- Host: localhost:8888\n\n" +
-									"- Content-Type: application/json\n" +
-									"- Request: {\"body\":\"my first blog post\"}\n\n" +
-									"! producer_timing_delay 0\n" +
-									"! max_async_wait_time 0\n\n" +
-									"PREVIOUS RESPONSE: 'HTTP/1.1 500 Internal Server Error request:{\"detail\":\"ID was not specified.\"}'\n"
+	expectedBody := "# PayloadBodyChecker Invalid 500 Response\n" +
+		"-> POST /api/blog/posts HTTP/1.1\n\n" +
+		"- Accept: application/json\n" +
+		"- Host: localhost:8888\n" +
+		"- Content-Type: application/json\n" +
+		"- Request: {    \"id\":99,    \"body\":\"my first blog post\"}\n\n" +
+		"! producer_timing_delay 0\n" +
+		"! max_async_wait_time 0\n\n" +
+		"PREVIOUS RESPONSE: 'HTTP/1.1 201 Created request:{\"id\":12,\"body\":\"my first blog post\"}'\n\n" +
+		"-> PUT /api/blog/posts/14 HTTP/1.1\n\n" +
+		"- Accept: application/json\n" +
+		"- Host: localhost:8888\n\n" +
+		"- Content-Type: application/json\n" +
+		"- Request: {\"body\":\"my first blog post\"}\n\n" +
+		"! producer_timing_delay 0\n" +
+		"! max_async_wait_time 0\n\n" +
+		"PREVIOUS RESPONSE: 'HTTP/1.1 500 Internal Server Error request:{\"detail\":\"ID was not specified.\"}'\n"
 	expectedEndpoint := "/api/blog/posts"
 	assert.Equal(t, expectedEndpoint, string(endpointCheck))
 	assert.Equal(t, expectedBody, string(bodyCheck))
@@ -103,23 +102,23 @@ func TestReadBugFileValidPayloadBodyChecker_2(t *testing.T) {
 	body := "# PayloadBodyChecker Invalid 500 Response"
 	bodyCheck, endpointCheck := parse.ReadBugFile(location, testBugFile, body)
 
-	expectedBody := "# PayloadBodyChecker Invalid 500 Response\n" + 
-									"-> POST /api/blog/posts HTTP/1.1\n\n" + 
-									"- Accept: application/json\n" +
-									"- Host: localhost:8888\n" +
-									"- Content-Type: application/json\n" +
-									"- Request: {    \"id\":99,    \"body\":\"my first blog post\"}\n\n" +
-									"! producer_timing_delay 0\n" +
-									"! max_async_wait_time 0\n\n" +
-									"PREVIOUS RESPONSE: 'HTTP/1.1 201 Created request:{\"id\":12,\"body\":\"my first blog post\"}'\n\n" + 
-									"-> PUT /api/blog/posts/16 HTTP/1.1\n\n" +
-									"- Accept: application/json\n" +
-									"- Host: localhost:8888\n\n" +
-									"- Content-Type: application/json\n" +
-									"- Request: {\"body\":0}\n\n" +
-									"! producer_timing_delay 0\n" +
-									"! max_async_wait_time 0\n\n" +
-									"PREVIOUS RESPONSE: 'HTTP/1.1 500 Internal Server Error request:{\"detail\":\"ID was not specified.\"}'\n"
+	expectedBody := "# PayloadBodyChecker Invalid 500 Response\n" +
+		"-> POST /api/blog/posts HTTP/1.1\n\n" +
+		"- Accept: application/json\n" +
+		"- Host: localhost:8888\n" +
+		"- Content-Type: application/json\n" +
+		"- Request: {    \"id\":99,    \"body\":\"my first blog post\"}\n\n" +
+		"! producer_timing_delay 0\n" +
+		"! max_async_wait_time 0\n\n" +
+		"PREVIOUS RESPONSE: 'HTTP/1.1 201 Created request:{\"id\":12,\"body\":\"my first blog post\"}'\n\n" +
+		"-> PUT /api/blog/posts/16 HTTP/1.1\n\n" +
+		"- Accept: application/json\n" +
+		"- Host: localhost:8888\n\n" +
+		"- Content-Type: application/json\n" +
+		"- Request: {\"body\":0}\n\n" +
+		"! producer_timing_delay 0\n" +
+		"! max_async_wait_time 0\n\n" +
+		"PREVIOUS RESPONSE: 'HTTP/1.1 500 Internal Server Error request:{\"detail\":\"ID was not specified.\"}'\n"
 	expectedEndpoint := "/api/blog/posts/16"
 	assert.Equal(t, expectedEndpoint, string(endpointCheck))
 	assert.Equal(t, expectedBody, string(bodyCheck))
@@ -131,27 +130,27 @@ func TestReadBugFileValidUseAfterFreeChecker(t *testing.T) {
 	body := "# UseAfterFreeChecker Invalid 200 Response"
 	bodyCheck, endpointCheck := parse.ReadBugFile(location, testBugFile, body)
 
-	expectedBody := "# UseAfterFreeChecker Invalid 200 Response\n" + 
-									"-> POST /api/blog/posts HTTP/1.1\n\n" + 
-									"- Accept: application/json\n" +
-									"- Host: localhost:8888\n" +
-									"- Content-Type: application/json\n" +
-									"- Request: {    \"id\":99,    \"body\":\"my first blog post\"}\n\n" +
-									"! producer_timing_delay 0\n" +
-									"! max_async_wait_time 0\n\n" +
-									"PREVIOUS RESPONSE: 'HTTP/1.1 201 Created request:{\"id\":20,\"body\":\"my first blog post\"}'\n\n" + 
-									"-> DELETE /api/blog/posts/20 HTTP/1.1\n\n" +
-									"- Accept: application/json\n" +
-									"- Host: localhost:8888\n\n" +
-									"! producer_timing_delay 0\n" +
-									"! max_async_wait_time 20\n\n" +
-									"PREVIOUS RESPONSE: 'HTTP/1.1 204 No Content\n" +
-									"-> GET /api/blog/posts/20 HTTP/1.1\n\n" +
-									"- Accept: application/json\n" +
-									"- Host: localhost:8888\n\n" +
-									"! producer_timing_delay 0\n" +
-									"! max_async_wait_time 0\n\n" +
-									"PREVIOUS RESPONSE: 'HTTP/1.1 200 OK request:null'\n"
+	expectedBody := "# UseAfterFreeChecker Invalid 200 Response\n" +
+		"-> POST /api/blog/posts HTTP/1.1\n\n" +
+		"- Accept: application/json\n" +
+		"- Host: localhost:8888\n" +
+		"- Content-Type: application/json\n" +
+		"- Request: {    \"id\":99,    \"body\":\"my first blog post\"}\n\n" +
+		"! producer_timing_delay 0\n" +
+		"! max_async_wait_time 0\n\n" +
+		"PREVIOUS RESPONSE: 'HTTP/1.1 201 Created request:{\"id\":20,\"body\":\"my first blog post\"}'\n\n" +
+		"-> DELETE /api/blog/posts/20 HTTP/1.1\n\n" +
+		"- Accept: application/json\n" +
+		"- Host: localhost:8888\n\n" +
+		"! producer_timing_delay 0\n" +
+		"! max_async_wait_time 20\n\n" +
+		"PREVIOUS RESPONSE: 'HTTP/1.1 204 No Content\n" +
+		"-> GET /api/blog/posts/20 HTTP/1.1\n\n" +
+		"- Accept: application/json\n" +
+		"- Host: localhost:8888\n\n" +
+		"! producer_timing_delay 0\n" +
+		"! max_async_wait_time 0\n\n" +
+		"PREVIOUS RESPONSE: 'HTTP/1.1 200 OK request:null'\n"
 	expectedEndpoint := "/api/blog/posts/20"
 	assert.Equal(t, expectedEndpoint, string(endpointCheck))
 	assert.Equal(t, expectedBody, string(bodyCheck))
@@ -165,7 +164,7 @@ func TestFuzzBugCheckInvalid(t *testing.T) {
 	assert.Nil(t, newIssueRequest.Assignee)
 	assert.Nil(t, newIssueRequest.State)
 	assert.Nil(t, newIssueRequest.Milestone)
-} 
+}
 
 func TestFuzzBugCheckValid(t *testing.T) {
 	body := "body"
@@ -173,17 +172,16 @@ func TestFuzzBugCheckValid(t *testing.T) {
 	assignee := "fishua"
 	state := "state"
 	milestone := 1
-	
 
-	fuzzErrorList := [7]string{"InternalServerErrors", 
-								"UseAfterFreeChecker",
-								"NameSpaceRuleChecker",
-								"ResourceHierarchyChecker",
-								"LeakageRuleChecker",
-								"InvalidDynamicObjectChecker",
-								"PayloadBodyChecker",
-							}
-			
+	fuzzErrorList := [7]string{"InternalServerErrors",
+		"UseAfterFreeChecker",
+		"NameSpaceRuleChecker",
+		"ResourceHierarchyChecker",
+		"LeakageRuleChecker",
+		"InvalidDynamicObjectChecker",
+		"PayloadBodyChecker",
+	}
+
 	newIssueRequest := parse.FuzzBugCheck(fuzzErrorList[0], body, endpoint, &assignee, &state, &milestone)
 	assert.Equal(t, "DYNO Fuzz: InternalServerErrors at Endpoint /endpoint", *newIssueRequest.Title)
 	assert.Equal(t, "body", *newIssueRequest.Body)
@@ -235,14 +233,14 @@ func TestFuzzBugCheckValid(t *testing.T) {
 }
 
 func TestDYNODetailsValid(t *testing.T) {
-	fuzzErrorList := [7]string{"InternalServerErrors", 
-								"UseAfterFreeChecker",
-								"NameSpaceRuleChecker",
-								"ResourceHierarchyChecker",
-								"LeakageRuleChecker",
-								"InvalidDynamicObjectChecker",
-								"PayloadBodyChecker",
-							}
+	fuzzErrorList := [7]string{"InternalServerErrors",
+		"UseAfterFreeChecker",
+		"NameSpaceRuleChecker",
+		"ResourceHierarchyChecker",
+		"LeakageRuleChecker",
+		"InvalidDynamicObjectChecker",
+		"PayloadBodyChecker",
+	}
 	actualDetails := parse.AddDYNODetails(fuzzErrorList[0])
 	assert.Equal(t, "\nDetails: '500 Internal Server' Errors and any other 5xx errors are detected.\n\nVisualizer: [DYNO](the web url)\n", actualDetails)
 	actualDetails = parse.AddDYNODetails(fuzzErrorList[1])

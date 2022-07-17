@@ -1,22 +1,21 @@
 package parse
 
 import (
-	"golambda/internal/platform"
+	"bufio"
 	"context"
-	"strings"
 	"fmt"
 	"github.com/google/go-github/v45/github"
-	"bufio"
+	"golambda/internal/platform"
 	"os"
-
+	"strings"
 )
 
 // TODO Change the process of reading file according to SQS and S3 Buckets
 const bugFile = 6
 
-// Parses the fuzzing files from the bug_buckets folder and creates github issues 
-// Inputs: 
-//				token is the user token 
+// Parses the fuzzing files from the bug_buckets folder and creates github issues
+// Inputs:
+//				token is the user token
 //				repoName is the user's repo
 //				owner is the owner of the repo
 //				file is filepath to the bug_buckets.txt file that stores all the bugs that has occured
@@ -31,10 +30,10 @@ func ParseFuzz(token string, repoName string, owner string, file string) {
 	defer f.Close()
 	location := "cmd/internal/tests/bug_buckets/"
 	scanner := bufio.NewScanner(f)
-	// Sending an issue for each error found through fuzz 
+	// Sending an issue for each error found through fuzz
 	for scanner.Scan() {
 		line := scanner.Text()
-		if line[:1]== "-" {
+		if line[:1] == "-" {
 			scanner.Scan()
 			line = scanner.Text()
 			bugFileNames := strings.Fields(line)
@@ -53,33 +52,34 @@ func ParseFuzz(token string, repoName string, owner string, file string) {
 
 	if err := scanner.Err(); err != nil {
 		panic(err)
-	} 
-	
+	}
+
 }
+
 // Reads the a bug_bucket file that is specified by the category of the bug found by restler
 // Creates the body of the issue in regards to the bug found by the fuzzer with details on the bug and how to fix itInternalServerErrors creates a github Issue Request for the categorized bug by restler
-// providing a description on what the bug is and how to possibly fix the bug 
-// 
-// Inputs: 
-//				bugFileName is the name of the file that has the logs of the bug 
+// providing a description on what the bug is and how to possibly fix the bug
+//
+// Inputs:
+//				bugFileName is the name of the file that has the logs of the bug
 //        body is the start of the body for the github issue
-// Returns: 
-// 				body is the body of the issue 
-// 				endpoint is the endpoint that has the bug 
-func ReadBugFile(location string, bugFileName string, body string) (string, string){
+// Returns:
+// 				body is the body of the issue
+// 				endpoint is the endpoint that has the bug
+func ReadBugFile(location string, bugFileName string, body string) (string, string) {
 	endpoint := ""
-	f, err := os.Open(fmt.Sprintf(location + "%s", bugFileName))
+	f, err := os.Open(fmt.Sprintf(location+"%s", bugFileName))
 	if err != nil {
 		panic(err)
 	}
 	defer f.Close()
 
 	scanner := bufio.NewScanner(f)
-	
+
 	// Creating body for IssueRequest in Github
 	for scanner.Scan() {
 		line := scanner.Text()
-		if len(line) > 0 && line[:1]== "-" {
+		if len(line) > 0 && line[:1] == "-" {
 			requestSplit := strings.Split(line, "\\n")
 			endpoint = strings.Split(requestSplit[0], " ")[2]
 			method := strings.Trim(requestSplit[0], "\\r")
@@ -108,13 +108,13 @@ func ReadBugFile(location string, bugFileName string, body string) (string, stri
 				prevrequest = " request:" + strings.Trim(prevrequest, "\\r")
 			}
 			previousResponse := strings.Trim(previousResponseSplit[0], "\\r") + prevrequest
-			if contentType != ""{
+			if contentType != "" {
 				body = body + "\n" + method + "\n" + "\n" + "- " + accept + "\n" + "- " + host + "\n" + "- " + contentType
 			} else {
 				body = body + "\n" + method + "\n" + "\n" + "- " + accept + "\n" + "- " + host
 			}
 			if request != "" {
-				body = body + "\n" + "- " + request 
+				body = body + "\n" + "- " + request
 			}
 			body = body + "\n" + "\n" + timeDelay + "\n" + asyncTime + "\n" + "\n" + previousResponse
 			body = body + "\n"
@@ -124,22 +124,22 @@ func ReadBugFile(location string, bugFileName string, body string) (string, stri
 	if err := scanner.Err(); err != nil {
 		panic(err)
 	}
-	
+
 	return body, endpoint
 }
 
 // FuzzBugCheck sorts the bugs found by the fuzzer by there categories and creates a new github issueRequest
-// Inputs: 
+// Inputs:
 //				fuzzError is the type of bug that has been found by the fuzzer
 //        body is the body of the github issue
-// 				endpoint is the endpoint that has the bug 
+// 				endpoint is the endpoint that has the bug
 // 				assignee is if there is a specified github user that should be assigned for checking this certain type of bug
-// 				state is the current state of the issue 
-// 				milestone specifies if the issue should be linked to a certain milestone on the users repo  
-// Returns: 
+// 				state is the current state of the issue
+// 				milestone specifies if the issue should be linked to a certain milestone on the users repo
+// Returns:
 // 				*github.IssueRequest with all the relevant information regarding the certain bug
-func FuzzBugCheck(fuzzError string, body string, endpoint string, assignee *string, state *string, milestone *int) *github.IssueRequest{
-	newIssueRequest := &github.IssueRequest{Title:nil, Body:nil, Labels:nil, Assignee:nil, State:nil, Milestone: nil, Assignees:nil}
+func FuzzBugCheck(fuzzError string, body string, endpoint string, assignee *string, state *string, milestone *int) *github.IssueRequest {
+	newIssueRequest := &github.IssueRequest{Title: nil, Body: nil, Labels: nil, Assignee: nil, State: nil, Milestone: nil, Assignees: nil}
 	switch fuzzError {
 	case "InternalServerErrors":
 		newIssueRequest = InternalServerErrors(body, endpoint, assignee, state, milestone)
@@ -157,15 +157,16 @@ func FuzzBugCheck(fuzzError string, body string, endpoint string, assignee *stri
 		newIssueRequest = PayloadBodyChecker(body, endpoint, assignee, state, milestone)
 	}
 	return newIssueRequest
-} 
-// AddDYNODetails adds the details and visualizer url to the body of the issue request that 
+}
+
+// AddDYNODetails adds the details and visualizer url to the body of the issue request that
 // corresponds to the FuzzError that is received
-// Inputs: 
+// Inputs:
 //				fuzzError is the type of bug that has been found by the fuzzer
-// Returns: 
-// 				details a string with the specified details 
+// Returns:
+// 				details a string with the specified details
 // 				If not details are created leaves an empty string
-func AddDYNODetails(fuzzError string) string{
+func AddDYNODetails(fuzzError string) string {
 	details := ""
 	switch fuzzError {
 	case "InternalServerErrors":
@@ -182,169 +183,169 @@ func AddDYNODetails(fuzzError string) string{
 		details = "\nDetails: Detects 500 errors or unexpected success status codes when invalid dynamic objects are sent in requests.\n\nVisualizer: [DYNO](the web url)\n"
 	case "PayloadBodyChecker":
 		details = "\nDetails: Detects 500 errors when fuzzing the JSON bodies of requests.\n\nVisualizer: [DYNO](the web url)\n"
-	default  :
+	default:
 		details = ""
 	}
 	return details
 }
 
 // InternalServerErrors creates a github Issue Request for the categorized bug by restler
-// providing a description on what the bug is and how to possibly fix the bug 
+// providing a description on what the bug is and how to possibly fix the bug
 // Inputs:
 //        body is the body of the github issue
-// 				endpoint is the endpoint that has the bug 
+// 				endpoint is the endpoint that has the bug
 // 				assignee is if there is a specified github user that should be assigned for checking this certain type of bug
-// 				state is the current state of the issue 
-// 				milestone specifies if the issue should be linked to a certain milestone on the users repo  
-// Returns: 
+// 				state is the current state of the issue
+// 				milestone specifies if the issue should be linked to a certain milestone on the users repo
+// Returns:
 // 				*github.IssueRequest with all the relevant information regarding the certain bug
 func InternalServerErrors(body string, endpoint string, assignee *string, state *string, milestone *int) *github.IssueRequest {
-	title := fmt.Sprintf("DYNO Fuzz: InternalServerErrors at Endpoint %s",  endpoint)
+	title := fmt.Sprintf("DYNO Fuzz: InternalServerErrors at Endpoint %s", endpoint)
 	labels := []string{"bug"}
 	return &github.IssueRequest{
-		Title:&title, 
-		Body: &body, 
-		Labels: &labels, 
-		Assignee: assignee, 
-		State: state, 
+		Title:     &title,
+		Body:      &body,
+		Labels:    &labels,
+		Assignee:  assignee,
+		State:     state,
 		Milestone: milestone,
 	}
 }
 
 // InternalServerErrors creates a github Issue Request for the categorized bug by restler
-// providing a description on what the bug is and how to possibly fix the bug 
+// providing a description on what the bug is and how to possibly fix the bug
 // Inputs:
 //        body is the body of the github issue
-// 				endpoint is the endpoint that has the bug 
+// 				endpoint is the endpoint that has the bug
 // 				assignee is if there is a specified github user that should be assigned for checking this certain type of bug
-// 				state is the current state of the issue 
-// 				milestone specifies if the issue should be linked to a certain milestone on the users repo  
-// Returns: 
+// 				state is the current state of the issue
+// 				milestone specifies if the issue should be linked to a certain milestone on the users repo
+// Returns:
 // 				*github.IssueRequest with all the relevant information regarding the certain bug
 func ResourceHierarchyChecker(body string, endpoint string, assignee *string, state *string, milestone *int) *github.IssueRequest {
-	title := fmt.Sprintf("DYNO Fuzz: ResourceHierarchyChecker at Endpoint %s",  endpoint)
+	title := fmt.Sprintf("DYNO Fuzz: ResourceHierarchyChecker at Endpoint %s", endpoint)
 	labels := []string{"bug"}
 	return &github.IssueRequest{
-		Title:&title, 
-		Body: &body, 
-		Labels: &labels, 
-		Assignee: assignee, 
-		State: state, 
+		Title:     &title,
+		Body:      &body,
+		Labels:    &labels,
+		Assignee:  assignee,
+		State:     state,
 		Milestone: milestone,
 	}
 }
 
 // InternalServerErrors creates a github Issue Request for the categorized bug by restler
-// providing a description on what the bug is and how to possibly fix the bug 
+// providing a description on what the bug is and how to possibly fix the bug
 // Inputs:
 //        body is the body of the github issue
-// 				endpoint is the endpoint that has the bug 
+// 				endpoint is the endpoint that has the bug
 // 				assignee is if there is a specified github user that should be assigned for checking this certain type of bug
-// 				state is the current state of the issue 
-// 				milestone specifies if the issue should be linked to a certain milestone on the users repo  
-// Returns: 
+// 				state is the current state of the issue
+// 				milestone specifies if the issue should be linked to a certain milestone on the users repo
+// Returns:
 // 				*github.IssueRequest with all the relevant information regarding the certain bug
 func NameSpaceRuleChecker(body string, endpoint string, assignee *string, state *string, milestone *int) *github.IssueRequest {
-	title := fmt.Sprintf("DYNO Fuzz: NameSpaceRuleChecker at Endpoint %s",  endpoint)
+	title := fmt.Sprintf("DYNO Fuzz: NameSpaceRuleChecker at Endpoint %s", endpoint)
 	labels := []string{"bug"}
 	return &github.IssueRequest{
-		Title:&title, 
-		Body: &body, 
-		Labels: &labels, 
-		Assignee: assignee, 
-		State: state, 
+		Title:     &title,
+		Body:      &body,
+		Labels:    &labels,
+		Assignee:  assignee,
+		State:     state,
 		Milestone: milestone,
 	}
 }
 
 // InternalServerErrors creates a github Issue Request for the categorized bug by restler
-// providing a description on what the bug is and how to possibly fix the bug 
+// providing a description on what the bug is and how to possibly fix the bug
 // Inputs:
 //        body is the body of the github issue
-// 				endpoint is the endpoint that has the bug 
+// 				endpoint is the endpoint that has the bug
 // 				assignee is if there is a specified github user that should be assigned for checking this certain type of bug
-// 				state is the current state of the issue 
-// 				milestone specifies if the issue should be linked to a certain milestone on the users repo  
-// Returns: 
+// 				state is the current state of the issue
+// 				milestone specifies if the issue should be linked to a certain milestone on the users repo
+// Returns:
 // 				*github.IssueRequest with all the relevant information regarding the certain bug
 func UseAfterFreeChecker(body string, endpoint string, assignee *string, state *string, milestone *int) *github.IssueRequest {
-	title := fmt.Sprintf("DYNO Fuzz: UseAfterFreeChecker at Endpoint %s",  endpoint)
+	title := fmt.Sprintf("DYNO Fuzz: UseAfterFreeChecker at Endpoint %s", endpoint)
 	labels := []string{"bug"}
 	return &github.IssueRequest{
-		Title:&title, 
-		Body: &body, 
-		Labels: &labels, 
-		Assignee: assignee, 
-		State: state, 
+		Title:     &title,
+		Body:      &body,
+		Labels:    &labels,
+		Assignee:  assignee,
+		State:     state,
 		Milestone: milestone,
 	}
 }
 
 // InternalServerErrors creates a github Issue Request for the categorized bug by restler
-// providing a description on what the bug is and how to possibly fix the bug 
+// providing a description on what the bug is and how to possibly fix the bug
 // Inputs:
 //        body is the body of the github issue
-// 				endpoint is the endpoint that has the bug 
+// 				endpoint is the endpoint that has the bug
 // 				assignee is if there is a specified github user that should be assigned for checking this certain type of bug
-// 				state is the current state of the issue 
-// 				milestone specifies if the issue should be linked to a certain milestone on the users repo  
-// Returns: 
+// 				state is the current state of the issue
+// 				milestone specifies if the issue should be linked to a certain milestone on the users repo
+// Returns:
 // 				*github.IssueRequest with all the relevant information regarding the certain bug
 func LeakageRuleChecker(body string, endpoint string, assignee *string, state *string, milestone *int) *github.IssueRequest {
-	title := fmt.Sprintf("DYNO Fuzz: LeakageRuleChecker at Endpoint %s",  endpoint)
+	title := fmt.Sprintf("DYNO Fuzz: LeakageRuleChecker at Endpoint %s", endpoint)
 	labels := []string{"bug"}
 	return &github.IssueRequest{
-		Title:&title, 
-		Body: &body, 
-		Labels: &labels, 
-		Assignee: assignee, 
-		State: state, 
+		Title:     &title,
+		Body:      &body,
+		Labels:    &labels,
+		Assignee:  assignee,
+		State:     state,
 		Milestone: milestone,
 	}
 }
 
 // InternalServerErrors creates a github Issue Request for the categorized bug by restler
-// providing a description on what the bug is and how to possibly fix the bug 
+// providing a description on what the bug is and how to possibly fix the bug
 // Inputs:
 //        body is the body of the github issue
-// 				endpoint is the endpoint that has the bug 
+// 				endpoint is the endpoint that has the bug
 // 				assignee is if there is a specified github user that should be assigned for checking this certain type of bug
-// 				state is the current state of the issue 
-// 				milestone specifies if the issue should be linked to a certain milestone on the users repo  
-// Returns: 
+// 				state is the current state of the issue
+// 				milestone specifies if the issue should be linked to a certain milestone on the users repo
+// Returns:
 // 				*github.IssueRequest with all the relevant information regarding the certain bug
 func InvalidDynamicObjectChecker(body string, endpoint string, assignee *string, state *string, milestone *int) *github.IssueRequest {
-	title := fmt.Sprintf("DYNO Fuzz: InvalidDynamicObjectChecker at Endpoint %s",  endpoint)
+	title := fmt.Sprintf("DYNO Fuzz: InvalidDynamicObjectChecker at Endpoint %s", endpoint)
 	labels := []string{"bug"}
 	return &github.IssueRequest{
-		Title:&title, 
-		Body: &body, 
-		Labels: &labels, 
-		Assignee: assignee, 
-		State: state, 
+		Title:     &title,
+		Body:      &body,
+		Labels:    &labels,
+		Assignee:  assignee,
+		State:     state,
 		Milestone: milestone,
 	}
 }
 
 // InternalServerErrors creates a github Issue Request for the categorized bug by restler
-// providing a description on what the bug is and how to possibly fix the bug 
+// providing a description on what the bug is and how to possibly fix the bug
 // Inputs:
 //        body is the body of the github issue
-// 				endpoint is the endpoint that has the bug 
+// 				endpoint is the endpoint that has the bug
 // 				assignee is if there is a specified github user that should be assigned for checking this certain type of bug
-// 				state is the current state of the issue 
-// 				milestone specifies if the issue should be linked to a certain milestone on the users repo  
-// Returns: 
+// 				state is the current state of the issue
+// 				milestone specifies if the issue should be linked to a certain milestone on the users repo
+// Returns:
 // 				*github.IssueRequest with all the relevant information regarding the certain bug
 func PayloadBodyChecker(body string, endpoint string, assignee *string, state *string, milestone *int) *github.IssueRequest {
-	title := fmt.Sprintf("DYNO Fuzz: PayloadBodyChecker at Endpoint %s",  endpoint)
+	title := fmt.Sprintf("DYNO Fuzz: PayloadBodyChecker at Endpoint %s", endpoint)
 	labels := []string{"bug"}
 	return &github.IssueRequest{
-		Title:&title, 
-		Body: &body, 
-		Labels: &labels, 
-		Assignee: assignee, 
-		State: state, 
+		Title:     &title,
+		Body:      &body,
+		Labels:    &labels,
+		Assignee:  assignee,
+		State:     state,
 		Milestone: milestone,
 	}
 }
