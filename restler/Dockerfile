@@ -29,7 +29,7 @@ WORKDIR ${FUNCTION_DIR}
 # Copy in the build image dependencies
 COPY --from=build-image ${FUNCTION_DIR} ${FUNCTION_DIR}
 COPY ./entry_script.sh /entry_script.sh
-ADD aws-lambda-rie /usr/local/bin/aws-lambda-rie
+ADD https://github.com/aws/aws-lambda-runtime-interface-emulator/releases/latest/download/aws-lambda-rie /usr/local/bin/aws-lambda-rie
 RUN chmod +x /entry_script.sh
 RUN chmod +x /usr/local/bin/aws-lambda-rie
 ENTRYPOINT [ "/entry_script.sh" ]
