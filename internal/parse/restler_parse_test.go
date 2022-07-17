@@ -7,6 +7,7 @@ import (
 	"testing"
 	"github.com/stretchr/testify/assert"
 	"golambda/internal/parse"
+	"golambda/internal/github"
 )
 
 func TestReadBugFileInvalidNoFile(t *testing.T) {
@@ -190,42 +191,42 @@ func TestFuzzBugCheckValid(t *testing.T) {
 	assert.Equal(t, "fishua", *newIssueRequest.Assignee)
 	assert.Equal(t, "state", *newIssueRequest.State)
 	assert.Equal(t, 1, *newIssueRequest.Milestone)
-	
+
 	newIssueRequest := FuzzBugCheck(fuzzErrorList[1], body, endpoint, &assignee, &state, &milestone)
 	assert.Equal(t, "DYNO Fuzz: UseAfterFreeChecker at Endpoint /endpoint", *newIssueRequest.Title)
 	assert.Equal(t, "body", *newIssueRequest.Body)
 	assert.Equal(t, "fishua", *newIssueRequest.Assignee)
 	assert.Equal(t, "state", *newIssueRequest.State)
 	assert.Equal(t, 1, *newIssueRequest.Milestone)
-	
+
 	newIssueRequest := FuzzBugCheck(fuzzErrorList[2], body, endpoint, &assignee, &state, &milestone)
 	assert.Equal(t, "DYNO Fuzz: NameSpaceRuleChecker at Endpoint /endpoint", *newIssueRequest.Title)
 	assert.Equal(t, "body", *newIssueRequest.Body)
 	assert.Equal(t, "fishua", *newIssueRequest.Assignee)
 	assert.Equal(t, "state", *newIssueRequest.State)
 	assert.Equal(t, 1, *newIssueRequest.Milestone)
-	
+
 	newIssueRequest := FuzzBugCheck(fuzzErrorList[3], body, endpoint, &assignee, &state, &milestone)
 	assert.Equal(t, "DYNO Fuzz: ResourceHierarchyChecker at Endpoint /endpoint", *newIssueRequest.Title)
 	assert.Equal(t, "body", *newIssueRequest.Body)
 	assert.Equal(t, "fishua", *newIssueRequest.Assignee)
 	assert.Equal(t, "state", *newIssueRequest.State)
 	assert.Equal(t, 1, *newIssueRequest.Milestone)
-	
+
 	newIssueRequest := FuzzBugCheck(fuzzErrorList[4], body, endpoint, &assignee, &state, &milestone)
 	assert.Equal(t, "DYNO Fuzz: LeakageRuleChecker at Endpoint /endpoint", *newIssueRequest.Title)
 	assert.Equal(t, "body", *newIssueRequest.Body)
 	assert.Equal(t, "fishua", *newIssueRequest.Assignee)
 	assert.Equal(t, "state", *newIssueRequest.State)
 	assert.Equal(t, 1, *newIssueRequest.Milestone)
-	
+
 	newIssueRequest := FuzzBugCheck(fuzzErrorList[5], body, endpoint, &assignee, &state, &milestone)
 	assert.Equal(t, "DYNO Fuzz: InvalidDynamicObjectChecker at Endpoint /endpoint", *newIssueRequest.Title)
 	assert.Equal(t, "body", *newIssueRequest.Body)
 	assert.Equal(t, "fishua", *newIssueRequest.Assignee)
 	assert.Equal(t, "state", *newIssueRequest.State)
 	assert.Equal(t, 1, *newIssueRequest.Milestone)
-	
+
 	newIssueRequest := FuzzBugCheck(fuzzErrorList[6], body, endpoint, &assignee, &state, &milestone)
 	assert.Equal(t, "DYNO Fuzz: PayloadBodyChecker at Endpoint /endpoint", *newIssueRequest.Title)
 	assert.Equal(t, "body", *newIssueRequest.Body)

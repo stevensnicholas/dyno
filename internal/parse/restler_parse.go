@@ -7,6 +7,7 @@ import (
 	"github.com/google/go-github/v45/github"
 	"bufio"
 	"os"
+	"golambda/internal/github"
 )
 
 // TODO Change the process of reading file according to SQS and S3 Buckets
