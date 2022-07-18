@@ -22,11 +22,9 @@ RUN python3 -m pip install --upgrade pip
 RUN pip3 install \
         --target ${FUNCTION_DIR} \
         awslambdaric
-
 FROM mcr.microsoft.com/restlerfuzzer/restler:v7.4.0
 ARG FUNCTION_DIR
 WORKDIR ${FUNCTION_DIR}
-# Copy in the build image dependencies
 COPY --from=build-image ${FUNCTION_DIR} ${FUNCTION_DIR}
 COPY ./entry_script.sh /entry_script.sh
 ADD https://github.com/aws/aws-lambda-runtime-interface-emulator/releases/latest/download/aws-lambda-rie /usr/local/bin/aws-lambda-rie
