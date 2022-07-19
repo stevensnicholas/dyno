@@ -87,7 +87,6 @@ func main() {
 			logger.Error("Please provide either JSON or YAML")
 		}
 
-		// will be replaced with actual api-endpoint,
 	case args.Send == nil:
 		p := arg.MustParse(&args)
 		p.WriteHelp(os.Stdout)
