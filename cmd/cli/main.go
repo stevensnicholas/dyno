@@ -54,10 +54,10 @@ func main() {
 		logger.Infof("ss", data)
 		fileData, _ := ioutil.ReadAll(data)
 
-		inputJson := isJSON(string(fileData))
-		inputYaml := isYAML(string(fileData))
+		inputJSON := isJSON(string(fileData))
+		inputYAML := isYAML(string(fileData))
 
-		if inputJson || inputYaml {
+		if inputJSON || inputYAML {
 			url := "https://o8cnchwjji.execute-api.ap-southeast-2.amazonaws.com/v1/post_json"
 			logger.Infof("URL:>", url)
 			logger.Infof("ss", data)
