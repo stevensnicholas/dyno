@@ -1,14 +1,15 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
-	"fmt"
 	"golambda/internal/logger"
 	"io/ioutil"
 	"net/http"
 	"os"
 
 	"github.com/alexflint/go-arg"
+	"gopkg.in/yaml.v3"
 )
 
 type SendCmd struct {
@@ -18,6 +19,18 @@ type SendCmd struct {
 
 var args struct {
 	Send *SendCmd `arg:"subcommand:send" help:"can also use -d to provide the path to file"`
+}
+
+func isJSON(s string) bool {
+	var js map[string]interface{}
+	return json.Unmarshal([]byte(s), &js) == nil
+
+}
+
+func isYAML(s string) bool {
+	var js map[string]interface{}
+	return yaml.Unmarshal([]byte(s), &js) == nil
+
 }
 
 func main() {
@@ -38,34 +51,46 @@ func main() {
 		if err != nil {
 			logger.Fatalf("Error", err)
 		}
+		logger.Infof("ss", data)
+		fileData, _ := ioutil.ReadAll(data)
+
+		inputJson := isJSON(string(fileData))
+		inputYaml := isYAML(string(fileData))
+
+		if inputJson || inputYaml {
+			url := "https://o8cnchwjji.execute-api.ap-southeast-2.amazonaws.com/v1/post_json"
+			logger.Infof("URL:>", url)
+			logger.Infof("ss", data)
+			data, _ := os.Open(args.Send.Path)
+			req, err := http.NewRequest("POST", url, data)
+
+			if err != nil {
+				panic(err)
+			}
+
+			req.Header.Set("Content-Type", "application/json")
+
+			client := &http.Client{}
+			resp, err := client.Do(req)
+			if err != nil {
+				panic(err)
+			}
+			defer resp.Body.Close()
+			body, _ := ioutil.ReadAll(resp.Body)
+
+			logger.Infof(
+				"response Status:", resp.Status,
+				"response Headers:", resp.Header,
+				"response Body:", string(body),
+			)
+		} else {
+			logger.Error("Please provide either JSON or YAML")
+		}
+
 		// will be replaced with actual api-endpoint,
-		url := "https://o8cnchwjji.execute-api.ap-southeast-2.amazonaws.com/v1/post_json"
-		fmt.Println("URL:>", url)
-
-		req, err := http.NewRequest("POST", url, data)
-
-		if err != nil {
-			panic(err)
-		}
-
-		req.Header.Set("X-Custom-Header", "myvalue")
-		req.Header.Set("Content-Type", "application/json")
-
-		client := &http.Client{}
-		resp, err := client.Do(req)
-		if err != nil {
-			panic(err)
-		}
-		defer resp.Body.Close()
-		body, _ := ioutil.ReadAll(resp.Body)
-
-		logger.Infof(
-			"response Status:", resp.Status,
-			"response Headers:", resp.Header,
-			"response Body:", string(body),
-		)
 	case args.Send == nil:
-		logger.Error("Invalid command, use -h to get help")
+		p := arg.MustParse(&args)
+		p.WriteHelp(os.Stdout)
 	}
 
 }
