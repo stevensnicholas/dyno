@@ -97,3 +97,11 @@ cd frontend
 npm run lint
 npm run fix # auto fixes problems
 ```
+
+## Test Restler Backend
+```
+sudo docker-compose up -d
+curl --location --request POST 'http://localhost:9000/2015-03-31/functions/function/invocations' \
+--header 'Content-Type: application/json' --data '@tests/restler_local_test.json'
+
+```
