@@ -19,7 +19,7 @@ type Conf struct {
 var conf = Conf{
 	ClientId:     "",  	// fill in with your id before test
 	ClientSecret: "",   // fill in with your secret before test
-	RedirectUrl:  "http://localhost:3000/login",
+	RedirectUrl:  "http://localhost:8080/login",
 }
 
 type Token struct {
@@ -101,7 +101,7 @@ func Oauth(w http.ResponseWriter, r *http.Request) {
 func main() {
 	http.HandleFunc("/", Hello)
 	http.HandleFunc("/login", Oauth)
-	if err := http.ListenAndServe(":3000", nil); err != nil {
+	if err := http.ListenAndServe(":8080", nil); err != nil {
 		fmt.Println("listening error:", err)
 		return
 	}
