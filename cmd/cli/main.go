@@ -44,7 +44,7 @@ func main() {
 	defer log.Sync()
 
 	switch {
-	case args.Send != nil:
+	case args.Send != nil && args.Send.Path != "":
 		logger.Infow("Getting file from location %s\n", args.Send.Path)
 
 		data, err := os.Open(args.Send.Path)
@@ -87,7 +87,7 @@ func main() {
 			logger.Error("Please provide either JSON or YAML")
 		}
 
-	case args.Send == nil:
+	case args.Send == nil || args.Send.Path == "":
 		p := arg.MustParse(&args)
 		p.WriteHelp(os.Stdout)
 	}
