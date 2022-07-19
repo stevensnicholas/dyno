@@ -43,6 +43,11 @@ func main() {
 		fmt.Println("URL:>", url)
 
 		req, err := http.NewRequest("POST", url, data)
+
+		if err != nil {
+			panic(err)
+		}
+
 		req.Header.Set("X-Custom-Header", "myvalue")
 		req.Header.Set("Content-Type", "application/json")
 
