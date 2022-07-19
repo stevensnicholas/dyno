@@ -24,13 +24,11 @@ var args struct {
 func isJSON(s string) bool {
 	var js map[string]interface{}
 	return json.Unmarshal([]byte(s), &js) == nil
-
 }
 
 func isYAML(s string) bool {
 	var js map[string]interface{}
 	return yaml.Unmarshal([]byte(s), &js) == nil
-
 }
 
 func main() {
@@ -84,7 +82,7 @@ func main() {
 				"response Body:", string(body),
 			)
 		} else {
-			logger.Error("Please provide either JSON or YAML")
+			logger.Fatal("Please provide either JSON or YAML")
 		}
 
 	case args.Send == nil || args.Send.Path == "":
