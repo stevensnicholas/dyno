@@ -1,11 +1,11 @@
 data "archive_file" "lambda" {
   type        = "zip"
-  source_file = "${path.module}/../../bin/main"
-  output_path = "${path.module}/files/backend.zip"
+  source_file = "${path.module}/../../bin/api/main"
+  output_path = "${path.module}/files/api.zip"
 }
 
 resource "aws_iam_role" "lambda_exec" {
-  name = "${var.deployment_id}-lambda-execution-comp9447"
+  name = "${var.deployment_id}-lambda-execution"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -27,7 +27,7 @@ resource "aws_iam_role_policy_attachment" "lambda_policy" {
 
 resource "aws_lambda_function" "lambda" {
   function_name    = "${var.deployment_id}-server"
-  filename         = "${path.module}/files/backend.zip"
+  filename         = "${path.module}/files/api.zip"
   source_code_hash = data.archive_file.lambda.output_base64sha256
 
   runtime = "go1.x"
