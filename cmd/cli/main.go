@@ -1,9 +1,8 @@
 package main
 
 import (
+	"dyno/internal/logger"
 	"encoding/json"
-	"flag"
-	"golambda/internal/logger"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -14,11 +13,12 @@ import (
 
 type SendCmd struct {
 	Path string `arg:"positional"`
-	Dest bool   `arg:"-d"`
 }
 
 var args struct {
-	Send *SendCmd `arg:"subcommand:send" help:"can also use -d to provide the path to file"`
+	Send    *SendCmd `arg:"subcommand:send" help:"can also use -d to provide the path to file"`
+	Verbose bool     `arg:"-d" help:"enable verbose logging"`
+	Debug   bool     `arg:"-d" help:"enable debug logging"`
 }
 
 func isJSON(s string) bool {
@@ -34,8 +34,15 @@ func isYAML(s string) bool {
 func main() {
 	arg.MustParse(&args)
 
-	var logLevel = flag.String("loglevel", "info", "Log level")
-	log, err := logger.ConfigureDevelopmentLogger(*logLevel)
+	// Configure logger
+	logLevel := "warn"
+	if args.Verbose {
+		logLevel = "info"
+	}
+	if args.Debug {
+		logLevel = "debug"
+	}
+	log, err := logger.ConfigureDevelopmentLogger(logLevel)
 	if err != nil {
 		panic(err)
 	}
@@ -49,45 +56,41 @@ func main() {
 		if err != nil {
 			logger.Fatalf("Error", err)
 		}
-		logger.Infof("ss", data)
 		fileData, _ := ioutil.ReadAll(data)
 
-		inputJSON := isJSON(string(fileData))
-		inputYAML := isYAML(string(fileData))
+		url := "https://o8cnchwjji.execute-api.ap-southeast-2.amazonaws.com/v1/post_json"
+		logger.Debugf("URL:>", url)
+		logger.Debugf("ss", data)
 
-		if inputJSON || inputYAML {
-			url := "https://o8cnchwjji.execute-api.ap-southeast-2.amazonaws.com/v1/post_json"
-			logger.Infof("URL:>", url)
-			logger.Infof("ss", data)
-			data, _ := os.Open(args.Send.Path)
-			req, err := http.NewRequest("POST", url, data)
-
-			if err != nil {
-				panic(err)
-			}
-
-			req.Header.Set("Content-Type", "application/json")
-
-			client := &http.Client{}
-			resp, err := client.Do(req)
-			if err != nil {
-				panic(err)
-			}
-			defer resp.Body.Close()
-			body, _ := ioutil.ReadAll(resp.Body)
-
-			logger.Infof(
-				"response Status:", resp.Status,
-				"response Headers:", resp.Header,
-				"response Body:", string(body),
-			)
-		} else {
-			logger.Fatal("Please provide either JSON or YAML")
+		req, err := http.NewRequest("POST", url, data)
+		if err != nil {
+			panic(err)
 		}
+
+		if isJSON(string(fileData)) {
+			req.Header.Set("Content-Type", "application/json")
+		} else if isYAML(string(fileData)) {
+			req.Header.Set("Content-Type", "application/x-yaml")
+		} else {
+			logger.Fatal("Please provide either a JSON or YAML file")
+		}
+
+		client := &http.Client{}
+		resp, err := client.Do(req)
+		if err != nil {
+			panic(err)
+		}
+		defer resp.Body.Close()
+		body, _ := ioutil.ReadAll(resp.Body)
+
+		logger.Infof(
+			"response Status:", resp.Status,
+			"response Headers:", resp.Header,
+			"response Body:", string(body),
+		)
 
 	case args.Send == nil || args.Send.Path == "":
 		p := arg.MustParse(&args)
 		p.WriteHelp(os.Stdout)
 	}
-
 }
