@@ -3,8 +3,10 @@ package main
 import (
 	"dyno/internal/logger"
 	"net/http"
+	"dyno/internal/authentication"
 	"runtime/debug"
 	"time"
+	"fmt"
 )
 
 func APIGatewayMiddleware(next http.Handler) http.Handler {
@@ -63,5 +65,19 @@ func LoggingMiddleware(next http.Handler) http.Handler {
 			"path", r.URL.EscapedPath(),
 			"duration", time.Since(start),
 		)
+		if r.URL.EscapedPath() == "/login"{
+			var err error
+
+			var code = r.URL.Query().Get("code")
+
+			var tokenAuthURL = authentication.GetTokenAuthURL(code)
+			var token *authentication.Token	
+			if token, err = authentication.GetToken(tokenAuthURL); err != nil {
+				fmt.Println(err)
+				return
+			}
+			fmt.Printf("%+v",token)
+
+		}
 	})
 }
