@@ -20,7 +20,7 @@ const bugFile = 6
 //				repoName is the user's repo
 //				owner is the owner of the repo
 //				file is filepath to the bug_buckets.txt file that stores all the bugs that has occured
-func ParseFuzz(token string, repoName string, owner string, file string) {
+func ParseFuzzGithub(token string, repoName string, owner string, file string) {
 	ctx := context.Background()
 	client := platform.CreateClient(ctx, &token)
 	f, err := os.Open(file)
