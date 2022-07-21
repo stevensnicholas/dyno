@@ -5,12 +5,15 @@ type DynoIssue struct {
 	Body *DynoIssueBody `json:"body,omitempty"`
 	Assignee *string `json:"assignee,omitempty"`
 	Labels *[]string `json:"labels,omitempty"`
+	State *string `json:"state,omitempty"`
+	Milestone *int `json:"milestone,omitempty"`
 }
 
 type DynoIssueBody struct {
 	Title *string `json:"title,omitempty"`
 	Details *string  `json:"details,omitempty"`
 	Visualizer *string  `json:"visualizer,omitempty"`
+	Endpoint *string `json:"endpoint,omitempty"`
 	Method *string  `json:"method,omitempty"`
 	MethodInformation *DynoMethodInformation `json:"methodInformation,omitempty"`
 	TimeDelay *string  `json:"timeDelay,omitempty"`
@@ -23,5 +26,4 @@ type DynoMethodInformation struct {
 	Host *string `json:"host,omitempty"`
 	ContentType *string `json:"contentType,omitempty"`
 	Request *string `json:"request,omitempty"`
-	Endpoint *string `json:"endpoint,omitempty"`
 }

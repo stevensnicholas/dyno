@@ -47,8 +47,16 @@ func ParseFuzz(token string, repoName string, owner string, file string) {
 				details := AddDYNODetails(fuzzError[0])
 				dynoIssueBody.Title = &title
 				dynoIssueBody.Details = &details
-				body, endpoint := ReadBugFile(location, bugFileName, dynoIssueBody)
-				client.Issues.Create(ctx, owner, repoName, FuzzBugCheck(fuzzError[0], body, endpoint, nil, nil, nil))
+				dynoIssueBody = ReadBugFile(location, bugFileName, dynoIssueBody)
+				dynoIssue.Body = dynoIssueBody
+				client.Issues.Create(ctx, owner, repoName, &github.IssueRequest{
+					Title:     dynoIssue.Title,
+					Body:      FormatBody(dynoIssueBody),
+					Labels:    dynoIssue.Labels,
+					Assignee:  dynoIssue.Assignee,
+					State:     dynoIssue.State,
+					Milestone: dynoIssue.Milestone,
+				})
 			}
 		}
 	}
@@ -69,8 +77,7 @@ func ParseFuzz(token string, repoName string, owner string, file string) {
 // Returns:
 // 				body is the body of the issue
 // 				endpoint is the endpoint that has the bug
-func ReadBugFile(location string, bugFileName string, dynoIssueBody *issue.DynoIssueBody) (string, string) {
-	endpoint := ""
+func ReadBugFile(location string, bugFileName string, dynoIssueBody *issue.DynoIssueBody) (*issue.DynoIssueBody) {
 	f, err := os.Open(fmt.Sprintf(location+"%s", bugFileName))
 	if err != nil {
 		panic(err)
@@ -79,18 +86,26 @@ func ReadBugFile(location string, bugFileName string, dynoIssueBody *issue.DynoI
 
 	scanner := bufio.NewScanner(f)
 
-	body := *dynoIssueBody.Title + *dynoIssueBody.Details
 	// Creating body for IssueRequest in Github
-	CreateMethod(dynoIssueBody, f)
+	for scanner.Scan() {
+		line := scanner.Text()
+		if len(line) > 0 && line[:1] == "-" {
+			requestSplit := strings.Split(line, "\\n")
+			dynoMethodInformation := &issue.DynoMethodInformation{}
+			dynoMethodInformation = CreateMethod(requestSplit, dynoMethodInformation)
+			dynoIssueBody.MethodInformation = dynoMethodInformation
+			CreateBody(requestSplit, scanner, dynoIssueBody)
+		}
+	}
 
 	if err := scanner.Err(); err != nil {
 		panic(err)
 	}
 
-	return body, endpoint
+	return dynoIssueBody
 }
 
-// FuzzBugCheck sorts the bugs found by the fuzzer by there categories and creates a new github issueRequest
+// CreateIssue sorts the bugs found by the fuzzer by there categories and creates a new github issueRequest
 // Inputs:
 //				fuzzError is the type of bug that has been found by the fuzzer
 //        body is the body of the github issue
@@ -100,25 +115,24 @@ func ReadBugFile(location string, bugFileName string, dynoIssueBody *issue.DynoI
 // 				milestone specifies if the issue should be linked to a certain milestone on the users repo
 // Returns:
 // 				*github.IssueRequest with all the relevant information regarding the certain bug
-func FuzzBugCheck(fuzzError string, body string, endpoint string, assignee *string, state *string, milestone *int) *github.IssueRequest {
-	newIssueRequest := &github.IssueRequest{Title: nil, Body: nil, Labels: nil, Assignee: nil, State: nil, Milestone: nil, Assignees: nil}
+func CreateIssue(fuzzError string, dynoIssue *issue.DynoIssue) *issue.DynoIssue {
 	switch fuzzError {
 	case "InternalServerErrors":
-		newIssueRequest = InternalServerErrors(body, endpoint, assignee, state, milestone)
+		dynoIssue = InternalServerErrors(dynoIssue)
 	case "UseAfterFreeChecker":
-		newIssueRequest = UseAfterFreeChecker(body, endpoint, assignee, state, milestone)
+		dynoIssue = UseAfterFreeChecker(dynoIssue)
 	case "NameSpaceRuleChecker":
-		newIssueRequest = NameSpaceRuleChecker(body, endpoint, assignee, state, milestone)
+		dynoIssue = NameSpaceRuleChecker(dynoIssue)
 	case "ResourceHierarchyChecker":
-		newIssueRequest = ResourceHierarchyChecker(body, endpoint, assignee, state, milestone)
+		dynoIssue = ResourceHierarchyChecker(dynoIssue)
 	case "LeakageRuleChecker":
-		newIssueRequest = LeakageRuleChecker(body, endpoint, assignee, state, milestone)
+		dynoIssue = LeakageRuleChecker(dynoIssue)
 	case "InvalidDynamicObjectChecker":
-		newIssueRequest = InvalidDynamicObjectChecker(body, endpoint, assignee, state, milestone)
+		dynoIssue = InvalidDynamicObjectChecker(dynoIssue)
 	default:
-		newIssueRequest = PayloadBodyChecker(body, endpoint, assignee, state, milestone)
+		dynoIssue = PayloadBodyChecker(dynoIssue)
 	}
-	return newIssueRequest
+	return dynoIssue
 }
 
 // AddDYNODetails adds the details and visualizer url to the body of the issue request that
@@ -161,17 +175,12 @@ func AddDYNODetails(fuzzError string) string {
 // 				milestone specifies if the issue should be linked to a certain milestone on the users repo
 // Returns:
 // 				*github.IssueRequest with all the relevant information regarding the certain bug
-func InternalServerErrors(body string, endpoint string, assignee *string, state *string, milestone *int) *github.IssueRequest {
-	title := fmt.Sprintf("DYNO Fuzz: InternalServerErrors at Endpoint %s", endpoint)
+func InternalServerErrors(dynoIssue *issue.DynoIssue) *issue.DynoIssue {
+	title := fmt.Sprintf("DYNO Fuzz: InternalServerErrors at Endpoint %s", *dynoIssue.Body.Endpoint)
 	labels := []string{"bug"}
-	return &github.IssueRequest{
-		Title:     &title,
-		Body:      &body,
-		Labels:    &labels,
-		Assignee:  assignee,
-		State:     state,
-		Milestone: milestone,
-	}
+	dynoIssue.Title = &title
+	dynoIssue.Labels = &labels 
+	return dynoIssue
 }
 
 // InternalServerErrors creates a github Issue Request for the categorized bug by restler
@@ -183,18 +192,13 @@ func InternalServerErrors(body string, endpoint string, assignee *string, state 
 // 				state is the current state of the issue
 // 				milestone specifies if the issue should be linked to a certain milestone on the users repo
 // Returns:
-// 				*github.IssueRequest with all the relevant information regarding the certain bug
-func ResourceHierarchyChecker(body string, endpoint string, assignee *string, state *string, milestone *int) *github.IssueRequest {
-	title := fmt.Sprintf("DYNO Fuzz: ResourceHierarchyChecker at Endpoint %s", endpoint)
+// 				*issue.DynoIssue with all the relevant information regarding the certain bug
+func ResourceHierarchyChecker(dynoIssue *issue.DynoIssue) *issue.DynoIssue {
+	title := fmt.Sprintf("DYNO Fuzz: ResourceHierarchyChecker at Endpoint %s", *dynoIssue.Body.Endpoint)
 	labels := []string{"bug"}
-	return &github.IssueRequest{
-		Title:     &title,
-		Body:      &body,
-		Labels:    &labels,
-		Assignee:  assignee,
-		State:     state,
-		Milestone: milestone,
-	}
+	dynoIssue.Title = &title
+	dynoIssue.Labels = &labels 
+	return dynoIssue
 }
 
 // InternalServerErrors creates a github Issue Request for the categorized bug by restler
@@ -206,18 +210,13 @@ func ResourceHierarchyChecker(body string, endpoint string, assignee *string, st
 // 				state is the current state of the issue
 // 				milestone specifies if the issue should be linked to a certain milestone on the users repo
 // Returns:
-// 				*github.IssueRequest with all the relevant information regarding the certain bug
-func NameSpaceRuleChecker(body string, endpoint string, assignee *string, state *string, milestone *int) *github.IssueRequest {
-	title := fmt.Sprintf("DYNO Fuzz: NameSpaceRuleChecker at Endpoint %s", endpoint)
+// 				*issue.DynoIssue with all the relevant information regarding the certain bug
+func NameSpaceRuleChecker(dynoIssue *issue.DynoIssue) *issue.DynoIssue {
+	title := fmt.Sprintf("DYNO Fuzz: NameSpaceRuleChecker at Endpoint %s", *dynoIssue.Body.Endpoint)
 	labels := []string{"bug"}
-	return &github.IssueRequest{
-		Title:     &title,
-		Body:      &body,
-		Labels:    &labels,
-		Assignee:  assignee,
-		State:     state,
-		Milestone: milestone,
-	}
+	dynoIssue.Title = &title
+	dynoIssue.Labels = &labels 
+	return dynoIssue
 }
 
 // InternalServerErrors creates a github Issue Request for the categorized bug by restler
@@ -229,18 +228,13 @@ func NameSpaceRuleChecker(body string, endpoint string, assignee *string, state 
 // 				state is the current state of the issue
 // 				milestone specifies if the issue should be linked to a certain milestone on the users repo
 // Returns:
-// 				*github.IssueRequest with all the relevant information regarding the certain bug
-func UseAfterFreeChecker(body string, endpoint string, assignee *string, state *string, milestone *int) *github.IssueRequest {
-	title := fmt.Sprintf("DYNO Fuzz: UseAfterFreeChecker at Endpoint %s", endpoint)
+// 				*issue.DynoIssue with all the relevant information regarding the certain bug
+func UseAfterFreeChecker(dynoIssue *issue.DynoIssue) *issue.DynoIssue {
+	title := fmt.Sprintf("DYNO Fuzz: UseAfterFreeChecker at Endpoint %s", *dynoIssue.Body.Endpoint)
 	labels := []string{"bug"}
-	return &github.IssueRequest{
-		Title:     &title,
-		Body:      &body,
-		Labels:    &labels,
-		Assignee:  assignee,
-		State:     state,
-		Milestone: milestone,
-	}
+	dynoIssue.Title = &title
+	dynoIssue.Labels = &labels 
+	return dynoIssue
 }
 
 // InternalServerErrors creates a github Issue Request for the categorized bug by restler
@@ -252,18 +246,13 @@ func UseAfterFreeChecker(body string, endpoint string, assignee *string, state *
 // 				state is the current state of the issue
 // 				milestone specifies if the issue should be linked to a certain milestone on the users repo
 // Returns:
-// 				*github.IssueRequest with all the relevant information regarding the certain bug
-func LeakageRuleChecker(body string, endpoint string, assignee *string, state *string, milestone *int) *github.IssueRequest {
-	title := fmt.Sprintf("DYNO Fuzz: LeakageRuleChecker at Endpoint %s", endpoint)
+// 				*issue.DynoIssue with all the relevant information regarding the certain bug
+func LeakageRuleChecker(dynoIssue *issue.DynoIssue) *issue.DynoIssue {
+	title := fmt.Sprintf("DYNO Fuzz: LeakageRuleChecker at Endpoint %s", *dynoIssue.Body.Endpoint)
 	labels := []string{"bug"}
-	return &github.IssueRequest{
-		Title:     &title,
-		Body:      &body,
-		Labels:    &labels,
-		Assignee:  assignee,
-		State:     state,
-		Milestone: milestone,
-	}
+	dynoIssue.Title = &title
+	dynoIssue.Labels = &labels 
+	return dynoIssue
 }
 
 // InternalServerErrors creates a github Issue Request for the categorized bug by restler
@@ -275,18 +264,13 @@ func LeakageRuleChecker(body string, endpoint string, assignee *string, state *s
 // 				state is the current state of the issue
 // 				milestone specifies if the issue should be linked to a certain milestone on the users repo
 // Returns:
-// 				*github.IssueRequest with all the relevant information regarding the certain bug
-func InvalidDynamicObjectChecker(body string, endpoint string, assignee *string, state *string, milestone *int) *github.IssueRequest {
-	title := fmt.Sprintf("DYNO Fuzz: InvalidDynamicObjectChecker at Endpoint %s", endpoint)
+// 				*issue.DynoIssue with all the relevant information regarding the certain bug
+func InvalidDynamicObjectChecker(dynoIssue *issue.DynoIssue) *issue.DynoIssue {
+	title := fmt.Sprintf("DYNO Fuzz: InvalidDynamicObjectChecker at Endpoint %s", *dynoIssue.Body.Endpoint)
 	labels := []string{"bug"}
-	return &github.IssueRequest{
-		Title:     &title,
-		Body:      &body,
-		Labels:    &labels,
-		Assignee:  assignee,
-		State:     state,
-		Milestone: milestone,
-	}
+	dynoIssue.Title = &title
+	dynoIssue.Labels = &labels 
+	return dynoIssue
 }
 
 // InternalServerErrors creates a github Issue Request for the categorized bug by restler
@@ -298,84 +282,70 @@ func InvalidDynamicObjectChecker(body string, endpoint string, assignee *string,
 // 				state is the current state of the issue
 // 				milestone specifies if the issue should be linked to a certain milestone on the users repo
 // Returns:
-// 				*github.IssueRequest with all the relevant information regarding the certain bug
-func PayloadBodyChecker(body string, endpoint string, assignee *string, state *string, milestone *int) *github.IssueRequest {
-	title := fmt.Sprintf("DYNO Fuzz: PayloadBodyChecker at Endpoint %s", endpoint)
+// 				*issue.DynoIssue with all the relevant information regarding the certain bug
+func PayloadBodyChecker(dynoIssue *issue.DynoIssue) *issue.DynoIssue {
+	title := fmt.Sprintf("DYNO Fuzz: PayloadBodyChecker at Endpoint %s", *dynoIssue.Body.Endpoint)
 	labels := []string{"bug"}
-	return &github.IssueRequest{
-		Title:     &title,
-		Body:      &body,
-		Labels:    &labels,
-		Assignee:  assignee,
-		State:     state,
-		Milestone: milestone,
-	}
+	dynoIssue.Title = &title
+	dynoIssue.Labels = &labels 
+	return dynoIssue
 }
 
-func CreateMethod(issueBody *issue.DynoIssueBody, f *os.File) (*issue.DynoIssueBody){
-	methodInformation := &issue.DynoMethodInformation{}
-	scanner := bufio.NewScanner(f)
-	for scanner.Scan() {
-		line := scanner.Text()
-		if len(line) > 0 && line[:1] == "-" {
-			requestSplit := strings.Split(line, "\\n")
-			methodInformation.Endpoint = &strings.Split(requestSplit[0], " ")[2]
-			method := strings.Trim(requestSplit[0], "\\r")
-			acceptedResponse := strings.Trim(requestSplit[1], "\\r")
-			host := strings.Trim(requestSplit[2], "\\r")
-			contentType := strings.Trim(requestSplit[3], "\\r")
-			methodInformation.AcceptedResponse = &acceptedResponse
-			methodInformation.Host = &host
-			methodInformation.ContentType = &contentType
-			request := ""
-			for i := 4; i < len(requestSplit); i++ {
-				request = request + requestSplit[i]
-			}
-			if request != "" {
-				request = "Request: " + strings.Trim(request, "\\r")
-			}
-			methodInformation.Request = &request
-			scanner.Scan()
-			timeDelay := scanner.Text()
-			issueBody.TimeDelay = &timeDelay
-			scanner.Scan()
-			asyncTime := scanner.Text()
-			issueBody.AsyncTime = &asyncTime
-			scanner.Scan()
-			previousResponseText := scanner.Text()
-			previousResponseSplit := strings.Split(previousResponseText, "\\n")
-			prevrequest := ""
-			for i := 5; i < len(previousResponseSplit); i++ {
-				prevrequest = prevrequest + previousResponseSplit[i]
-			}
-			if prevrequest != "" {
-				prevrequest = " request:" + strings.Trim(prevrequest, "\\r")
-			}
-			previousResponse := strings.Trim(previousResponseSplit[0], "\\r") + prevrequest
-			issueBody.PreviousResponse = &previousResponse
-			if contentType != "" {
-				body = body + "\n" + method + "\n" + "\n" + "- " + acceptedResponse + "\n" + "- " + host + "\n" + "- " + contentType
-			} else {
-				body = body + "\n" + method + "\n" + "\n" + "- " + acceptedResponse + "\n" + "- " + host
-			}
-			if request != "" {
-				body = body + "\n" + "- " + request
-			}
-			body = body + "\n" + "\n" + timeDelay + "\n" + asyncTime + "\n" + "\n" + previousResponse
-			body = body + "\n"
-		}
-	}
-}
-
-func CreateBody(issueBody *issue.DynoIssueBody, method *issue.DynoMethodInformation) {
-	if contentType != "" {
-		body = body + "\n" + method + "\n" + "\n" + "- " + acceptedResponse + "\n" + "- " + host + "\n" + "- " + contentType
-	} else {
-		body = body + "\n" + method + "\n" + "\n" + "- " + acceptedResponse + "\n" + "- " + host
+func CreateMethod(requestSplit []string, dynoMethodInformation *issue.DynoMethodInformation) (*issue.DynoMethodInformation) {
+	acceptedResponse := strings.Trim(requestSplit[1], "\\r")
+	host := strings.Trim(requestSplit[2], "\\r")
+	contentType := strings.Trim(requestSplit[3], "\\r")
+	dynoMethodInformation.AcceptedResponse = &acceptedResponse
+	dynoMethodInformation.Host = &host
+	dynoMethodInformation.ContentType = &contentType
+	request := ""
+	for i := 4; i < len(requestSplit); i++ {
+		request = request + requestSplit[i]
 	}
 	if request != "" {
-		body = body + "\n" + "- " + request
+		request = "Request: " + strings.Trim(request, "\\r")
 	}
-	body = body + "\n" + "\n" + timeDelay + "\n" + asyncTime + "\n" + "\n" + previousResponse
+	dynoMethodInformation.Request = &request
+	return dynoMethodInformation
+}
+
+func CreateBody(requestSplit []string, scanner *bufio.Scanner, dynoIssueBody *issue.DynoIssueBody) (*issue.DynoIssueBody){
+	method := strings.Trim(requestSplit[0], "\\r")
+	dynoIssueBody.Method = &method
+	endpoint := strings.Split(requestSplit[0], " ")[2]
+	dynoIssueBody.Endpoint = &endpoint
+	scanner.Scan()
+	timeDelay := scanner.Text()
+	dynoIssueBody.TimeDelay = &timeDelay
+	scanner.Scan()
+	asyncTime := scanner.Text()
+	dynoIssueBody.AsyncTime = &asyncTime
+	scanner.Scan()
+	previousResponseText := scanner.Text()
+	previousResponseSplit := strings.Split(previousResponseText, "\\n")
+	prevrequest := ""
+	for i := 5; i < len(previousResponseSplit); i++ {
+		prevrequest = prevrequest + previousResponseSplit[i]
+	}
+	if prevrequest != "" {
+		prevrequest = " request:" + strings.Trim(prevrequest, "\\r")
+	}
+	previousResponse := strings.Trim(previousResponseSplit[0], "\\r") + prevrequest
+	dynoIssueBody.PreviousResponse = &previousResponse
+	return dynoIssueBody
+}
+
+func FormatBody(dynoIssueBody *issue.DynoIssueBody) *string {
+	body := *dynoIssueBody.Title + *dynoIssueBody.Details 
+	if *dynoIssueBody.MethodInformation.ContentType != ""{
+		body = body + "\n" + *dynoIssueBody.Method + "\n" + "\n" + "- " + *dynoIssueBody.MethodInformation.AcceptedResponse + "\n" + "- " + *dynoIssueBody.MethodInformation.Host + "\n" + "- " + *dynoIssueBody.MethodInformation.ContentType
+	} else {
+		body = body + "\n" + *dynoIssueBody.Method + "\n" + "\n" + "- " + *dynoIssueBody.MethodInformation.AcceptedResponse + "\n" + "- " + *dynoIssueBody.MethodInformation.Host
+	}
+	if *dynoIssueBody.MethodInformation.Request != "" {
+		body = body + "\n" + "- " + *dynoIssueBody.MethodInformation.Request 
+	}
+	body = body + "\n" + "\n" + *dynoIssueBody.TimeDelay + "\n" + *dynoIssueBody.AsyncTime + "\n" + "\n" + *dynoIssueBody.PreviousResponse
 	body = body + "\n"
+	return &body
 }
