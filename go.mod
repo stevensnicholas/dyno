@@ -1,4 +1,4 @@
-module golambda
+module dyno
 
 go 1.17
 

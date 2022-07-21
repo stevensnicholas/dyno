@@ -9,7 +9,7 @@ RUN make build
 
 FROM scratch
 WORKDIR /
-COPY --from=builder /app/bin/main /main
+COPY --from=builder /app/bin/api/main /main
 EXPOSE 8080
 HEALTHCHECK --interval=1s --timeout=1s --start-period=2s --retries=3 CMD [ "/main", "-healthcheck" ]
 CMD [ "/main", "-http" ]

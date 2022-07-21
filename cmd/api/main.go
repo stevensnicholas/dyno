@@ -1,8 +1,8 @@
 package main
 
 import (
+	"dyno/internal/logger"
 	"flag"
-	"golambda/internal/logger"
 	"net/http"
 	"os"
 	"sort"
