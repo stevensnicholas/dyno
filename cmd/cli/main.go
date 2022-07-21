@@ -17,7 +17,7 @@ type SendCmd struct {
 
 var args struct {
 	Send    *SendCmd `arg:"subcommand:send" help:"can also use -d to provide the path to file"`
-	Verbose bool     `arg:"-d" help:"enable verbose logging"`
+	Verbose bool     `arg:"-v" help:"enable verbose logging"`
 	Debug   bool     `arg:"-d" help:"enable debug logging"`
 }
 
