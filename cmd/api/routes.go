@@ -1,7 +1,7 @@
 package main
 
 import (
-	"golambda/cmd/endpoints"
+	"dyno/internal/endpoints"
 
 	"github.com/swaggest/rest/web"
 	swgui "github.com/swaggest/swgui/v4"
@@ -17,6 +17,6 @@ func registerRoutes(service *web.Service, hostdocs bool, hosthealth bool) {
 	}
 
 	if hosthealth {
-		healthcheck(service)
+		endpoints.Healthcheck(service)
 	}
 }
