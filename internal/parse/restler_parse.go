@@ -313,17 +313,20 @@ func PayloadBodyChecker(body string, endpoint string, assignee *string, state *s
 }
 
 func CreateMethod(issueBody *issue.DynoIssueBody, f *os.File) (*issue.DynoIssueBody){
-	DynoIssueBody := &DynoIssueBody{}
+	methodInformation := &issue.DynoMethodInformation{}
 	scanner := bufio.NewScanner(f)
 	for scanner.Scan() {
 		line := scanner.Text()
 		if len(line) > 0 && line[:1] == "-" {
 			requestSplit := strings.Split(line, "\\n")
-			endpoint = strings.Split(requestSplit[0], " ")[2]
+			methodInformation.Endpoint = &strings.Split(requestSplit[0], " ")[2]
 			method := strings.Trim(requestSplit[0], "\\r")
-			accept := strings.Trim(requestSplit[1], "\\r")
+			acceptedResponse := strings.Trim(requestSplit[1], "\\r")
 			host := strings.Trim(requestSplit[2], "\\r")
 			contentType := strings.Trim(requestSplit[3], "\\r")
+			methodInformation.AcceptedResponse = &acceptedResponse
+			methodInformation.Host = &host
+			methodInformation.ContentType = &contentType
 			request := ""
 			for i := 4; i < len(requestSplit); i++ {
 				request = request + requestSplit[i]
@@ -331,10 +334,13 @@ func CreateMethod(issueBody *issue.DynoIssueBody, f *os.File) (*issue.DynoIssueB
 			if request != "" {
 				request = "Request: " + strings.Trim(request, "\\r")
 			}
+			methodInformation.Request = &request
 			scanner.Scan()
 			timeDelay := scanner.Text()
+			issueBody.TimeDelay = &timeDelay
 			scanner.Scan()
 			asyncTime := scanner.Text()
+			issueBody.AsyncTime = &asyncTime
 			scanner.Scan()
 			previousResponseText := scanner.Text()
 			previousResponseSplit := strings.Split(previousResponseText, "\\n")
@@ -346,10 +352,11 @@ func CreateMethod(issueBody *issue.DynoIssueBody, f *os.File) (*issue.DynoIssueB
 				prevrequest = " request:" + strings.Trim(prevrequest, "\\r")
 			}
 			previousResponse := strings.Trim(previousResponseSplit[0], "\\r") + prevrequest
+			issueBody.PreviousResponse = &previousResponse
 			if contentType != "" {
-				body = body + "\n" + method + "\n" + "\n" + "- " + accept + "\n" + "- " + host + "\n" + "- " + contentType
+				body = body + "\n" + method + "\n" + "\n" + "- " + acceptedResponse + "\n" + "- " + host + "\n" + "- " + contentType
 			} else {
-				body = body + "\n" + method + "\n" + "\n" + "- " + accept + "\n" + "- " + host
+				body = body + "\n" + method + "\n" + "\n" + "- " + acceptedResponse + "\n" + "- " + host
 			}
 			if request != "" {
 				body = body + "\n" + "- " + request
@@ -358,4 +365,17 @@ func CreateMethod(issueBody *issue.DynoIssueBody, f *os.File) (*issue.DynoIssueB
 			body = body + "\n"
 		}
 	}
+}
+
+func CreateBody(issueBody *issue.DynoIssueBody, method *issue.DynoMethodInformation) {
+	if contentType != "" {
+		body = body + "\n" + method + "\n" + "\n" + "- " + acceptedResponse + "\n" + "- " + host + "\n" + "- " + contentType
+	} else {
+		body = body + "\n" + method + "\n" + "\n" + "- " + acceptedResponse + "\n" + "- " + host
+	}
+	if request != "" {
+		body = body + "\n" + "- " + request
+	}
+	body = body + "\n" + "\n" + timeDelay + "\n" + asyncTime + "\n" + "\n" + previousResponse
+	body = body + "\n"
 }
