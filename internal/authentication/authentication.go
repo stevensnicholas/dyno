@@ -8,9 +8,9 @@ import (
 )
 
 type Conf struct {
-	ClientId     string // Client ID
+	ClientID     string // Client ID
 	ClientSecret string // Client Secret
-	RedirectUrl  string // Authorization callback URL
+	RedirectURL  string // Authorization callback URL
 }
 
 var conf = Conf{
@@ -26,7 +26,7 @@ type Token struct {
 }
 
 
-func GetTokenAuthUrl(code string) string {
+func GetTokenAuthURL(code string) string {
 	return fmt.Sprintf(
 		"https://github.com/login/oauth/access_token?client_id=%s&client_secret=%s&code=%s",
 		conf.ClientId, conf.ClientSecret, code,

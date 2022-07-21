@@ -69,9 +69,9 @@ func LoggingMiddleware(next http.Handler) http.Handler {
 
 			var code = r.URL.Query().Get("code")
 			
-			var tokenAuthUrl = authentication.GetTokenAuthUrl(code)
+			var tokenAuthURL = authentication.GetTokenAuthURL(code)
 			var token *authentication.Token	
-			if token, err = authentication.GetToken(tokenAuthUrl); err != nil {
+			if token, err = authentication.GetToken(tokenAuthURL); err != nil {
 				fmt.Println(err)
 				return
 			}
