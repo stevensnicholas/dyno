@@ -1,7 +1,8 @@
 .PHONY: build clean deploy
 
 build:
-	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o bin/api/main ./cmd/api/...
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o bin/api/main   ./cmd/api/...
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o bin/api/issues ./cmd/issues/...
 
 docs: build
 	./bin/main -gendocs
