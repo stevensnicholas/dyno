@@ -39,7 +39,7 @@ npm run build
 
 Usage:
 ```
-./bin/main --help
+./bin/api/main --help
 Usage of ./bin/main:
   -gendocs
     	Generate API Docs
@@ -53,7 +53,7 @@ Usage of ./bin/main:
 
 Run backend http server
 ```
-./bin/main -http
+./bin/api/main -http
 ```
 
 Run frontend development server
