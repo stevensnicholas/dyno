@@ -22,7 +22,7 @@ const Login = () => {
             <div className="row">
               <div className="login-box">
                 <a
-                  href="#"
+                  href="http://localhost:3000/login"
                   className="btn-large waves-effect waves-teal col s12"
                 >
                   <span />
