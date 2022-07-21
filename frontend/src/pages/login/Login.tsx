@@ -11,24 +11,36 @@ const Login = () => {
           <div className="col s12 z-depth-4 card-panel">
             <div className="row">
               <div className="input-field col s12 center">
-                <img src={Photo} alt="" className={"circle responsive-img valign" + (styles.profile_image_login)} />
-                <p className={"center" + (styles.login_form_text)}>Sign In</p>
-                <h4 className={styles.login_form_text}>Use your Github Account</h4>
+                <img
+                  src={Photo}
+                  alt=""
+                  className={
+                    'circle responsive-img valign' + styles.profile_image_login
+                  }
+                />
+                <p className={'center' + styles.login_form_text}>Sign In</p>
+                <h4 className={styles.login_form_text}>
+                  Use your Github Account
+                </h4>
               </div>
             </div>
             <div className="row">
               <div className={styles.login_box}>
-                <a href="http://localhost:3000/login" className="btn-large waves-effect waves-teal col s12 black">
+                <a
+                  href="http://localhost:3000/login"
+                  className="btn-large waves-effect waves-teal col s12 black"
+                >
                   <span></span>
                   <span></span>
                   <span></span>
-                  <span></span>Login</a>
+                  <span></span>Login
+                </a>
               </div>
             </div>
           </div>
         </div>
-      </body >
-    </html >
+      </body>
+    </html>
   );
 };
 
