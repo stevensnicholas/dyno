@@ -1,6 +1,5 @@
 import React from 'react';
 import './index.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import reportWebVitals from './reportWebVitals';
 import { createRoot } from 'react-dom/client';
 import Navigation from './Navigation';

@@ -3,43 +3,43 @@
 /*----------------------------------------
     Login Page
 ------------------------------------------*/
-.login-form {
+.login_form {
   width: 320px;
 }
 
-.login-form-text {
+.login_form_text {
   text-transform: uppercase;
   letter-spacing: 2px;
   font-size: 0.8rem;
 }
 
-.profile-image-login {
+.profile_image_login {
   width: 100px;
   height: 100px !important;
   background-color: white;
 }
 
-.login-text {
+.login_text {
   margin-top: -6px;
   margin-left: -6px !important;
 }
 
-.login-text {
+.login_text {
   margin-top: -px;
   margin-left: -6px !important;
 }
 
-.login-background {
-  background: url("../../images/login/login.png") no-repeat center center;
+.login_background {
+  background: url("../login/login.png") no-repeat center center;
   background-color: aquamarine;
 }
 
-.login-box a span {
+.login_box a span {
   position: absolute;
   display: block;
 }
 
-.login-box a span:nth-child(1) {
+.login_box a span:nth-child(1) {
   top: 0;
   left: -100%;
   width: 100%;
@@ -59,7 +59,7 @@
   }
 }
 
-.login-box a span:nth-child(2) {
+.login_box a span:nth-child(2) {
   top: -100%;
   right: 0;
   width: 7px;
@@ -80,7 +80,7 @@
   }
 }
 
-.login-box a span:nth-child(3) {
+.login_box a span:nth-child(3) {
   bottom: 0;
   right: -100%;
   width: 100%;
@@ -101,7 +101,7 @@
   }
 }
 
-.login-box a span:nth-child(4) {
+.login_box a span:nth-child(4) {
   bottom: -100%;
   left: 0;
   width: 7px;
