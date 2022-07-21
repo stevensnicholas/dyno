@@ -2,6 +2,7 @@ package main
 
 import (
 	"dyno/internal/logger"
+	"dyno/internal/authentication"
 	"net/http"
 	"runtime/debug"
 	"time"
@@ -65,14 +66,12 @@ func LoggingMiddleware(next http.Handler) http.Handler {
 		)
 		if r.URL.EscapedPath() == "/login"{
 			var err error
-	
-			// get code
+
 			var code = r.URL.Query().Get("code")
-	
-			// get token
-			var tokenAuthUrl = GetTokenAuthUrl(code)
-			var token *Token	
-			if token, err = GetToken(tokenAuthUrl); err != nil {
+			
+			var tokenAuthUrl = authentication.GetTokenAuthUrl(code)
+			var token *authentication.Token	
+			if token, err = authentication.GetToken(tokenAuthUrl); err != nil {
 				fmt.Println(err)
 				return
 			}

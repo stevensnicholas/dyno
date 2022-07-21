@@ -1,11 +1,8 @@
-
-
-package main
+package authentication
 import (
     "fmt"
     "net/http"
     "errors"
-	"html/template"
 	"encoding/json"
 
 )
