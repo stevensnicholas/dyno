@@ -8,6 +8,7 @@ import (
 	"golambda/internal/platform"
 	"os"
 	"strings"
+	"golambda/internal/issue"
 )
 
 // TODO Change the process of reading file according to SQS and S3 Buckets
@@ -30,6 +31,8 @@ func ParseFuzz(token string, repoName string, owner string, file string) {
 	defer f.Close()
 	location := "cmd/internal/tests/bug_buckets/"
 	scanner := bufio.NewScanner(f)
+	dynoIssue := &issue.DynoIssue{}
+	dynoIssueBody := &issue.DynoIssueBody{}
 	// Sending an issue for each error found through fuzz
 	for scanner.Scan() {
 		line := scanner.Text()
@@ -40,11 +43,11 @@ func ParseFuzz(token string, repoName string, owner string, file string) {
 			if len(bugFileNames) > 5 {
 				bugFileName := bugFileNames[bugFile]
 				fuzzError := strings.Split(bugFileNames[bugFile], "_")
-				bodyTitle := fmt.Sprintf("# %s Invalid %s Response\n", fuzzError[0], fuzzError[1])
+				title := fmt.Sprintf("# %s Invalid %s Response\n", fuzzError[0], fuzzError[1])
 				details := AddDYNODetails(fuzzError[0])
-				body := bodyTitle + details
-				body, endpoint := ReadBugFile(location, bugFileName, body)
-				println(body)
+				dynoIssueBody.Title = &title
+				dynoIssueBody.Details = &details
+				body, endpoint := ReadBugFile(location, bugFileName, dynoIssueBody)
 				client.Issues.Create(ctx, owner, repoName, FuzzBugCheck(fuzzError[0], body, endpoint, nil, nil, nil))
 			}
 		}
@@ -66,7 +69,7 @@ func ParseFuzz(token string, repoName string, owner string, file string) {
 // Returns:
 // 				body is the body of the issue
 // 				endpoint is the endpoint that has the bug
-func ReadBugFile(location string, bugFileName string, body string) (string, string) {
+func ReadBugFile(location string, bugFileName string, dynoIssueBody *issue.DynoIssueBody) (string, string) {
 	endpoint := ""
 	f, err := os.Open(fmt.Sprintf(location+"%s", bugFileName))
 	if err != nil {
@@ -76,50 +79,9 @@ func ReadBugFile(location string, bugFileName string, body string) (string, stri
 
 	scanner := bufio.NewScanner(f)
 
+	body := *dynoIssueBody.Title + *dynoIssueBody.Details
 	// Creating body for IssueRequest in Github
-	for scanner.Scan() {
-		line := scanner.Text()
-		if len(line) > 0 && line[:1] == "-" {
-			requestSplit := strings.Split(line, "\\n")
-			endpoint = strings.Split(requestSplit[0], " ")[2]
-			method := strings.Trim(requestSplit[0], "\\r")
-			accept := strings.Trim(requestSplit[1], "\\r")
-			host := strings.Trim(requestSplit[2], "\\r")
-			contentType := strings.Trim(requestSplit[3], "\\r")
-			request := ""
-			for i := 4; i < len(requestSplit); i++ {
-				request = request + requestSplit[i]
-			}
-			if request != "" {
-				request = "Request: " + strings.Trim(request, "\\r")
-			}
-			scanner.Scan()
-			timeDelay := scanner.Text()
-			scanner.Scan()
-			asyncTime := scanner.Text()
-			scanner.Scan()
-			previousResponseText := scanner.Text()
-			previousResponseSplit := strings.Split(previousResponseText, "\\n")
-			prevrequest := ""
-			for i := 5; i < len(previousResponseSplit); i++ {
-				prevrequest = prevrequest + previousResponseSplit[i]
-			}
-			if prevrequest != "" {
-				prevrequest = " request:" + strings.Trim(prevrequest, "\\r")
-			}
-			previousResponse := strings.Trim(previousResponseSplit[0], "\\r") + prevrequest
-			if contentType != "" {
-				body = body + "\n" + method + "\n" + "\n" + "- " + accept + "\n" + "- " + host + "\n" + "- " + contentType
-			} else {
-				body = body + "\n" + method + "\n" + "\n" + "- " + accept + "\n" + "- " + host
-			}
-			if request != "" {
-				body = body + "\n" + "- " + request
-			}
-			body = body + "\n" + "\n" + timeDelay + "\n" + asyncTime + "\n" + "\n" + previousResponse
-			body = body + "\n"
-		}
-	}
+	CreateMethod(dynoIssueBody, f)
 
 	if err := scanner.Err(); err != nil {
 		panic(err)
@@ -347,5 +309,53 @@ func PayloadBodyChecker(body string, endpoint string, assignee *string, state *s
 		Assignee:  assignee,
 		State:     state,
 		Milestone: milestone,
+	}
+}
+
+func CreateMethod(issueBody *issue.DynoIssueBody, f *os.File) (*issue.DynoIssueBody){
+	DynoIssueBody := &DynoIssueBody{}
+	scanner := bufio.NewScanner(f)
+	for scanner.Scan() {
+		line := scanner.Text()
+		if len(line) > 0 && line[:1] == "-" {
+			requestSplit := strings.Split(line, "\\n")
+			endpoint = strings.Split(requestSplit[0], " ")[2]
+			method := strings.Trim(requestSplit[0], "\\r")
+			accept := strings.Trim(requestSplit[1], "\\r")
+			host := strings.Trim(requestSplit[2], "\\r")
+			contentType := strings.Trim(requestSplit[3], "\\r")
+			request := ""
+			for i := 4; i < len(requestSplit); i++ {
+				request = request + requestSplit[i]
+			}
+			if request != "" {
+				request = "Request: " + strings.Trim(request, "\\r")
+			}
+			scanner.Scan()
+			timeDelay := scanner.Text()
+			scanner.Scan()
+			asyncTime := scanner.Text()
+			scanner.Scan()
+			previousResponseText := scanner.Text()
+			previousResponseSplit := strings.Split(previousResponseText, "\\n")
+			prevrequest := ""
+			for i := 5; i < len(previousResponseSplit); i++ {
+				prevrequest = prevrequest + previousResponseSplit[i]
+			}
+			if prevrequest != "" {
+				prevrequest = " request:" + strings.Trim(prevrequest, "\\r")
+			}
+			previousResponse := strings.Trim(previousResponseSplit[0], "\\r") + prevrequest
+			if contentType != "" {
+				body = body + "\n" + method + "\n" + "\n" + "- " + accept + "\n" + "- " + host + "\n" + "- " + contentType
+			} else {
+				body = body + "\n" + method + "\n" + "\n" + "- " + accept + "\n" + "- " + host
+			}
+			if request != "" {
+				body = body + "\n" + "- " + request
+			}
+			body = body + "\n" + "\n" + timeDelay + "\n" + asyncTime + "\n" + "\n" + previousResponse
+			body = body + "\n"
+		}
 	}
 }

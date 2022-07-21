@@ -1,16 +1,17 @@
-package issues
+package issue
 
 type DynoIssue struct {
 	Title *string `json:"title,omitempty"`
 	Body *DynoIssueBody `json:"body,omitempty"`
 	Assignee *string `json:"assignee,omitempty"`
-	Labels *string `json:"labels,omitempty"`
+	Labels *[]string `json:"labels,omitempty"`
 }
 
 type DynoIssueBody struct {
 	Title *string `json:"title,omitempty"`
 	Details *string  `json:"details,omitempty"`
 	Visualizer *string  `json:"visualizer,omitempty"`
+	Endpoint *string `json:"endpoint,omitempty"`
 	Method *string  `json:"method,omitempty"`
 	MethodInformation *DynoMethodInformation `json:"methodInformation,omitempty"`
 	TimeDelay *string  `json:"timeDelay,omitempty"`
