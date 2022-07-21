@@ -8,7 +8,9 @@ import (
 	"github.com/swaggest/usecase/status"
 )
 
-type GetCodeInput struct {}
+type GetCodeInput struct {
+	Code string `query:"code"`
+}
 
 type GetCodeOutput struct {
 	Result string `json:"result"`

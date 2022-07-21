@@ -8,14 +8,14 @@ import (
 )
 
 type Conf struct {
-	ClientID     string // Client ID
-	ClientSecret string // Client Secret
-	RedirectURL  string // Authorization callback URL
+	ClientID     string 
+	ClientSecret string 
+	RedirectURL  string 
 }
 
 var conf = Conf{
-	ClientID:     "94143fe4a712d77c2983",  	// fill in with your id before test
-	ClientSecret: "de6bdb690150bf73bbb866ed5f905d622e9ade0f",   // fill in with your secret before test
+	ClientID:     "",  	// fill in with your id before test
+	ClientSecret: "",   // fill in with your secret before test
 	RedirectURL:  "http://localhost:8080/login",
 }
 
