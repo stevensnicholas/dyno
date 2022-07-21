@@ -1,14 +1,12 @@
 import React from 'react';
-import "../css/materialize.css";
-import "../css/style.css";
-import "../css/page-center.css";
-import Photo from "../images/logo/login-logo.png";
+import Photo from "../images/logo/login-logo.png"
+import "../css/style.css"
 
 const Login = () => {
   return (
     <html>
       <body className="login-background">
-        <div id="login-page" className="row">
+        <div id="login-page">
           <div className="col s12 z-depth-4 card-panel">
             <div className="row">
               <div className="input-field col s12 center">

@@ -1,20 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <meta
-      name="description"
-      content="Go Lambda Skeleton"
-    />
-    <!--
+
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" href="%PUBLIC_URL%/images/logo/login-logo.png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#000000" />
+  <link href="%PUBLIC_URL%/css/materialize.css" type="text/css" rel="stylesheet">
+  <link href="%PUBLIC_URL%/css/page-center.css" type="text/css" rel="stylesheet">
+  <!--
       manifest.json provides metadata used when your web app is installed on a
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <!--
+  <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+  <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
       Only files inside the `public` folder can be referenced from the HTML.
@@ -23,10 +22,23 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-    <title>Go Lambda Skeleton</title>
-  </head>
-  <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
-  </body>
+  <title>Very Secured</title>
+</head>
+
+<body>
+  <div id="root"></div>
+  <div id="loader-wrapper">
+    <div id="loader"></div>
+    <div class="loader-section section-left"></div>
+    <div class="loader-section section-right"></div>
+  </div>
+  <!-- jQuery Library -->
+  <script type="text/javascript" src="../../vendors/jquery-3.2.1.min.js"></script>
+  <!--materialize js-->
+  <script type="text/javascript" src="../../js/materialize.min.js"></script>
+  <!--plugins.js - Some Specific JS codes for Plugin Settings-->
+  <script type="text/javascript" src="../../js/plugins.js"></script>
+</body>
+
+
 </html>
