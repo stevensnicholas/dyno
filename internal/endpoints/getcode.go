@@ -32,4 +32,8 @@ func GetCode(service *web.Service) {
 	u.SetExpectedErrors(status.InvalidArgument)
 
 	service.Post("/login", u)
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> ef0003e11a62bc907e6e57d9844b69e35487828b
