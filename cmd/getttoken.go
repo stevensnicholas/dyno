@@ -17,8 +17,8 @@ type Conf struct {
 }
 
 var conf = Conf{
-	ClientId:     "",  	// fill in with your id before test
-	ClientSecret: "",   // fill in with your secret before test
+	ClientId:     "94143fe4a712d77c2983",  	// fill in with your id before test
+	ClientSecret: "de6bdb690150bf73bbb866ed5f905d622e9ade0f",   // fill in with your secret before test
 	RedirectUrl:  "http://localhost:8080/login",
 }
 
@@ -26,22 +26,6 @@ type Token struct {
 	AccessToken string `json:"access_token"`
 	TokenType   string `json:"token_type"` 
 	Scope       string `json:"scope"`     
-}
-
-func Hello(w http.ResponseWriter, r *http.Request) {
-
-	var temp *template.Template
-	var err error
-	if temp, err = template.ParseFiles("test-frontend.html"); err != nil {
-		fmt.Println("read frontend failed, error:", err)
-		return
-	}
-
-
-	if err = temp.Execute(w, conf); err != nil {
-		fmt.Println("read html page failed, error:", err)
-		return
-	}
 }
 
 
@@ -79,30 +63,4 @@ func GetToken(url string) (*Token, error) {
 }
 
 
-func Oauth(w http.ResponseWriter, r *http.Request) {
 
-	var err error
-	
-	// get code
-	var code = r.URL.Query().Get("code")
-
-	// get token
-	var tokenAuthUrl = GetTokenAuthUrl(code)
-	var token *Token	
-	if token, err = GetToken(tokenAuthUrl); err != nil {
-		fmt.Println(err)
-		return
-	}
-	fmt.Printf("%+v",token)
-	
-}
-
-
-func main() {
-	http.HandleFunc("/", Hello)
-	http.HandleFunc("/login", Oauth)
-	if err := http.ListenAndServe(":8080", nil); err != nil {
-		fmt.Println("listening error:", err)
-		return
-	}
-}

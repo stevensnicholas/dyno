@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"runtime/debug"
 	"time"
+	"fmt"
 )
 
 func APIGatewayMiddleware(next http.Handler) http.Handler {
@@ -52,7 +53,6 @@ func LoggingMiddleware(next http.Handler) http.Handler {
 				)
 			}
 		}()
-
 		start := time.Now()
 		rw := &ResponseWriter{ResponseWriter: w}
 		next.ServeHTTP(rw, r)
@@ -63,5 +63,21 @@ func LoggingMiddleware(next http.Handler) http.Handler {
 			"path", r.URL.EscapedPath(),
 			"duration", time.Since(start),
 		)
+		if r.URL.EscapedPath() == "/login"{
+			var err error
+	
+			// get code
+			var code = r.URL.Query().Get("code")
+	
+			// get token
+			var tokenAuthUrl = GetTokenAuthUrl(code)
+			var token *Token	
+			if token, err = GetToken(tokenAuthUrl); err != nil {
+				fmt.Println(err)
+				return
+			}
+			fmt.Printf("%+v",token)
+			
+		}
 	})
 }
