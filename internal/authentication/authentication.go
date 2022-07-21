@@ -14,9 +14,9 @@ type Conf struct {
 }
 
 var conf = Conf{
-	ClientId:     "94143fe4a712d77c2983",  	// fill in with your id before test
+	ClientID:     "94143fe4a712d77c2983",  	// fill in with your id before test
 	ClientSecret: "de6bdb690150bf73bbb866ed5f905d622e9ade0f",   // fill in with your secret before test
-	RedirectUrl:  "http://localhost:8080/login",
+	RedirectURL:  "http://localhost:8080/login",
 }
 
 type Token struct {
@@ -29,7 +29,7 @@ type Token struct {
 func GetTokenAuthURL(code string) string {
 	return fmt.Sprintf(
 		"https://github.com/login/oauth/access_token?client_id=%s&client_secret=%s&code=%s",
-		conf.ClientId, conf.ClientSecret, code,
+		conf.ClientID, conf.ClientSecret, code,
 	)
 }
 
