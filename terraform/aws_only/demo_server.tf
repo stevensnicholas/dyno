@@ -8,7 +8,7 @@ data "archive_file" "lambda_test_api" {
   output_path = "${path.module}/files/lambda_test_code.zip"
 }
 resource "aws_iam_role" "lambda_exec_test" {
-  name = "${var.deployment_id}-lambda-execution-comp9447-test-api"
+  name = "${var.deployment_id}-test-api-lambda-execution"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
