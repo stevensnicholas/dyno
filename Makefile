@@ -2,6 +2,7 @@
 
 build:
 	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o bin/api/main ./cmd/api/...
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o bin/cli/main ./cmd/cli/...
 
 docs: build
 	./bin/main -gendocs
