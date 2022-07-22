@@ -27,7 +27,7 @@ resource "aws_iam_role_policy_attachment" "lambda_restler" {
 resource "aws_lambda_function" "lambda_restler" {
   function_name = "${var.deployment_id}-restler-fuzzer"
   image_uri     = "${aws_ecr_repository.image_repository.repository_url}:latest"
-  handler       = "app.handler"
+  package_type  = "Image"
   timeout       = 60
 
   tracing_config {
