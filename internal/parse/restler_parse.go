@@ -2,10 +2,7 @@ package parse
 
 import (
 	"bufio"
-	"context"
 	"fmt"
-	"github.com/google/go-github/v45/github"
-	"golambda/internal/platform"
 	"os"
 	"strings"
 	"golambda/internal/issue"
@@ -20,17 +17,16 @@ const bugFile = 6
 //				repoName is the user's repo
 //				owner is the owner of the repo
 //				file is filepath to the bug_buckets.txt file that stores all the bugs that has occured
-func ParseFuzzGithub(token string, repoName string, owner string, file string) {
-	ctx := context.Background()
-	client := platform.CreateClient(ctx, &token)
+func ParseFuzz(token string, repoName string, owner string, file string) []issue.DynoIssue {
 	f, err := os.Open(file)
 	if err != nil {
 		panic(err)
 	}
 
 	defer f.Close()
-	location := "cmd/internal/tests/bug_buckets/"
+	location := "internal/tests/bug_buckets/"
 	scanner := bufio.NewScanner(f)
+	dynoIssueSlice := []issue.DynoIssue{}
 	dynoIssue := &issue.DynoIssue{}
 	dynoIssueBody := &issue.DynoIssueBody{}
 	// Sending an issue for each error found through fuzz
@@ -47,16 +43,12 @@ func ParseFuzzGithub(token string, repoName string, owner string, file string) {
 				details := AddDYNODetails(fuzzError[0])
 				dynoIssueBody.Title = &title
 				dynoIssueBody.Details = &details
-				dynoIssueBody = ReadBugFile(location, bugFileName, dynoIssueBody)
+				dynoIssueBody = CreateDynoIssueBody(location, bugFileName, dynoIssueBody)
 				dynoIssue.Body = dynoIssueBody
-				client.Issues.Create(ctx, owner, repoName, &github.IssueRequest{
-					Title:     dynoIssue.Title,
-					Body:      FormatBody(dynoIssueBody),
-					Labels:    dynoIssue.Labels,
-					Assignee:  dynoIssue.Assignee,
-					State:     dynoIssue.State,
-					Milestone: dynoIssue.Milestone,
-				})
+				dynoIssue = CreateIssue(fuzzError[0], dynoIssue)
+				if dynoIssue != nil {
+					dynoIssueSlice = append(dynoIssueSlice, *dynoIssue)
+				}
 			}
 		}
 	}
@@ -64,7 +56,7 @@ func ParseFuzzGithub(token string, repoName string, owner string, file string) {
 	if err := scanner.Err(); err != nil {
 		panic(err)
 	}
-
+	return dynoIssueSlice
 }
 
 // Reads the a bug_bucket file that is specified by the category of the bug found by restler
@@ -77,7 +69,7 @@ func ParseFuzzGithub(token string, repoName string, owner string, file string) {
 // Returns:
 // 				body is the body of the issue
 // 				endpoint is the endpoint that has the bug
-func ReadBugFile(location string, bugFileName string, dynoIssueBody *issue.DynoIssueBody) (*issue.DynoIssueBody) {
+func CreateDynoIssueBody(location string, bugFileName string, dynoIssueBody *issue.DynoIssueBody) (*issue.DynoIssueBody) {
 	f, err := os.Open(fmt.Sprintf(location+"%s", bugFileName))
 	if err != nil {
 		panic(err)
@@ -101,7 +93,6 @@ func ReadBugFile(location string, bugFileName string, dynoIssueBody *issue.DynoI
 	if err := scanner.Err(); err != nil {
 		panic(err)
 	}
-
 	return dynoIssueBody
 }
 
