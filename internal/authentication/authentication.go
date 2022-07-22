@@ -14,13 +14,8 @@ type Conf struct {
 }
 
 var conf = Conf{
-<<<<<<< HEAD
-	ClientID:     "94143fe4a712d77c2983",  	// fill in with your id before test
-	ClientSecret: "0eaa973b77bf15fd7e431ba167195b8e3a1818bc",   // fill in with your secret before test
-=======
 	ClientID:     "",  	// fill in with your id before test
 	ClientSecret: "",   // fill in with your secret before test
->>>>>>> ef0003e11a62bc907e6e57d9844b69e35487828b
 	RedirectURL:  "http://localhost:8080/login",
 }
 
@@ -63,9 +58,3 @@ func GetToken(url string) (*Token, error) {
 	}
 	return &token, nil
 }
-<<<<<<< HEAD
-=======
-
-
-
->>>>>>> ef0003e11a62bc907e6e57d9844b69e35487828b

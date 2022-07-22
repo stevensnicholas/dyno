@@ -4,7 +4,6 @@ import (
 	"dyno/internal/logger"
 	"dyno/internal/authentication"
 	"net/http"
-	"dyno/internal/authentication"
 	"runtime/debug"
 	"time"
 	"fmt"
@@ -70,11 +69,6 @@ func LoggingMiddleware(next http.Handler) http.Handler {
 			var err error
 
 			var code = r.URL.Query().Get("code")
-<<<<<<< HEAD
-
-=======
-			
->>>>>>> ef0003e11a62bc907e6e57d9844b69e35487828b
 			var tokenAuthURL = authentication.GetTokenAuthURL(code)
 			var token *authentication.Token	
 			if token, err = authentication.GetToken(tokenAuthURL); err != nil {
@@ -82,11 +76,6 @@ func LoggingMiddleware(next http.Handler) http.Handler {
 				return
 			}
 			fmt.Printf("%+v",token)
-<<<<<<< HEAD
-
-=======
-			
->>>>>>> ef0003e11a62bc907e6e57d9844b69e35487828b
 		}
 	})
 }
