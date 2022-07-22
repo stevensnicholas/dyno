@@ -1,5 +1,5 @@
 ARG FUNCTION_DIR="/function"
-FROM  mcr.microsoft.com/restlerfuzzer/restler:v7.4.0 as build-image
+FROM  mcr.microsoft.com/restlerfuzzer/restler:v8.5.0 as build-image
 RUN apk add --no-cache \
     python3 \
     python3-dev \
@@ -20,7 +20,7 @@ RUN python3 -m pip install --upgrade pip
 RUN pip3 install \
     --target ${FUNCTION_DIR} \
     awslambdaric
-FROM mcr.microsoft.com/restlerfuzzer/restler:v7.4.0
+FROM mcr.microsoft.com/restlerfuzzer/restler:v8.5.0
 ARG FUNCTION_DIR
 WORKDIR ${FUNCTION_DIR}
 COPY --from=build-image ${FUNCTION_DIR} ${FUNCTION_DIR}
