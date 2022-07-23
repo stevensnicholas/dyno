@@ -14,3 +14,8 @@ variable "static_react_bucket" {
   description = "lambda made in main"
 
 }
+
+variable "restler_image_tag" {
+  type        = string
+  description = "restler image tag to pull"
+}
