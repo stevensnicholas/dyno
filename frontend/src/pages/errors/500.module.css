@@ -1,0 +1,82 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700|Montserrat:400,400i,500);
+
+.text_long_shadow {
+  text-shadow: #1d7d74 1px 1px, #1d7d74 2px 2px, #1d7d74 3px 3px, #1d7d74 4px 4px, #1d7d74 5px 5px, #1d7d74 6px 6px, #1d7d74 7px 7px, #1d7d74 8px 8px, #1d7d74 9px 9px, #1d7d74 10px 10px, #1d7d74 11px 11px, #1d7d74 12px 12px, #1d7d74 13px 13px, #1d7d74 14px 14px, #1d7d74 15px 15px, #1d7d74 16px 16px, #1d7d74 17px 17px, #1d7d74 18px 18px, #1d7d74 19px 19px, #1d7d74 20px 20px, #1d7d74 21px 21px, #208b81 22px 22px, #208b81 23px 23px, #208b81 24px 24px, #208b81 25px 25px, #208b81 26px 26px, #208b81 27px 27px, #208b81 28px 28px, #208b81 29px 29px, #208b81 30px 30px, #26a69a 31px 31px, #26a69a 32px 32px, #26a69a 33px 33px, #26a69a 34px 34px, #26a69a 35px 35px, #26a69a 36px 36px, #26a69a 37px 37px;
+  background-color: #00bfa5;
+  width: 100%;
+  font-size: 10rem;
+  color: #fff !important;
+  text-align: center;
+  padding: 20px 0 !important;
+}
+
+#site_layout_example_right {
+  background-color: #00bfa5;
+  height: 300px;
+}
+
+#site_layout_example_top {
+  background-color: #FF5252;
+  height: 50px;
+}
+
+.browser_window {
+  text-align: left;
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  -webkit-border-radius: 5px 5px 2px 2px;
+  -moz-border-radius: 5px 5px 2px 2px;
+  border-radius: 5px 5px 2px 2px;
+  background-clip: padding-box;
+  background-color: transparent;
+  margin: 20px 0;
+  overflow: hidden;
+}
+
+.browser_window .top_bar {
+  height: 30px;
+  -webkit-border-radius: 5px 5px 0 0;
+  -moz-border-radius: 5px 5px 0 0;
+  border-radius: 5px 5px 0 0;
+  background-clip: padding-box;
+  border-top: thin solid #eaeae9;
+  border-bottom: thin solid #ddd;
+  background: linear-gradient(#e7e7e6, #e0e0e0);
+}
+
+.browser_window .circle {
+  height: 10px;
+  width: 10px;
+  display: inline-block;
+  border-radius: 50%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  background-color: #fff;
+  margin-right: 1px;
+}
+
+#close_circle {
+  background-color: #ff5c5a;
+}
+
+#minimize_circle {
+  background-color: #fdb45c;
+}
+
+#maximize_circle {
+  background-color: #1bc656;
+}
+
+.caption {
+  font-size: 1.25rem;
+  font-weight: 300;
+  margin-bottom: 30px;
+}
+
+.caption_uppercase {
+  font-size: 1.25rem;
+  font-weight: 300;
+  margin-bottom: 30px;
+  text-transform: uppercase;
+}
