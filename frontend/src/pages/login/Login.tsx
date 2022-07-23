@@ -30,10 +30,7 @@ const Login = () => {
                   href="http://localhost:3000/login"
                   className="btn-large waves-effect waves-teal col s12 black"
                 >
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                  <span></span>Login
+                  Login
                 </a>
               </div>
             </div>
