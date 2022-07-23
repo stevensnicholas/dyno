@@ -322,33 +322,3 @@ func TestCreateResultsValidUseAfterFreeChecker(t *testing.T) {
 	expectedEndpoint := "/api/blog/posts/20"
 	assert.Equal(t, expectedEndpoint, string(*actualResult[2].Endpoint))
 }
-
-func TestDYNODetailsValid(t *testing.T) {
-	fuzzErrorList := [7]string{"InternalServerErrors",
-		"UseAfterFreeChecker",
-		"NameSpaceRuleChecker",
-		"ResourceHierarchyChecker",
-		"LeakageRuleChecker",
-		"InvalidDynamicObjectChecker",
-		"PayloadBodyChecker",
-	}
-	actualDetails := parse.AddDYNODetails(fuzzErrorList[0])
-	assert.Equal(t, "\nDetails: '500 Internal Server' Errors and any other 5xx errors are detected.\n\nVisualizer: [DYNO](the web url)\n", actualDetails)
-	actualDetails = parse.AddDYNODetails(fuzzErrorList[1])
-	assert.Equal(t, "\nDetails: Detects that a deleted resource can still being accessed after deletion.\n\nVisualizer: [DYNO](the web url)\n", actualDetails)
-	actualDetails = parse.AddDYNODetails(fuzzErrorList[2])
-	assert.Equal(t, "\nDetails: Detects that an unauthorized user can access service resources.\n\nVisualizer: [DYNO](the web url)\n", actualDetails)
-	actualDetails = parse.AddDYNODetails(fuzzErrorList[3])
-	assert.Equal(t, "\nDetails: Detects that a child resource can be accessed from a non-parent resource.\n\nVisualizer: [DYNO](the web url)\n", actualDetails)
-	actualDetails = parse.AddDYNODetails(fuzzErrorList[4])
-	assert.Equal(t, "\nDetails: Detects that a failed resource creation leaks data in subsequent requests.\n\nVisualizer: [DYNO](the web url)\n", actualDetails)
-	actualDetails = parse.AddDYNODetails(fuzzErrorList[5])
-	assert.Equal(t, "\nDetails: Detects 500 errors or unexpected success status codes when invalid dynamic objects are sent in requests.\n\nVisualizer: [DYNO](the web url)\n", actualDetails)
-	actualDetails = parse.AddDYNODetails(fuzzErrorList[6])
-	assert.Equal(t, "\nDetails: Detects 500 errors when fuzzing the JSON bodies of requests.\n\nVisualizer: [DYNO](the web url)\n", actualDetails)
-}
-
-func TestDYNODetailsInvalid(t *testing.T) {
-	actualDetails := parse.AddDYNODetails("")
-	assert.Equal(t, "", actualDetails)
-}

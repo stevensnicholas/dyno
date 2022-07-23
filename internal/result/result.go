@@ -2,8 +2,6 @@ package result
 
 type DynoResult struct {
 	Title *string `json:"title,omitempty"`
-	Details *string  `json:"details,omitempty"`
-	Visualizer *string  `json:"visualizer,omitempty"`
 	Endpoint *string `json:"endpoint,omitempty"`
 	Method *string  `json:"method,omitempty"`
 	MethodInformation *DynoMethodInformation `json:"methodInformation,omitempty"`

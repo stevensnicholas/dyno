@@ -11,9 +11,9 @@ import (
 // TODO Change the process of reading file according to SQS and S3 Buckets
 const bugFile = 6
 
-// Parses the fuzzing files from the bug_buckets folder and creates github issues
-// Inputs:
-//				file is filepath to the bug_buckets.txt file that stores all the bugs that has occured
+// Parses the fuzzing files from the bug_buckets folder and creates raw fuzzing results.
+// File is filepath to the bug_buckets.txt file that stores all the bugs that has occured.
+// Location is the current location of the file on the system.
 func ParseRestlerFuzzResults(location string, file string) []result.DynoResult {
 	f, err := os.Open(file)
 	if err != nil {
@@ -67,9 +67,7 @@ func CreateResults(location string, bugFileName string, fuzzError []string) ([]r
 	defer f.Close()
 	
 	title := fmt.Sprintf("%s Invalid %s Response", fuzzError[0], fuzzError[1])
-	details := AddDYNODetails(fuzzError[0])
 	dynoResult.Title = &title
-	dynoResult.Details = &details
 	dynoResult.ErrorType = &fuzzError[0]
 
 	scanner := bufio.NewScanner(f)
@@ -93,36 +91,6 @@ func CreateResults(location string, bugFileName string, fuzzError []string) ([]r
 		panic(err)
 	}
 	return dynoResults
-}
-
-// AddDYNODetails adds the details and visualizer url to the body of the issue request that
-// corresponds to the FuzzError that is received
-// Inputs:
-//				fuzzError is the type of bug that has been found by the fuzzer
-// Returns:
-// 				details a string with the specified details
-// 				If not details are created leaves an empty string
-func AddDYNODetails(fuzzError string) string {
-	details := ""
-	switch fuzzError {
-	case "InternalServerErrors":
-		details = "\nDetails: '500 Internal Server' Errors and any other 5xx errors are detected.\n\nVisualizer: [DYNO](the web url)\n"
-	case "UseAfterFreeChecker":
-		details = "\nDetails: Detects that a deleted resource can still being accessed after deletion.\n\nVisualizer: [DYNO](the web url)\n"
-	case "NameSpaceRuleChecker":
-		details = "\nDetails: Detects that an unauthorized user can access service resources.\n\nVisualizer: [DYNO](the web url)\n"
-	case "ResourceHierarchyChecker":
-		details = "\nDetails: Detects that a child resource can be accessed from a non-parent resource.\n\nVisualizer: [DYNO](the web url)\n"
-	case "LeakageRuleChecker":
-		details = "\nDetails: Detects that a failed resource creation leaks data in subsequent requests.\n\nVisualizer: [DYNO](the web url)\n"
-	case "InvalidDynamicObjectChecker":
-		details = "\nDetails: Detects 500 errors or unexpected success status codes when invalid dynamic objects are sent in requests.\n\nVisualizer: [DYNO](the web url)\n"
-	case "PayloadBodyChecker":
-		details = "\nDetails: Detects 500 errors when fuzzing the JSON bodies of requests.\n\nVisualizer: [DYNO](the web url)\n"
-	default:
-		details = ""
-	}
-	return details
 }
 
 func CreateMethod(requestSplit []string, dynoMethodInformation *result.DynoMethodInformation) (*result.DynoMethodInformation) {
