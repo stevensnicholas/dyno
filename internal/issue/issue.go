@@ -16,6 +16,9 @@ type DynoIssue struct {
 	Milestone *int `json:"milestone,omitempty"`
 }
 
+// CreateIssues collects all the results from the raw fuzzing results and formats 
+// them using the DynoIssue struct to be presented as an issue on any communication platform.
+// Inputted is a slice of dynoResults and returns all the issues as a []DynoIssue.
 func CreateIssues(dynoResults []result.DynoResult) []DynoIssue{
 	dynoIssues := []DynoIssue{}
 	dynoIssue := &DynoIssue{}
@@ -29,16 +32,10 @@ func CreateIssues(dynoResults []result.DynoResult) []DynoIssue{
 	return dynoIssues 
 }
 
-// createIssue sorts the bugs found by the fuzzer by there categories and creates a new github issueRequest
-// Inputs:
-//				fuzzError is the type of bug that has been found by the fuzzer
-//        body is the body of the github issue
-// 				endpoint is the endpoint that has the bug
-// 				assignee is if there is a specified github user that should be assigned for checking this certain type of bug
-// 				state is the current state of the issue
-// 				milestone specifies if the issue should be linked to a certain milestone on the users repo
-// Returns:
-// 				*github.IssueRequest with all the relevant information regarding the certain bug
+// createIssue sorts the bugs found by the fuzzer by there categories and creates a new DynoIssue
+// Inputted is a fuzzError is the type of bug that has been found by the fuzzer and a 
+// dynoIssue is a struct of a issue. Returns *DynoIssue with all the relevant 
+// information regarding the certain bug
 func createIssue(fuzzError string, dynoIssue *DynoIssue) *DynoIssue {
 	switch fuzzError {
 	case "InternalServerErrors":
@@ -60,15 +57,9 @@ func createIssue(fuzzError string, dynoIssue *DynoIssue) *DynoIssue {
 }
 
 // internalServerErrorsIssue creates a github Issue Request for the categorized bug by restler
-// providing a description on what the bug is and how to possibly fix the bug
-// Inputs:
-//        body is the body of the github issue
-// 				endpoint is the endpoint that has the bug
-// 				assignee is if there is a specified github user that should be assigned for checking this certain type of bug
-// 				state is the current state of the issue
-// 				milestone specifies if the issue should be linked to a certain milestone on the users repo
-// Returns:
-// 				*github.IssueRequest with all the relevant information regarding the certain bug
+// providing a description on what the bug is and how to possibly fix the bug.
+// Inputted is a *DynoIssue which is null and is a struct of a issue. 
+// Returns *DynoIssue with all the relevant information regarding the certain bug
 func internalServerErrorsIssue(dynoIssue *DynoIssue) *DynoIssue {
 	title := fmt.Sprintf("DYNO Fuzz: InternalServerErrors at Endpoint %s", *dynoIssue.Body.Endpoint)
 	details := "\nDetails: '500 Internal Server' Errors and any other 5xx errors are detected.\n"
@@ -81,16 +72,10 @@ func internalServerErrorsIssue(dynoIssue *DynoIssue) *DynoIssue {
 	return dynoIssue
 }
 
-// InternalServerErrors creates a github Issue Request for the categorized bug by restler
-// providing a description on what the bug is and how to possibly fix the bug
-// Inputs:
-//        body is the body of the github issue
-// 				endpoint is the endpoint that has the bug
-// 				assignee is if there is a specified github user that should be assigned for checking this certain type of bug
-// 				state is the current state of the issue
-// 				milestone specifies if the issue should be linked to a certain milestone on the users repo
-// Returns:
-// 				*DynoIssue with all the relevant information regarding the certain bug
+// resourceHierarchyCheckerIssue creates a github Issue Request for the categorized bug by restler
+// providing a description on what the bug is and how to possibly fix the bug.
+// Inputted is a *DynoIssue which is null and is a struct of a issue. 
+// Returns *DynoIssue with all the relevant information regarding the certain bug
 func resourceHierarchyCheckerIssue(dynoIssue *DynoIssue) *DynoIssue {
 	title := fmt.Sprintf("DYNO Fuzz: ResourceHierarchyChecker at Endpoint %s", *dynoIssue.Body.Endpoint)
 	details := "\nDetails: Detects that a child resource can be accessed from a non-parent resource.\n"
@@ -103,16 +88,10 @@ func resourceHierarchyCheckerIssue(dynoIssue *DynoIssue) *DynoIssue {
 	return dynoIssue
 }
 
-// InternalServerErrors creates a github Issue Request for the categorized bug by restler
-// providing a description on what the bug is and how to possibly fix the bug
-// Inputs:
-//        body is the body of the github issue
-// 				endpoint is the endpoint that has the bug
-// 				assignee is if there is a specified github user that should be assigned for checking this certain type of bug
-// 				state is the current state of the issue
-// 				milestone specifies if the issue should be linked to a certain milestone on the users repo
-// Returns:
-// 				*DynoIssue with all the relevant information regarding the certain bug
+// nameSpaceRuleCheckerIssue creates a github Issue Request for the categorized bug by restler
+// providing a description on what the bug is and how to possibly fix the bug.
+// Inputted is a *DynoIssue which is null and is a struct of a issue. 
+// Returns *DynoIssue with all the relevant information regarding the certain bug
 func nameSpaceRuleCheckerIssue(dynoIssue *DynoIssue) *DynoIssue {
 	title := fmt.Sprintf("DYNO Fuzz: NameSpaceRuleChecker at Endpoint %s", *dynoIssue.Body.Endpoint)
 	details := "\nDetails: Detects that an unauthorized user can access service resources.\n"
@@ -125,16 +104,10 @@ func nameSpaceRuleCheckerIssue(dynoIssue *DynoIssue) *DynoIssue {
 	return dynoIssue
 }
 
-// InternalServerErrors creates a github Issue Request for the categorized bug by restler
-// providing a description on what the bug is and how to possibly fix the bug
-// Inputs:
-//        body is the body of the github issue
-// 				endpoint is the endpoint that has the bug
-// 				assignee is if there is a specified github user that should be assigned for checking this certain type of bug
-// 				state is the current state of the issue
-// 				milestone specifies if the issue should be linked to a certain milestone on the users repo
-// Returns:
-// 				*DynoIssue with all the relevant information regarding the certain bug
+// useAfterFreeCheckerIssue creates a github Issue Request for the categorized bug by restler
+// providing a description on what the bug is and how to possibly fix the bug.
+// Inputted is a *DynoIssue which is null and is a struct of a issue. 
+// Returns *DynoIssue with all the relevant information regarding the certain bug
 func useAfterFreeCheckerIssue(dynoIssue *DynoIssue) *DynoIssue {
 	title := fmt.Sprintf("DYNO Fuzz: UseAfterFreeChecker at Endpoint %s", *dynoIssue.Body.Endpoint)
 	details := "\nDetails: Detects that a deleted resource can still being accessed after deletion.\n"
@@ -147,16 +120,10 @@ func useAfterFreeCheckerIssue(dynoIssue *DynoIssue) *DynoIssue {
 	return dynoIssue
 }
 
-// InternalServerErrors creates a github Issue Request for the categorized bug by restler
-// providing a description on what the bug is and how to possibly fix the bug
-// Inputs:
-//        body is the body of the github issue
-// 				endpoint is the endpoint that has the bug
-// 				assignee is if there is a specified github user that should be assigned for checking this certain type of bug
-// 				state is the current state of the issue
-// 				milestone specifies if the issue should be linked to a certain milestone on the users repo
-// Returns:
-// 				*DynoIssue with all the relevant information regarding the certain bug
+// leakageRuleCheckerIssue creates a github Issue Request for the categorized bug by restler
+// providing a description on what the bug is and how to possibly fix the bug.
+// Inputted is a *DynoIssue which is null and is a struct of a issue. 
+// Returns *DynoIssue with all the relevant information regarding the certain bug
 func leakageRuleCheckerIssue(dynoIssue *DynoIssue) *DynoIssue {
 	title := fmt.Sprintf("DYNO Fuzz: LeakageRuleChecker at Endpoint %s", *dynoIssue.Body.Endpoint)
 	details := "\nDetails: Detects that a failed resource creation leaks data in subsequent requests.\n"
@@ -169,16 +136,10 @@ func leakageRuleCheckerIssue(dynoIssue *DynoIssue) *DynoIssue {
 	return dynoIssue
 }
 
-// InternalServerErrors creates a github Issue Request for the categorized bug by restler
-// providing a description on what the bug is and how to possibly fix the bug
-// Inputs:
-//        body is the body of the github issue
-// 				endpoint is the endpoint that has the bug
-// 				assignee is if there is a specified github user that should be assigned for checking this certain type of bug
-// 				state is the current state of the issue
-// 				milestone specifies if the issue should be linked to a certain milestone on the users repo
-// Returns:
-// 				*DynoIssue with all the relevant information regarding the certain bug
+// invalidDynamicObjectCheckerIssue creates a github Issue Request for the categorized bug by restler
+// providing a description on what the bug is and how to possibly fix the bug.
+// Inputted is a *DynoIssue which is null and is a struct of a issue. 
+// Returns *DynoIssue with all the relevant information regarding the certain bug
 func invalidDynamicObjectCheckerIssue(dynoIssue *DynoIssue) *DynoIssue {
 	title := fmt.Sprintf("DYNO Fuzz: InvalidDynamicObjectChecker at Endpoint %s", *dynoIssue.Body.Endpoint)
 	details := "\nDetails: Detects 500 errors or unexpected success status codes when invalid dynamic objects are sent in requests.\n"
@@ -191,16 +152,10 @@ func invalidDynamicObjectCheckerIssue(dynoIssue *DynoIssue) *DynoIssue {
 	return dynoIssue
 }
 
-// InternalServerErrors creates a github Issue Request for the categorized bug by restler
-// providing a description on what the bug is and how to possibly fix the bug
-// Inputs:
-//        body is the body of the github issue
-// 				endpoint is the endpoint that has the bug
-// 				assignee is if there is a specified github user that should be assigned for checking this certain type of bug
-// 				state is the current state of the issue
-// 				milestone specifies if the issue should be linked to a certain milestone on the users repo
-// Returns:
-// 				*DynoIssue with all the relevant information regarding the certain bug
+// payloadBodyCheckerIssue creates a github Issue Request for the categorized bug by restler
+// providing a description on what the bug is and how to possibly fix the bug.
+// Inputted is a *DynoIssue which is null and is a struct of a issue. 
+// Returns *DynoIssue with all the relevant information regarding the certain bug
 func payloadBodyCheckerIssue(dynoIssue *DynoIssue) *DynoIssue {
 	title := fmt.Sprintf("DYNO Fuzz: PayloadBodyChecker at Endpoint %s", *dynoIssue.Body.Endpoint)
 	details := "\nDetails: Detects 500 errors when fuzzing the JSON bodies of requests.\n"
