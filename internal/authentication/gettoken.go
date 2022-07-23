@@ -1,30 +1,29 @@
 package authentication
-import (
-    "fmt"
-    "net/http"
-    "errors"
-	"encoding/json"
 
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+	"net/http"
 )
 
 type Conf struct {
-	ClientID     string 
-	ClientSecret string 
-	RedirectURL  string 
+	ClientID     string
+	ClientSecret string
+	RedirectURL  string
 }
 
 var conf = Conf{
-	ClientID:     "",  	// fill in with your id before test
-	ClientSecret: "",   // fill in with your secret before test
+	ClientID:     "", // fill in with your id before test
+	ClientSecret: "", // fill in with your secret before test
 	RedirectURL:  "http://localhost:8080/login",
 }
 
 type Token struct {
 	AccessToken string `json:"access_token"`
-	TokenType   string `json:"token_type"` 
-	Scope       string `json:"scope"`     
+	TokenType   string `json:"token_type"`
+	Scope       string `json:"scope"`
 }
-
 
 func GetTokenAuthURL(code string) string {
 	return fmt.Sprintf(
@@ -49,7 +48,7 @@ func GetToken(url string) (*Token, error) {
 	}
 
 	if res.StatusCode != http.StatusOK {
-	return nil, errors.New("could not retrieve token")
+		return nil, errors.New("could not retrieve token")
 	}
 
 	var token Token

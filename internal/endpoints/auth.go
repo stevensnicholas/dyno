@@ -2,14 +2,14 @@ package endpoints
 
 import (
 	"context"
+	"dyno/internal/authentication"
 	"fmt"
 	"github.com/swaggest/rest/web"
 	"github.com/swaggest/usecase"
-	"dyno/internal/authentication"
 	"github.com/swaggest/usecase/status"
 )
 
-type AuthInput struct{
+type AuthInput struct {
 	Code string `query:"code"`
 }
 
@@ -26,13 +26,13 @@ func Authentication(service *web.Service) {
 
 		var code = in.Code
 		var tokenAuthURL = authentication.GetTokenAuthURL(code)
-		var token *authentication.Token	
+		var token *authentication.Token
 		if token, err = authentication.GetToken(tokenAuthURL); err != nil {
 			fmt.Println(err)
 			return err
 		}
-		
-		fmt.Printf("%+v",token)
+
+		fmt.Printf("%+v", token)
 		out.Result = token.AccessToken
 		return nil
 	}

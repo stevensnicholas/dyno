@@ -52,7 +52,7 @@ func LoggingMiddleware(next http.Handler) http.Handler {
 				)
 			}
 		}()
-		
+
 		start := time.Now()
 		rw := &ResponseWriter{ResponseWriter: w}
 		next.ServeHTTP(rw, r)
