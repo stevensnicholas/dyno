@@ -11,7 +11,7 @@ services:
   restler:
     build:
       context: restler
-    ports: [ 5000:5000 ]
+    ports: [ 9000:8080 ]
   demo_server:
     build:
       context: demo_server

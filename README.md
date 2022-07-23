@@ -39,7 +39,7 @@ npm run build
 
 Usage:
 ```
-./bin/main --help
+./bin/api/main --help
 Usage of ./bin/main:
   -gendocs
     	Generate API Docs
@@ -53,7 +53,7 @@ Usage of ./bin/main:
 
 Run backend http server
 ```
-./bin/main -http
+./bin/api/main -http
 ```
 
 Run frontend development server
@@ -96,4 +96,12 @@ Run the frontend linter
 cd frontend
 npm run lint
 npm run fix # auto fixes problems
+```
+
+## Test Restler Backend
+```
+sudo docker-compose up -d
+curl --location --request POST 'http://localhost:9000/2015-03-31/functions/function/invocations' \
+--header 'Content-Type: application/json' --data '@tests/restler_local_test.json'
+
 ```
