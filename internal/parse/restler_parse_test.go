@@ -16,26 +16,32 @@ func TestParseRestlerFuzzResultsInvalid(t *testing.T) {
 func TestParseRestlerFuzzResultsValid(t *testing.T) {
 	location := "../tests/bug_buckets/"
 	file := "../tests/bug_buckets/bug_buckets.txt"
-	expectedDynoResults := [5]string{
+	expectedDynoResults := [11]string{
 		"InvalidDynamicObjectChecker Invalid 20x Response",
 		"InvalidDynamicObjectChecker Invalid 20x Response",
+		"InvalidDynamicObjectChecker Invalid 20x Response",
+		"InvalidDynamicObjectChecker Invalid 20x Response",
+		"PayloadBodyChecker Invalid 500 Response",
+		"PayloadBodyChecker Invalid 500 Response",
 		"PayloadBodyChecker Invalid 500 Response",
 		"PayloadBodyChecker Invalid 500 Response",
 		"UseAfterFreeChecker Invalid 20x Response",
+		"UseAfterFreeChecker Invalid 20x Response",
+		"UseAfterFreeChecker Invalid 20x Response",
 	}
 	actualDynoResults := parse.ParseRestlerFuzzResults(location, file)
-	assert.Equal(t, expectedDynoResults[0], *actualDynoResults[0][0].Title)
-	assert.Equal(t, expectedDynoResults[0], *actualDynoResults[0][1].Title)
-	assert.Equal(t, expectedDynoResults[1], *actualDynoResults[1][0].Title)
-	assert.Equal(t, expectedDynoResults[1], *actualDynoResults[1][1].Title)
-	assert.Equal(t, expectedDynoResults[2], *actualDynoResults[2][0].Title)
-	assert.Equal(t, expectedDynoResults[2], *actualDynoResults[2][1].Title)
-	assert.Equal(t, expectedDynoResults[3], *actualDynoResults[3][0].Title)
-	assert.Equal(t, expectedDynoResults[3], *actualDynoResults[3][1].Title)
-	assert.Equal(t, expectedDynoResults[4], *actualDynoResults[4][0].Title)
-	assert.Equal(t, expectedDynoResults[4], *actualDynoResults[4][1].Title)
+	assert.Equal(t, expectedDynoResults[0], *actualDynoResults[0].Title)
+	assert.Equal(t, expectedDynoResults[1], *actualDynoResults[1].Title)
+	assert.Equal(t, expectedDynoResults[2], *actualDynoResults[2].Title)
+	assert.Equal(t, expectedDynoResults[3], *actualDynoResults[3].Title)
+	assert.Equal(t, expectedDynoResults[4], *actualDynoResults[4].Title)
+	assert.Equal(t, expectedDynoResults[5], *actualDynoResults[5].Title)
+	assert.Equal(t, expectedDynoResults[6], *actualDynoResults[6].Title)
+	assert.Equal(t, expectedDynoResults[7], *actualDynoResults[7].Title)
+	assert.Equal(t, expectedDynoResults[8], *actualDynoResults[8].Title)
+	assert.Equal(t, expectedDynoResults[9], *actualDynoResults[9].Title)
+	assert.Equal(t, expectedDynoResults[10], *actualDynoResults[10].Title)
 }
-
 func TestCreateResultInvalidNoFile(t *testing.T) {
 	location := ""
 	testBugFile := ""
@@ -194,7 +200,7 @@ func TestCreateResultsValidPayloadBodyChecker_1(t *testing.T) {
 	assert.Equal(t, expectedTimeDelay, string(*actualResult[1].TimeDelay))
 	expectedAsyncTime = "! max_async_wait_time 0"
 	assert.Equal(t, expectedAsyncTime, string(*actualResult[1].AsyncTime))
-	expectedPreviousResponse = "PREVIOUS RESPONSE: 'HTTP/1.1 500 Internal Server Error response:{\"detail\":\"ID was not specified.\"}'"
+	expectedPreviousResponse = "PREVIOUS RESPONSE: 'HTTP/1.1 500 Internal Server Erro response:{\"detail\":\"ID was not specified.\"}'"
 	assert.Equal(t, expectedPreviousResponse, string(*actualResult[1].PreviousResponse))
 	expectedEndpoint := "/api/blog/posts/14"
 	assert.Equal(t, expectedEndpoint, string(*actualResult[1].Endpoint))
@@ -248,7 +254,7 @@ func TestCreateResultsValidPayloadBodyChecker_2(t *testing.T) {
 	assert.Equal(t, expectedTimeDelay, string(*actualResult[1].TimeDelay))
 	expectedAsyncTime = "! max_async_wait_time 0"
 	assert.Equal(t, expectedAsyncTime, string(*actualResult[1].AsyncTime))
-	expectedPreviousResponse = "PREVIOUS RESPONSE: 'HTTP/1.1 500 Internal Server Error response:{\"detail\":\"ID was not specified.\"}'"
+	expectedPreviousResponse = "PREVIOUS RESPONSE: 'HTTP/1.1 500 Internal Server Erro response:{\"detail\":\"ID was not specified.\"}'"
 	assert.Equal(t, expectedPreviousResponse, string(*actualResult[1].PreviousResponse))
 	expectedEndpoint := "/api/blog/posts/16"
 	assert.Equal(t, expectedEndpoint, string(*actualResult[1].Endpoint))

@@ -14,14 +14,14 @@ const bugFile = 6
 // Parses the fuzzing files from the bug_buckets folder and creates github issues
 // Inputs:
 //				file is filepath to the bug_buckets.txt file that stores all the bugs that has occured
-func ParseRestlerFuzzResults(location string, file string) [][]result.DynoResult {
+func ParseRestlerFuzzResults(location string, file string) []result.DynoResult {
 	f, err := os.Open(file)
 	if err != nil {
 		panic(err)
 	}
 	defer f.Close()
 	scanner := bufio.NewScanner(f)
-	dynoResults := [][]result.DynoResult{}
+	dynoResults := []result.DynoResult{}
 	// Creating raw results from fuzz
 	for scanner.Scan() {
 		line := scanner.Text()
@@ -32,7 +32,10 @@ func ParseRestlerFuzzResults(location string, file string) [][]result.DynoResult
 			if len(bugFileNames) > 5 {
 				bugFileName := bugFileNames[bugFile]
 				fuzzError := strings.Split(bugFileName, "_")
-				dynoResults = append(dynoResults, CreateResults(location, bugFileName, fuzzError))
+				results := CreateResults(location, bugFileName, fuzzError)
+				for i := 0; i < len(results); i++ {
+					dynoResults = append(dynoResults, results[i])
+				}
 			}
 		}
 	}
