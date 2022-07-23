@@ -35,11 +35,11 @@ func ParseRestlerFuzzResults(file string) []result.DynoResult {
 				bugFileName := bugFileNames[bugFile]
 				fuzzError := strings.Split(bugFileNames[bugFile], "_")
 				dynoResult.ErrorType = &fuzzError[0]
-				title := fmt.Sprintf("# %s Invalid %s Response\n", fuzzError[0], fuzzError[1])
+				title := fmt.Sprintf("%s Invalid %s Response\n", fuzzError[0], fuzzError[1])
 				details := AddDYNODetails(fuzzError[0])
 				dynoResult.Title = &title
 				dynoResult.Details = &details
-				dynoResult = CreateDynoResult(location, bugFileName, dynoResult)
+				dynoResult = CreateResult(location, bugFileName, dynoResult)
 				if dynoResult != nil {
 					dynoResults = append(dynoResults, *dynoResult)
 				}
@@ -63,7 +63,7 @@ func ParseRestlerFuzzResults(file string) []result.DynoResult {
 // Returns:
 // 				body is the body of the issue
 // 				endpoint is the endpoint that has the bug
-func CreateDynoResult(location string, bugFileName string, dynoResult *result.DynoResult) (*result.DynoResult) {
+func CreateResult(location string, bugFileName string, dynoResult *result.DynoResult) (*result.DynoResult) {
 	f, err := os.Open(fmt.Sprintf(location+"%s", bugFileName))
 	if err != nil {
 		panic(err)
@@ -80,7 +80,7 @@ func CreateDynoResult(location string, bugFileName string, dynoResult *result.Dy
 			dynoMethodInformation := &result.DynoMethodInformation{}
 			dynoMethodInformation = CreateMethod(requestSplit, dynoMethodInformation)
 			dynoResult.MethodInformation = dynoMethodInformation
-			CreateBody(requestSplit, scanner, dynoResult)
+			dynoResult = CreateBody(requestSplit, scanner, dynoResult)
 		}
 	}
 
@@ -162,19 +162,4 @@ func CreateBody(requestSplit []string, scanner *bufio.Scanner, dynoResult *resul
 	previousResponse := strings.Trim(previousResponseSplit[0], "\\r") + prevrequest
 	dynoResult.PreviousResponse = &previousResponse
 	return dynoResult
-}
-
-func FormatBody(dynoResult *result.DynoResult) *string {
-	body := *dynoResult.Title + *dynoResult.Details 
-	if *dynoResult.MethodInformation.ContentType != ""{
-		body = body + "\n" + *dynoResult.Method + "\n" + "\n" + "- " + *dynoResult.MethodInformation.AcceptedResponse + "\n" + "- " + *dynoResult.MethodInformation.Host + "\n" + "- " + *dynoResult.MethodInformation.ContentType
-	} else {
-		body = body + "\n" + *dynoResult.Method + "\n" + "\n" + "- " + *dynoResult.MethodInformation.AcceptedResponse + "\n" + "- " + *dynoResult.MethodInformation.Host
-	}
-	if *dynoResult.MethodInformation.Request != "" {
-		body = body + "\n" + "- " + *dynoResult.MethodInformation.Request 
-	}
-	body = body + "\n" + "\n" + *dynoResult.TimeDelay + "\n" + *dynoResult.AsyncTime + "\n" + "\n" + *dynoResult.PreviousResponse
-	body = body + "\n"
-	return &body
 }

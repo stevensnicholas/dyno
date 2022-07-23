@@ -1,6 +1,7 @@
 package platform
 
 import (
+	"golambda/internal/result"
 	"context"
 	"github.com/google/go-github/v45/github"
 	"golang.org/x/oauth2"
@@ -29,4 +30,19 @@ func GetRepo(ctx context.Context, client *github.Client, owner *string, repoName
 		panic(err)
 	}
 	return repo
+}
+
+func FormatFuzzBody(dynoResult *result.DynoResult) *string {
+	body := "# " + *dynoResult.Title + *dynoResult.Details 
+	if *dynoResult.MethodInformation.ContentType != ""{
+		body = body + "\n" + *dynoResult.Method + "\n" + "\n" + "- " + *dynoResult.MethodInformation.AcceptedResponse + "\n" + "- " + *dynoResult.MethodInformation.Host + "\n" + "- " + *dynoResult.MethodInformation.ContentType
+	} else {
+		body = body + "\n" + *dynoResult.Method + "\n" + "\n" + "- " + *dynoResult.MethodInformation.AcceptedResponse + "\n" + "- " + *dynoResult.MethodInformation.Host
+	}
+	if *dynoResult.MethodInformation.Request != "" {
+		body = body + "\n" + "- " + *dynoResult.MethodInformation.Request 
+	}
+	body = body + "\n" + "\n" + *dynoResult.TimeDelay + "\n" + *dynoResult.AsyncTime + "\n" + "\n" + *dynoResult.PreviousResponse
+	body = body + "\n"
+	return &body
 }

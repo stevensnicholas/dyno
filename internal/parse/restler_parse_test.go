@@ -3,17 +3,17 @@ package parse_test
 //TODO Talk about what to do when the file is wrong
 
 import (
-	"golambda/internal/issue"
-	"github.com/stretchr/testify/assert"
 	"golambda/internal/parse"
+	"golambda/internal/result"
+	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
-func TestReadBugFileInvalidNoFile(t *testing.T) {
+func TestCreateResultInvalidNoFile(t *testing.T) {
 	location := ""
 	testBugFile := ""
-	dynoIssueBody := &issue.DynoIssueBody{}
-	assert.Panics(t, func() { parse.ReadBugFile(location, testBugFile, dynoIssueBody) }, "Panics as there is no file")
+	dynoResult := &result.DynoResult{}
+	assert.Panics(t, func() { parse.CreateResult(location, testBugFile, dynoResult) }, "Panics as there is no file")
 }
 
 // // // TODO Fix this as need a check for the correct file
@@ -25,27 +25,55 @@ func TestReadBugFileInvalidNoFile(t *testing.T) {
 func TestReadBugFileValidInvalidDynamicObjectChecker_1(t *testing.T) {
 	location := "../tests/bug_buckets/"
 	testBugFile := "InvalidDynamicObjectChecker_20x_1.txt"
-	body := "# InvalidDynamicObjectChecker Invalid 200 Response"
-	bodyCheck, endpointCheck := parse.ReadBugFile(location, testBugFile, body)
-
-	expectedBody := "# InvalidDynamicObjectChecker Invalid 200 Response\n" +
-		"-> POST /api/blog/posts HTTP/1.1\n\n" +
-		"- Accept: application/json\n" +
-		"- Host: localhost:8888\n" +
-		"- Content-Type: application/json\n" +
-		"- Request: {    \"id\":99,    \"body\":\"my first blog post\"}\n\n" +
-		"! producer_timing_delay 0\n" +
-		"! max_async_wait_time 20\n\n" +
-		"PREVIOUS RESPONSE: 'HTTP/1.1 201 Created request:{\"id\":10,\"body\":\"my first blog post\"}'\n\n" +
-		"-> GET /api/blog/posts/10?injected_query_string=123 HTTP/1.1\n\n" +
-		"- Accept: application/json\n" +
-		"- Host: localhost:8888\n\n" +
-		"! producer_timing_delay 0\n" +
-		"! max_async_wait_time 0\n\n" +
-		"PREVIOUS RESPONSE: 'HTTP/1.1 200 OK request:{\"id\":10,\"body\":\"my first blog post\"}'\n"
+	title := "# InvalidDynamicObjectChecker Invalid 200 Response"
+	details := "\nDetails: '500 Internal Server' Errors and any other 5xx errors are detected.\n\nVisualizer: [DYNO](the web url)\n"
+	errorType := "InvalidDynamicObjectChecker"
+	dynoResult := &result.DynoResult{}
+	dynoResult.Title = &title 
+	dynoResult.Details = &details
+	dynoResult.ErrorType = &errorType
+	actualResult := parse.CreateResult(location, testBugFile, dynoResult)
+	expectedTitle := ""
+	expectedMethod := ""
+	expectedAcceptedResponse := ""
+	expectedHost := ""
+	expectedContentType := ""
+	expectedRequest := ""
+	expectedTimeDelay := ""
+	expectedAsyncTime := ""
+	expectedPreviousResponse := ""
+	expectedTitle = "InvalidDynamicObjectChecker Invalid 200 Response"
+	assert.Equal(t, expectedTitle, string(*actualResult.Title))
+	expectedMethod = "-> POST /api/blog/posts HTTP/1.1"
+	assert.Equal(t, expectedMethod, string(*actualResult.Method))
+	expectedAcceptedResponse = "Accept: application/json"
+	assert.Equal(t, expectedAcceptedResponse, string(*actualResult.MethodInformation.AcceptedResponse))
+	expectedHost = "Host: localhost:8888"
+	assert.Equal(t, expectedHost, string(*actualResult.MethodInformation.Host))
+	expectedContentType = "Content-Type: application/json"
+	assert.Equal(t, expectedContentType, string(*actualResult.MethodInformation.ContentType))
+	expectedRequest = "Request: {    \"id\":99,    \"body\":\"my first blog post\"}"
+	assert.Equal(t, expectedRequest, string(*actualResult.MethodInformation.Request))
+	expectedTimeDelay = "! producer_timing_delay 0"
+	assert.Equal(t, expectedTimeDelay, string(*actualResult.TimeDelay))
+	expectedAsyncTime = "! max_async_wait_time 20"
+	assert.Equal(t, expectedAsyncTime, string(*actualResult.AsyncTime))
+	expectedPreviousResponse = "PREVIOUS RESPONSE: 'HTTP/1.1 201 Created response:{\"id\":10,\"body\":\"my first blog post\"}'"
+	assert.Equal(t, expectedPreviousResponse, string(*actualResult.PreviousResponse))
+	expectedMethod = "-> GET /api/blog/posts/10?injected_query_string=123 HTTP/1.1"
+	assert.Equal(t, expectedMethod, string(*actualResult.Method))
+	expectedAcceptedResponse = "Accept: application/json"
+	assert.Equal(t, expectedAcceptedResponse, string(*actualResult.MethodInformation.AcceptedResponse))
+	expectedHost = "Host: localhost:8888"
+	assert.Equal(t, expectedHost, string(*actualResult.MethodInformation.Host))
+	expectedTimeDelay = "! producer_timing_delay 0"
+	assert.Equal(t, expectedTimeDelay, string(*actualResult.TimeDelay))
+	expectedAsyncTime = "! max_async_wait_time 0"
+	assert.Equal(t, expectedAsyncTime, string(*actualResult.AsyncTime))
+	expectedPreviousResponse = "PREVIOUS RESPONSE: 'HTTP/1.1 200 OK response:{\"id\":10,\"body\":\"my first blog post\"}'"
+	assert.Equal(t, expectedPreviousResponse, string(*actualResult.PreviousResponse))
 	expectedEndpoint := "/api/blog/posts/10?injected_query_string=123"
-	assert.Equal(t, expectedEndpoint, string(endpointCheck))
-	assert.Equal(t, expectedBody, string(bodyCheck))
+	assert.Equal(t, expectedEndpoint, string(*actualResult.Endpoint))
 }
 // func TestReadBugFileValidInvalidDynamicObjectChecker_2(t *testing.T) {
 // 	location := "../tests/bug_buckets/"
