@@ -32,7 +32,7 @@ func ParseRestlerFuzzResults(location string, file string) []result.DynoResult {
 			if len(bugFileNames) > 5 {
 				bugFileName := bugFileNames[bugFile]
 				fuzzError := strings.Split(bugFileName, "_")
-				results := createResults(location, bugFileName, fuzzError)
+				results := CreateResults(location, bugFileName, fuzzError)
 				for i := 0; i < len(results); i++ {
 					dynoResults = append(dynoResults, results[i])
 				}
@@ -54,7 +54,7 @@ func ParseRestlerFuzzResults(location string, file string) []result.DynoResult {
 // bugFileName is the name of the file that has the logs of the bug
 // fuzzError is the categoried error created
 // Returns a list of all the results from the fuzz error that has occured within a DynoResult struct
-func createResults(location string, bugFileName string, fuzzError []string) ([]result.DynoResult) {
+func CreateResults(location string, bugFileName string, fuzzError []string) ([]result.DynoResult) {
 	dynoResults := []result.DynoResult{}
 	dynoResult := &result.DynoResult{}
 	
