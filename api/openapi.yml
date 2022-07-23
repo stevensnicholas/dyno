@@ -27,8 +27,44 @@ paths:
                 $ref: '#/components/schemas/RestErrResponse'
           description: Bad Request
       summary: Echo
+  /login:
+    post:
+      description: Get token from GitHub
+      operationId: cmd/endpoints.Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EndpointsAuthInput'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EndpointsAuthOutput'
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Bad Request
+      summary: Login
 components:
   schemas:
+     EndpointsAuthInput:
+      properties:
+        code:
+          type: string
+      required:
+      - request
+      type: object
+     EndpointsAuthOutput:
+      properties:
+        token:
+          type: string
+      required:
+      - request
     EndpointsPostEchoInput:
       properties:
         request:
