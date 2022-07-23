@@ -33,7 +33,7 @@ func GetRepo(ctx context.Context, client *github.Client, owner *string, repoName
 }
 
 func FormatFuzzBody(dynoResult *result.DynoResult) *string {
-	body := "# " + *dynoResult.Title + *dynoResult.Details 
+	body := "# " + *dynoResult.Title + "\n" + *dynoResult.Details 
 	if *dynoResult.MethodInformation.ContentType != ""{
 		body = body + "\n" + *dynoResult.Method + "\n" + "\n" + "- " + *dynoResult.MethodInformation.AcceptedResponse + "\n" + "- " + *dynoResult.MethodInformation.Host + "\n" + "- " + *dynoResult.MethodInformation.ContentType
 	} else {

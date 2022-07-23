@@ -14,17 +14,15 @@ const bugFile = 6
 // Parses the fuzzing files from the bug_buckets folder and creates github issues
 // Inputs:
 //				file is filepath to the bug_buckets.txt file that stores all the bugs that has occured
-func ParseRestlerFuzzResults(file string) []result.DynoResult {
+func ParseRestlerFuzzResults(location string, file string) [][]result.DynoResult {
 	f, err := os.Open(file)
 	if err != nil {
 		panic(err)
 	}
 	defer f.Close()
-	location := "internal/tests/bug_buckets/"
 	scanner := bufio.NewScanner(f)
-	dynoResult := &result.DynoResult{}
-	dynoResults := []result.DynoResult{}
-	// Sending an issue for each error found through fuzz
+	dynoResults := [][]result.DynoResult{}
+	// Creating raw results from fuzz
 	for scanner.Scan() {
 		line := scanner.Text()
 		if line[:1] == "-" {
@@ -33,16 +31,8 @@ func ParseRestlerFuzzResults(file string) []result.DynoResult {
 			bugFileNames := strings.Fields(line)
 			if len(bugFileNames) > 5 {
 				bugFileName := bugFileNames[bugFile]
-				fuzzError := strings.Split(bugFileNames[bugFile], "_")
-				dynoResult.ErrorType = &fuzzError[0]
-				title := fmt.Sprintf("%s Invalid %s Response\n", fuzzError[0], fuzzError[1])
-				details := AddDYNODetails(fuzzError[0])
-				dynoResult.Title = &title
-				dynoResult.Details = &details
-				dynoResult = CreateResult(location, bugFileName, dynoResult)
-				if dynoResult != nil {
-					dynoResults = append(dynoResults, *dynoResult)
-				}
+				fuzzError := strings.Split(bugFileName, "_")
+				dynoResults = append(dynoResults, CreateResults(location, bugFileName, fuzzError))
 			}
 		}
 	}
@@ -63,12 +53,21 @@ func ParseRestlerFuzzResults(file string) []result.DynoResult {
 // Returns:
 // 				body is the body of the issue
 // 				endpoint is the endpoint that has the bug
-func CreateResult(location string, bugFileName string, dynoResult *result.DynoResult) (*result.DynoResult) {
+func CreateResults(location string, bugFileName string, fuzzError []string) ([]result.DynoResult) {
+	dynoResults := []result.DynoResult{}
+	dynoResult := &result.DynoResult{}
+	
 	f, err := os.Open(fmt.Sprintf(location+"%s", bugFileName))
 	if err != nil {
 		panic(err)
 	}
 	defer f.Close()
+	
+	title := fmt.Sprintf("%s Invalid %s Response", fuzzError[0], fuzzError[1])
+	details := AddDYNODetails(fuzzError[0])
+	dynoResult.Title = &title
+	dynoResult.Details = &details
+	dynoResult.ErrorType = &fuzzError[0]
 
 	scanner := bufio.NewScanner(f)
 
@@ -81,13 +80,16 @@ func CreateResult(location string, bugFileName string, dynoResult *result.DynoRe
 			dynoMethodInformation = CreateMethod(requestSplit, dynoMethodInformation)
 			dynoResult.MethodInformation = dynoMethodInformation
 			dynoResult = CreateBody(requestSplit, scanner, dynoResult)
+			if dynoResult != nil {
+				dynoResults = append(dynoResults, *dynoResult)
+			}
 		}
 	}
 
 	if err := scanner.Err(); err != nil {
 		panic(err)
 	}
-	return dynoResult
+	return dynoResults
 }
 
 // AddDYNODetails adds the details and visualizer url to the body of the issue request that
@@ -152,14 +154,14 @@ func CreateBody(requestSplit []string, scanner *bufio.Scanner, dynoResult *resul
 	scanner.Scan()
 	previousResponseText := scanner.Text()
 	previousResponseSplit := strings.Split(previousResponseText, "\\n")
-	prevrequest := ""
+	prevresp := ""
 	for i := 5; i < len(previousResponseSplit); i++ {
-		prevrequest = prevrequest + previousResponseSplit[i]
+		prevresp = prevresp + previousResponseSplit[i]
 	}
-	if prevrequest != "" {
-		prevrequest = " request:" + strings.Trim(prevrequest, "\\r")
+	if prevresp != "" {
+		prevresp = " response:" + strings.Trim(prevresp, "\\r")
 	}
-	previousResponse := strings.Trim(previousResponseSplit[0], "\\r") + prevrequest
+	previousResponse := strings.Trim(previousResponseSplit[0], "\\r") + prevresp
 	dynoResult.PreviousResponse = &previousResponse
 	return dynoResult
 }
