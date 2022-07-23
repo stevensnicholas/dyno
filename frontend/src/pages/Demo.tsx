@@ -23,7 +23,7 @@ export function Demo(props: Props) {
         type="submit"
         onClick={() => {
           props.client.default
-            .cmdEndpointsPostEcho({
+            .endpointsPostEcho({
               request,
             })
             .then((res) => {
