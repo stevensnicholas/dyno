@@ -32,7 +32,7 @@ func ParseRestlerFuzzResults(location string, file string) []result.DynoResult {
 			if len(bugFileNames) > 5 {
 				bugFileName := bugFileNames[bugFile]
 				fuzzError := strings.Split(bugFileName, "_")
-				results := CreateResults(location, bugFileName, fuzzError)
+				results := createResults(location, bugFileName, fuzzError)
 				for i := 0; i < len(results); i++ {
 					dynoResults = append(dynoResults, results[i])
 				}
@@ -47,16 +47,14 @@ func ParseRestlerFuzzResults(location string, file string) []result.DynoResult {
 }
 
 // Reads the a bug_bucket file that is specified by the category of the bug found by restler
-// Creates the body of the issue in regards to the bug found by the fuzzer with details on the bug and how to fix itInternalServerErrors creates a github Issue Request for the categorized bug by restler
-// providing a description on what the bug is and how to possibly fix the bug
-//
-// Inputs:
-//				bugFileName is the name of the file that has the logs of the bug
-//        body is the start of the body for the github issue
-// Returns:
-// 				body is the body of the issue
-// 				endpoint is the endpoint that has the bug
-func CreateResults(location string, bugFileName string, fuzzError []string) ([]result.DynoResult) {
+// Creates the body of the issue in regards to the bug found by the fuzzer with details on the bug 
+// and how to fix itInternalServerErrors creates a github Issue Request for 
+// the categorized bug by restler providing a description on what the bug is and how to possibly fix the bug
+// Inputs location is the location of the bug_buckets folder, 
+// bugFileName is the name of the file that has the logs of the bug
+// fuzzError is the categoried error created
+// Returns a list of all the results from the fuzz error that has occured within a DynoResult struct
+func createResults(location string, bugFileName string, fuzzError []string) ([]result.DynoResult) {
 	dynoResults := []result.DynoResult{}
 	dynoResult := &result.DynoResult{}
 	
@@ -72,15 +70,15 @@ func CreateResults(location string, bugFileName string, fuzzError []string) ([]r
 
 	scanner := bufio.NewScanner(f)
 
-	// Creating body for IssueRequest in Github
+	// Creating DynoResult and adding the result to a list of all the results within the bug 
 	for scanner.Scan() {
 		line := scanner.Text()
 		if len(line) > 0 && line[:1] == "-" {
 			requestSplit := strings.Split(line, "\\n")
 			dynoMethodInformation := &result.DynoMethodInformation{}
-			dynoMethodInformation = CreateMethod(requestSplit, dynoMethodInformation)
+			dynoMethodInformation = createMethod(requestSplit, dynoMethodInformation)
 			dynoResult.MethodInformation = dynoMethodInformation
-			dynoResult = CreateBody(requestSplit, scanner, dynoResult)
+			dynoResult = createResult(requestSplit, scanner, dynoResult)
 			if dynoResult != nil {
 				dynoResults = append(dynoResults, *dynoResult)
 			}
@@ -93,7 +91,12 @@ func CreateResults(location string, bugFileName string, fuzzError []string) ([]r
 	return dynoResults
 }
 
-func CreateMethod(requestSplit []string, dynoMethodInformation *result.DynoMethodInformation) (*result.DynoMethodInformation) {
+// createMethod creates the method information within a DynoResult that is supplied with the 
+// accepted response, host, content and the request that was sent 
+// Inputed is the requestSplit string that contains information on the fuzz bug 
+// and dynoMethodInformation which holds all the information about the method of fuzzing.
+// Returning DynoMethodInformation struct
+func createMethod(requestSplit []string, dynoMethodInformation *result.DynoMethodInformation) (*result.DynoMethodInformation) {
 	acceptedResponse := strings.Trim(requestSplit[1], "\\r")
 	host := strings.Trim(requestSplit[2], "\\r")
 	contentType := strings.Trim(requestSplit[3], "\\r")
@@ -110,8 +113,12 @@ func CreateMethod(requestSplit []string, dynoMethodInformation *result.DynoMetho
 	dynoMethodInformation.Request = &request
 	return dynoMethodInformation
 }
-
-func CreateBody(requestSplit []string, scanner *bufio.Scanner, dynoResult *result.DynoResult) (*result.DynoResult){
+// createResult creates the result structure of a DynoResult 
+// containing all the necessary information from the fuzzing 
+// Inputed is the requestSplit string that contains information on the fuzz bug, 
+// scanner of the bug file allowing to read the next line of text and the current dynoResult 
+// Returning a dynoResult struct 
+func createResult(requestSplit []string, scanner *bufio.Scanner, dynoResult *result.DynoResult) (*result.DynoResult){
 	method := strings.Trim(requestSplit[0], "\\r")
 	dynoResult.Method = &method
 	endpoint := strings.Split(requestSplit[0], " ")[2]
