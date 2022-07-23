@@ -11,8 +11,12 @@ require github.com/swaggest/usecase v1.1.3
 
 require (
 	github.com/akrylysov/algnhsa v0.12.1
-	github.com/swaggest/rest v0.2.29
+	github.com/alexflint/go-arg v1.4.3
+	github.com/google/go-github/v45 v45.2.0
+	github.com/swaggest/rest v0.2.30
 	github.com/swaggest/swgui v1.4.5
+	golang.org/x/oauth2 v0.0.0-20220630143837-2104d58473e0
+
 )
 
 require (
@@ -23,7 +27,6 @@ require (
 	github.com/go-playground/validator/v10 v10.10.0 // indirect
 	github.com/goccy/go-json v0.9.7 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
-	github.com/google/go-github/v45 v45.2.0 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/joho/godotenv v1.4.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
@@ -58,5 +61,5 @@ require (
 	go.uber.org/zap v1.21.0
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
-	gopkg.in/yaml.v3 v3.0.1 // indirect
+	gopkg.in/yaml.v3 v3.0.1
 )
