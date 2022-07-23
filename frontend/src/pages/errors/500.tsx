@@ -1,6 +1,6 @@
 import React from 'react';
 import 'materialize-css/dist/css/materialize.min.css';
-import styles from '../errors/500.module.css';
+import styles from '../errors/Error.module.css';
 
 const Error500 = () => {
   return (
