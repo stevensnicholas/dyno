@@ -4,6 +4,7 @@ import reportWebVitals from './reportWebVitals';
 import { createRoot } from 'react-dom/client';
 import Navigation from './Navigation';
 import { BrowserRouter } from 'react-router-dom';
+import 'materialize-css/dist/css/materialize.min.css';
 
 /* eslint-disable */
 

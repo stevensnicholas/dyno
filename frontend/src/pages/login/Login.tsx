@@ -1,7 +1,6 @@
 import React from 'react';
 import Photo from '../login/login-logo.png';
 import styles from '../login/login.module.css';
-import 'materialize-css/dist/css/materialize.min.css';
 const Login = () => {
   return (
     <html>
