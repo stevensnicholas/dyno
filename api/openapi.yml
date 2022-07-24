@@ -28,7 +28,7 @@ paths:
           description: Bad Request
       summary: Echo
   /login:
-    post:
+    get:
       description: Return code
       operationId: endpoints.Authentication
       parameters:
