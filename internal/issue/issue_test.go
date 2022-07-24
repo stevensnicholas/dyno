@@ -1,9 +1,9 @@
 package issue_test
 
 import (
-	"github.com/stretchr/testify/assert"
 	"dyno/internal/issue"
 	"dyno/internal/result"
+	"github.com/stretchr/testify/assert"
 	"testing"
 )
 

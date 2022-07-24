@@ -1,8 +1,8 @@
 package issue
 
 import (
+	"dyno/internal/result"
 	"fmt"
-	"golambda/internal/result"
 )
 
 type DynoIssue struct {
