@@ -3,12 +3,8 @@ package endpoints
 import (
 	"context"
 	"dyno/internal/authentication"
-<<<<<<< HEAD
-	"fmt"
-=======
 	"dyno/internal/logger"
-
->>>>>>> main
+	"fmt"
 	"github.com/swaggest/rest/web"
 	"github.com/swaggest/usecase"
 	"github.com/swaggest/usecase/status"
@@ -26,37 +22,26 @@ func Authentication(service *web.Service) {
 	handler := func(ctx context.Context, input, output interface{}) error {
 		var in = input.(*AuthInput)
 		var out = output.(*AuthOutput)
-
+		fmt.Println(in)
 		var err error
-<<<<<<< HEAD
-
-=======
->>>>>>> main
 		var code = in.Code
+		fmt.Println("code", code)
 		var tokenAuthURL = authentication.GetTokenAuthURL(code)
 		var token *authentication.Token
 		if token, err = authentication.GetToken(tokenAuthURL); err != nil {
-<<<<<<< HEAD
-			fmt.Println(err)
-			return err
-		}
-
-		fmt.Printf("%+v", token)
-=======
 			logger.Error(err.Error())
 			return err
 		}
-
->>>>>>> main
+		fmt.Println(token)
 		out.Result = token.AccessToken
 		return nil
 	}
 
 	u := usecase.NewIOI(new(AuthInput), new(AuthOutput), handler)
 
-	u.SetTitle("code")
-	u.SetDescription("Return code")
+	u.SetTitle("login")
+	u.SetDescription("Return tokencode")
 	u.SetExpectedErrors(status.InvalidArgument)
 
-	service.Post("/login", u)
+	service.Get("/login", u)
 }

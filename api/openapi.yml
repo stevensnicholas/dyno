@@ -28,16 +28,7 @@ paths:
           description: Bad Request
       summary: Echo
   /login:
-    post:
-<<<<<<< HEAD
-      description: Get token from GitHub
-      operationId: cmd/endpoints.Authentication
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/EndpointsAuthInput'
-=======
+    get:
       description: Return code
       operationId: endpoints.Authentication
       parameters:
@@ -45,7 +36,6 @@ paths:
         name: code
         schema:
           type: string
->>>>>>> main
       responses:
         "200":
           content:
@@ -59,34 +49,16 @@ paths:
               schema:
                 $ref: '#/components/schemas/RestErrResponse'
           description: Bad Request
-<<<<<<< HEAD
-      summary: Login
-components:
-  schemas:
-     EndpointsAuthInput:
-      properties:
-        code:
-          type: string
-      required:
-      - request
-      type: object
-     EndpointsAuthOutput:
-=======
       summary: code
 components:
   schemas:
     EndpointsAuthOutput:
->>>>>>> main
       properties:
         token:
           type: string
       required:
-<<<<<<< HEAD
-      - request
-=======
       - token
       type: object
->>>>>>> main
     EndpointsPostEchoInput:
       properties:
         request:

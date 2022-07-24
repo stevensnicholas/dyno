@@ -14,8 +14,8 @@ type Conf struct {
 }
 
 var conf = Conf{
-	ClientID:     "", // fill in with your id before test
-	ClientSecret: "", // fill in with your secret before test
+	ClientID:     "94143fe4a712d77c2983", // fill in with your id before test, delete before commit
+	ClientSecret: "0eaa973b77bf15fd7e431ba167195b8e3a1818bc", // fill in with your secret before test, delete before commit
 	RedirectURL:  "http://localhost:8080/login",
 }
 
@@ -33,10 +33,6 @@ func GetTokenAuthURL(code string) string {
 }
 
 func GetToken(url string) (*Token, error) {
-<<<<<<< HEAD
-
-=======
->>>>>>> main
 	var req *http.Request
 	var err error
 	if req, err = http.NewRequest(http.MethodGet, url, nil); err != nil {
