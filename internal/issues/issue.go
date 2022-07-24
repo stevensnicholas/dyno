@@ -6,20 +6,20 @@ import (
 )
 
 type DynoIssue struct {
-	Title *string `json:"title,omitempty"`
-	Details *string  `json:"details,omitempty"`
-	Visualizer *string  `json:"visualizer,omitempty"`
-	Body *result.DynoResult `json:"body,omitempty"`
-	Assignee *string `json:"assignee,omitempty"`
-	Labels *[]string `json:"labels,omitempty"`
-	State *string `json:"state,omitempty"`
-	Milestone *int `json:"milestone,omitempty"`
+	Title      *string            `json:"title,omitempty"`
+	Details    *string            `json:"details,omitempty"`
+	Visualizer *string            `json:"visualizer,omitempty"`
+	Body       *result.DynoResult `json:"body,omitempty"`
+	Assignee   *string            `json:"assignee,omitempty"`
+	Labels     *[]string          `json:"labels,omitempty"`
+	State      *string            `json:"state,omitempty"`
+	Milestone  *int               `json:"milestone,omitempty"`
 }
 
-// CreateIssues collects all the results from the raw fuzzing results and formats 
+// CreateIssues collects all the results from the raw fuzzing results and formats
 // them using the DynoIssue struct to be presented as an issue on any communication platform.
 // Inputted is a slice of dynoResults and returns all the issues as a []DynoIssue.
-func CreateIssues(dynoResults []result.DynoResult) []DynoIssue{
+func CreateIssues(dynoResults []result.DynoResult) []DynoIssue {
 	dynoIssues := []DynoIssue{}
 	dynoIssue := &DynoIssue{}
 	for _, dynoResult := range dynoResults {
@@ -29,12 +29,12 @@ func CreateIssues(dynoResults []result.DynoResult) []DynoIssue{
 			dynoIssues = append(dynoIssues, *dynoIssue)
 		}
 	}
-	return dynoIssues 
+	return dynoIssues
 }
 
 // createIssue sorts the bugs found by the fuzzer by there categories and creates a new DynoIssue
-// Inputted is a fuzzError is the type of bug that has been found by the fuzzer and a 
-// dynoIssue is a struct of a issue. Returns *DynoIssue with all the relevant 
+// Inputted is a fuzzError is the type of bug that has been found by the fuzzer and a
+// dynoIssue is a struct of a issue. Returns *DynoIssue with all the relevant
 // information regarding the certain bug
 func createIssue(fuzzError string, dynoIssue *DynoIssue) *DynoIssue {
 	switch fuzzError {
@@ -58,7 +58,7 @@ func createIssue(fuzzError string, dynoIssue *DynoIssue) *DynoIssue {
 
 // internalServerErrorsIssue creates a github Issue Request for the categorized bug by restler
 // providing a description on what the bug is and how to possibly fix the bug.
-// Inputted is a *DynoIssue which is null and is a struct of a issue. 
+// Inputted is a *DynoIssue which is null and is a struct of a issue.
 // Returns *DynoIssue with all the relevant information regarding the certain bug
 func internalServerErrorsIssue(dynoIssue *DynoIssue) *DynoIssue {
 	title := fmt.Sprintf("DYNO Fuzz: InternalServerErrors at Endpoint %s", *dynoIssue.Body.Endpoint)
@@ -66,7 +66,7 @@ func internalServerErrorsIssue(dynoIssue *DynoIssue) *DynoIssue {
 	visualizer := "\nVisualizer: [DYNO](the web url)\n"
 	labels := []string{"bug"}
 	dynoIssue.Title = &title
-	dynoIssue.Labels = &labels 
+	dynoIssue.Labels = &labels
 	dynoIssue.Details = &details
 	dynoIssue.Visualizer = &visualizer
 	return dynoIssue
@@ -74,7 +74,7 @@ func internalServerErrorsIssue(dynoIssue *DynoIssue) *DynoIssue {
 
 // resourceHierarchyCheckerIssue creates a github Issue Request for the categorized bug by restler
 // providing a description on what the bug is and how to possibly fix the bug.
-// Inputted is a *DynoIssue which is null and is a struct of a issue. 
+// Inputted is a *DynoIssue which is null and is a struct of a issue.
 // Returns *DynoIssue with all the relevant information regarding the certain bug
 func resourceHierarchyCheckerIssue(dynoIssue *DynoIssue) *DynoIssue {
 	title := fmt.Sprintf("DYNO Fuzz: ResourceHierarchyChecker at Endpoint %s", *dynoIssue.Body.Endpoint)
@@ -82,15 +82,15 @@ func resourceHierarchyCheckerIssue(dynoIssue *DynoIssue) *DynoIssue {
 	visualizer := "\nVisualizer: [DYNO](the web url)\n"
 	labels := []string{"bug"}
 	dynoIssue.Title = &title
-	dynoIssue.Labels = &labels 
-	dynoIssue.Details = &details 
+	dynoIssue.Labels = &labels
+	dynoIssue.Details = &details
 	dynoIssue.Visualizer = &visualizer
 	return dynoIssue
 }
 
 // nameSpaceRuleCheckerIssue creates a github Issue Request for the categorized bug by restler
 // providing a description on what the bug is and how to possibly fix the bug.
-// Inputted is a *DynoIssue which is null and is a struct of a issue. 
+// Inputted is a *DynoIssue which is null and is a struct of a issue.
 // Returns *DynoIssue with all the relevant information regarding the certain bug
 func nameSpaceRuleCheckerIssue(dynoIssue *DynoIssue) *DynoIssue {
 	title := fmt.Sprintf("DYNO Fuzz: NameSpaceRuleChecker at Endpoint %s", *dynoIssue.Body.Endpoint)
@@ -98,15 +98,15 @@ func nameSpaceRuleCheckerIssue(dynoIssue *DynoIssue) *DynoIssue {
 	visualizer := "\nVisualizer: [DYNO](the web url)\n"
 	labels := []string{"bug"}
 	dynoIssue.Title = &title
-	dynoIssue.Labels = &labels 
-	dynoIssue.Details = &details 
+	dynoIssue.Labels = &labels
+	dynoIssue.Details = &details
 	dynoIssue.Visualizer = &visualizer
 	return dynoIssue
 }
 
 // useAfterFreeCheckerIssue creates a github Issue Request for the categorized bug by restler
 // providing a description on what the bug is and how to possibly fix the bug.
-// Inputted is a *DynoIssue which is null and is a struct of a issue. 
+// Inputted is a *DynoIssue which is null and is a struct of a issue.
 // Returns *DynoIssue with all the relevant information regarding the certain bug
 func useAfterFreeCheckerIssue(dynoIssue *DynoIssue) *DynoIssue {
 	title := fmt.Sprintf("DYNO Fuzz: UseAfterFreeChecker at Endpoint %s", *dynoIssue.Body.Endpoint)
@@ -114,15 +114,15 @@ func useAfterFreeCheckerIssue(dynoIssue *DynoIssue) *DynoIssue {
 	visualizer := "\nVisualizer: [DYNO](the web url)\n"
 	labels := []string{"bug"}
 	dynoIssue.Title = &title
-	dynoIssue.Labels = &labels 
-	dynoIssue.Details = &details 
+	dynoIssue.Labels = &labels
+	dynoIssue.Details = &details
 	dynoIssue.Visualizer = &visualizer
 	return dynoIssue
 }
 
 // leakageRuleCheckerIssue creates a github Issue Request for the categorized bug by restler
 // providing a description on what the bug is and how to possibly fix the bug.
-// Inputted is a *DynoIssue which is null and is a struct of a issue. 
+// Inputted is a *DynoIssue which is null and is a struct of a issue.
 // Returns *DynoIssue with all the relevant information regarding the certain bug
 func leakageRuleCheckerIssue(dynoIssue *DynoIssue) *DynoIssue {
 	title := fmt.Sprintf("DYNO Fuzz: LeakageRuleChecker at Endpoint %s", *dynoIssue.Body.Endpoint)
@@ -130,15 +130,15 @@ func leakageRuleCheckerIssue(dynoIssue *DynoIssue) *DynoIssue {
 	visualizer := "\nVisualizer: [DYNO](the web url)\n"
 	labels := []string{"bug"}
 	dynoIssue.Title = &title
-	dynoIssue.Labels = &labels 
-	dynoIssue.Details = &details 
+	dynoIssue.Labels = &labels
+	dynoIssue.Details = &details
 	dynoIssue.Visualizer = &visualizer
 	return dynoIssue
 }
 
 // invalidDynamicObjectCheckerIssue creates a github Issue Request for the categorized bug by restler
 // providing a description on what the bug is and how to possibly fix the bug.
-// Inputted is a *DynoIssue which is null and is a struct of a issue. 
+// Inputted is a *DynoIssue which is null and is a struct of a issue.
 // Returns *DynoIssue with all the relevant information regarding the certain bug
 func invalidDynamicObjectCheckerIssue(dynoIssue *DynoIssue) *DynoIssue {
 	title := fmt.Sprintf("DYNO Fuzz: InvalidDynamicObjectChecker at Endpoint %s", *dynoIssue.Body.Endpoint)
@@ -146,15 +146,15 @@ func invalidDynamicObjectCheckerIssue(dynoIssue *DynoIssue) *DynoIssue {
 	visualizer := "\nVisualizer: [DYNO](the web url)\n"
 	labels := []string{"bug"}
 	dynoIssue.Title = &title
-	dynoIssue.Labels = &labels 
-	dynoIssue.Details = &details 
+	dynoIssue.Labels = &labels
+	dynoIssue.Details = &details
 	dynoIssue.Visualizer = &visualizer
 	return dynoIssue
 }
 
 // payloadBodyCheckerIssue creates a github Issue Request for the categorized bug by restler
 // providing a description on what the bug is and how to possibly fix the bug.
-// Inputted is a *DynoIssue which is null and is a struct of a issue. 
+// Inputted is a *DynoIssue which is null and is a struct of a issue.
 // Returns *DynoIssue with all the relevant information regarding the certain bug
 func payloadBodyCheckerIssue(dynoIssue *DynoIssue) *DynoIssue {
 	title := fmt.Sprintf("DYNO Fuzz: PayloadBodyChecker at Endpoint %s", *dynoIssue.Body.Endpoint)
@@ -162,8 +162,8 @@ func payloadBodyCheckerIssue(dynoIssue *DynoIssue) *DynoIssue {
 	visualizer := "\nVisualizer: [DYNO](the web url)\n"
 	labels := []string{"bug"}
 	dynoIssue.Title = &title
-	dynoIssue.Labels = &labels 
-	dynoIssue.Details = &details 
+	dynoIssue.Labels = &labels
+	dynoIssue.Details = &details
 	dynoIssue.Visualizer = &visualizer
 	return dynoIssue
 }

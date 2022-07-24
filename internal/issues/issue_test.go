@@ -1,9 +1,9 @@
 package issue_test
 
 import (
-	"golambda/internal/result"
-	"golambda/internal/issue"
 	"github.com/stretchr/testify/assert"
+	"golambda/internal/issue"
+	"golambda/internal/result"
 	"testing"
 )
 
@@ -27,48 +27,48 @@ func TestCreateIssueIntegratedTestValid(t *testing.T) {
 		"PayloadBodyChecker",
 	}
 	dynoResults := []result.DynoResult{
-		result.DynoResult{
-			Title:    &title,
-			Endpoint:	&endpoint, 
-			Method:		&method, 
-			ErrorType: &fuzzErrorList[0], 	
-		}, 
-		result.DynoResult{
-			Title:    &title,
-			Endpoint:	&endpoint, 
-			Method:		&method, 
-			ErrorType: &fuzzErrorList[1], 	
-		}, 
-		result.DynoResult{
-			Title:    &title,
-			Endpoint:	&endpoint, 
-			Method:		&method, 
-			ErrorType: &fuzzErrorList[2], 	
-		}, 
-		result.DynoResult{
-			Title:    &title,
-			Endpoint:	&endpoint, 
-			Method:		&method, 
-			ErrorType: &fuzzErrorList[3], 	
-		}, 
-		result.DynoResult{
-			Title:    &title,
-			Endpoint:	&endpoint, 
-			Method:		&method, 
-			ErrorType: &fuzzErrorList[4], 	
-		}, 
-		result.DynoResult{
-			Title:    &title,
-			Endpoint:	&endpoint, 
-			Method:		&method, 
-			ErrorType: &fuzzErrorList[5], 	
-		}, 
-		result.DynoResult{
-			Title:    &title,
-			Endpoint:	&endpoint, 
-			Method:		&method, 
-			ErrorType: &fuzzErrorList[6], 	
-		}, 
+		{
+			Title:     &title,
+			Endpoint:  &endpoint,
+			Method:    &method,
+			ErrorType: &fuzzErrorList[0],
+		},
+		{
+			Title:     &title,
+			Endpoint:  &endpoint,
+			Method:    &method,
+			ErrorType: &fuzzErrorList[1],
+		},
+		{
+			Title:     &title,
+			Endpoint:  &endpoint,
+			Method:    &method,
+			ErrorType: &fuzzErrorList[2],
+		},
+		{
+			Title:     &title,
+			Endpoint:  &endpoint,
+			Method:    &method,
+			ErrorType: &fuzzErrorList[3],
+		},
+		{
+			Title:     &title,
+			Endpoint:  &endpoint,
+			Method:    &method,
+			ErrorType: &fuzzErrorList[4],
+		},
+		{
+			Title:     &title,
+			Endpoint:  &endpoint,
+			Method:    &method,
+			ErrorType: &fuzzErrorList[5],
+		},
+		{
+			Title:     &title,
+			Endpoint:  &endpoint,
+			Method:    &method,
+			ErrorType: &fuzzErrorList[6],
+		},
 	}
 
 	dynoIssues := issue.CreateIssues(dynoResults)
