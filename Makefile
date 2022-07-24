@@ -5,7 +5,7 @@ build:
 	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o bin/cli/main ./cmd/cli/...
 
 docs: build
-	./bin/main -gendocs
+	./bin/api/main -gendocs
 	(cd frontend && npm run gen)
 
 clean:

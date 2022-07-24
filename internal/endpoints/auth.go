@@ -3,7 +3,12 @@ package endpoints
 import (
 	"context"
 	"dyno/internal/authentication"
+<<<<<<< HEAD
 	"fmt"
+=======
+	"dyno/internal/logger"
+
+>>>>>>> main
 	"github.com/swaggest/rest/web"
 	"github.com/swaggest/usecase"
 	"github.com/swaggest/usecase/status"
@@ -23,16 +28,26 @@ func Authentication(service *web.Service) {
 		var out = output.(*AuthOutput)
 
 		var err error
+<<<<<<< HEAD
 
+=======
+>>>>>>> main
 		var code = in.Code
 		var tokenAuthURL = authentication.GetTokenAuthURL(code)
 		var token *authentication.Token
 		if token, err = authentication.GetToken(tokenAuthURL); err != nil {
+<<<<<<< HEAD
 			fmt.Println(err)
 			return err
 		}
 
 		fmt.Printf("%+v", token)
+=======
+			logger.Error(err.Error())
+			return err
+		}
+
+>>>>>>> main
 		out.Result = token.AccessToken
 		return nil
 	}

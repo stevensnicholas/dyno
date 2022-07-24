@@ -44,6 +44,22 @@ require (
 )
 
 require (
+<<<<<<< HEAD
+=======
+	github.com/cespare/xxhash/v2 v2.1.2 // indirect
+	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/go-chi/chi/v5 v5.0.7 // indirect
+	github.com/pmezard/go-difflib v1.0.0 // indirect
+	github.com/santhosh-tekuri/jsonschema/v3 v3.1.0 // indirect
+	github.com/swaggest/form/v5 v5.0.1 // indirect
+	github.com/swaggest/jsonschema-go v0.3.35 // indirect
+	github.com/swaggest/openapi-go v0.2.18 // indirect
+	github.com/swaggest/refl v1.1.0 // indirect
+	gopkg.in/yaml.v2 v2.4.0 // indirect
+)
+
+require (
+>>>>>>> main
 	github.com/kr/pretty v0.3.0 // indirect
 	github.com/rogpeppe/go-internal v1.8.0 // indirect
 	go.uber.org/zap v1.21.0

@@ -33,7 +33,10 @@ func GetTokenAuthURL(code string) string {
 }
 
 func GetToken(url string) (*Token, error) {
+<<<<<<< HEAD
 
+=======
+>>>>>>> main
 	var req *http.Request
 	var err error
 	if req, err = http.NewRequest(http.MethodGet, url, nil); err != nil {
