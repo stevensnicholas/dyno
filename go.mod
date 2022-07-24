@@ -21,6 +21,8 @@ require (
 
 require (
 	github.com/alexflint/go-scalar v1.1.0 // indirect
+<<<<<<< HEAD
+=======
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/go-chi/chi/v5 v5.0.7 // indirect
@@ -40,6 +42,23 @@ require (
 	golang.org/x/text v0.3.7 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/protobuf v1.28.0 // indirect
+	gopkg.in/yaml.v2 v2.4.0 // indirect
+)
+
+require (
+>>>>>>> 13e30cc1f1abb833bc56a910660974fb688ba7e3
+	github.com/cespare/xxhash/v2 v2.1.2 // indirect
+	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/go-chi/chi/v5 v5.0.7 // indirect
+	github.com/golang/protobuf v1.5.2 // indirect
+	github.com/google/go-querystring v1.1.0 // indirect
+	github.com/pmezard/go-difflib v1.0.0 // indirect
+	github.com/santhosh-tekuri/jsonschema/v3 v3.1.0 // indirect
+	github.com/shurcooL/httpgzip v0.0.0-20190720172056-320755c1c1b0 // indirect
+	github.com/swaggest/form/v5 v5.0.1 // indirect
+	github.com/swaggest/jsonschema-go v0.3.35 // indirect
+	github.com/swaggest/openapi-go v0.2.18 // indirect
+	github.com/swaggest/refl v1.1.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
 

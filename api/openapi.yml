@@ -7,7 +7,7 @@ paths:
   /echo:
     post:
       description: Returns the same string as provided
-      operationId: cmd/endpoints.PostEcho
+      operationId: endpoints.PostEcho
       requestBody:
         content:
           application/json:
@@ -28,14 +28,14 @@ paths:
           description: Bad Request
       summary: Echo
   /login:
-    post:
-      description: Get token from GitHub
-      operationId: cmd/endpoints.Authentication
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/EndpointsAuthInput'
+    get:
+      description: Return code
+      operationId: endpoints.Authentication
+      parameters:
+      - in: query
+        name: code
+        schema:
+          type: string
       responses:
         "200":
           content:
@@ -49,22 +49,16 @@ paths:
               schema:
                 $ref: '#/components/schemas/RestErrResponse'
           description: Bad Request
-      summary: Login
+      summary: code
 components:
   schemas:
-     EndpointsAuthInput:
-      properties:
-        code:
-          type: string
-      required:
-      - request
-      type: object
-     EndpointsAuthOutput:
+    EndpointsAuthOutput:
       properties:
         token:
           type: string
       required:
-      - request
+      - token
+      type: object
     EndpointsPostEchoInput:
       properties:
         request:
