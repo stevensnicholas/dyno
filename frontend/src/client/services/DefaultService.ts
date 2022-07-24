@@ -34,8 +34,8 @@ export class DefaultService {
   }
 
   /**
-   * code
-   * Return code
+   * Authentication
+   * Return token
    * @param code
    * @returns EndpointsAuthOutput OK
    * @throws ApiError
@@ -44,7 +44,7 @@ export class DefaultService {
     code?: string,
   ): CancelablePromise<EndpointsAuthOutput> {
     return this.httpRequest.request({
-      method: 'POST',
+      method: 'GET',
       url: '/login',
       query: {
         'code': code,
