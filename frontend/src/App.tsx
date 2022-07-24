@@ -3,10 +3,8 @@ import './App.css';
 import { AppClient } from './client';
 import Background from './background.jpg';
 import { Loading } from './components/Loading/Loading';
-import { ToastContainer } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
-import { Demo } from './pages/Demo';
 
 export interface PageProps {
   client: AppClient;
@@ -14,6 +12,8 @@ export interface PageProps {
 
 export function App() {
   const [client, setClient] = useState<AppClient | undefined>();
+  const [request, setRequest] = useState<string>('');
+  const [response, setResponse] = useState<string>('');
 
   useEffect(() => {
     fetch('settings.json')
@@ -40,27 +40,29 @@ export function App() {
         <h1>Go Lambda Skeleton</h1>
         {client ? (
           <>
-            <div>
-              <nav>
-                <ul>
-                  <li>
-                    <Link to="/">Home</Link>
-                  </li>
-                  <li>
-                    <Link to="/about">About</Link>
-                  </li>
-                  <li>
-                    <Link to="/users">Users</Link>
-                  </li>
-                </ul>
-              </nav>
-            </div>
-
-            <BrowserRouter>
-              <Routes>
-                <Route path="/" element={<Demo client={client} />} />
-              </Routes>
-            </BrowserRouter>
+            <input
+              type="text"
+              onChange={(e) => {
+                e.preventDefault();
+                setRequest(e.target.value);
+              }}
+            />
+            <input
+              type="submit"
+              onClick={() => {
+                client.default
+                  .cmdEndpointsPostEcho({
+                    request,
+                  })
+                  .then((res) => {
+                    setResponse(res.result);
+                  })
+                  .catch((e) => {
+                    toast(e);
+                  });
+              }}
+            />
+            <h2>{response}</h2>
           </>
         ) : (
           <Loading />

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"dyno/internal/logger"
+	"golambda/internal/logger"
 	"net/http"
 	"runtime/debug"
 	"time"

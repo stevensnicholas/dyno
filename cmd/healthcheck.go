@@ -1,4 +1,4 @@
-package endpoints
+package main
 
 import (
 	"context"
@@ -14,7 +14,7 @@ type HealthcheckOutput struct {
 	Health string `json:"health"`
 }
 
-func Healthcheck(service *web.Service) {
+func healthcheck(service *web.Service) {
 	handler := func(ctx context.Context, input, output interface{}) error {
 		var out = output.(*HealthcheckOutput)
 

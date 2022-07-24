@@ -2,7 +2,7 @@ package endpoints
 
 import (
 	"context"
-	"dyno/internal/logger"
+	"golambda/internal/logger"
 
 	"github.com/swaggest/rest/web"
 	"github.com/swaggest/usecase"
