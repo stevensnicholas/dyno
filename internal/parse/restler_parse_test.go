@@ -4,14 +4,15 @@ package parse_test
 
 import (
 	"dyno/internal/parse"
-	"strings"
 	"github.com/stretchr/testify/assert"
+	"strings"
 	"testing"
 )
+
 func TestParseRestlerFuzzResultsInvalid(t *testing.T) {
 	location := "../tests/bug_buckets/"
 	file := ""
-	assert.Panics(t, func() {parse.ParseRestlerFuzzResults(location, file)})
+	assert.Panics(t, func() { parse.ParseRestlerFuzzResults(location, file) })
 }
 func TestParseRestlerFuzzResultsValid(t *testing.T) {
 	location := "../tests/bug_buckets/"
