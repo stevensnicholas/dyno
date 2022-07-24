@@ -3,12 +3,12 @@ on:
   pull_request:
     paths:
       - frontend/**
+      - api/openapi.yml
 jobs:
   ci:
     runs-on: ubuntu-latest
     container: 
       image: node:16.15.0
-
     steps:
       - uses: actions/checkout@v2
       - name: Frontend CI
