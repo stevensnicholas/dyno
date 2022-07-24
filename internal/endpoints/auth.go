@@ -36,7 +36,7 @@ func Authentication(service *web.Service) {
 	u := usecase.NewIOI(new(AuthInput), new(AuthOutput), handler)
 
 	u.SetTitle("login")
-	u.SetDescription("Return tokencode")
+	u.SetDescription("Return token")
 	u.SetExpectedErrors(status.InvalidArgument)
 
 	service.Get("/login", u)
