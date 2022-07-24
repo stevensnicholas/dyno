@@ -14,8 +14,8 @@ type Conf struct {
 }
 
 var conf = Conf{
-	ClientID:     "94143fe4a712d77c2983", // fill in with your id before test, delete before commit
-	ClientSecret: "0eaa973b77bf15fd7e431ba167195b8e3a1818bc", // fill in with your secret before test, delete before commit
+	ClientID:     "", // fill in with your id before test, delete before commit
+	ClientSecret: "", // fill in with your secret before test, delete before commit
 	RedirectURL:  "http://localhost:8080/login",
 }
 
