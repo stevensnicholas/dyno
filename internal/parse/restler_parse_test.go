@@ -31,6 +31,17 @@ func TestParseRestlerFuzzResultsValid(t *testing.T) {
 		"UseAfterFreeChecker Invalid 20x Response",
 	}
 	actualDynoResults := parse.ParseRestlerFuzzResults(location, file)
+	println(*actualDynoResults[0].Title)
+	println(*actualDynoResults[0].Endpoint)
+	println(*actualDynoResults[0].Method)
+	println(*actualDynoResults[0].MethodInformation.AcceptedResponse)
+	println(*actualDynoResults[0].MethodInformation.Host)
+	println(*actualDynoResults[0].MethodInformation.ContentType)
+	println(*actualDynoResults[0].MethodInformation.Request)
+	println(*actualDynoResults[0].TimeDelay)
+	println(*actualDynoResults[0].AsyncTime)
+	println(*actualDynoResults[0].PreviousResponse)
+	println(*actualDynoResults[0].ErrorType)
 	assert.Equal(t, expectedDynoResults[0], *actualDynoResults[0].Title)
 	assert.Equal(t, expectedDynoResults[1], *actualDynoResults[1].Title)
 	assert.Equal(t, expectedDynoResults[2], *actualDynoResults[2].Title)

@@ -62,8 +62,8 @@ func createIssue(fuzzError string, dynoIssue *DynoIssue) *DynoIssue {
 // Returns *DynoIssue with all the relevant information regarding the certain bug
 func internalServerErrorsIssue(dynoIssue *DynoIssue) *DynoIssue {
 	title := fmt.Sprintf("DYNO Fuzz: InternalServerErrors at Endpoint %s", *dynoIssue.Body.Endpoint)
-	details := "\nDetails: '500 Internal Server' Errors and any other 5xx errors are detected.\n"
-	visualizer := "\nVisualizer: [DYNO](the web url)\n"
+	details := "Details: '500 Internal Server' Errors and any other 5xx errors are detected."
+	visualizer := "Visualizer: [DYNO](the web url)"
 	labels := []string{"bug"}
 	dynoIssue.Title = &title
 	dynoIssue.Labels = &labels
@@ -78,8 +78,8 @@ func internalServerErrorsIssue(dynoIssue *DynoIssue) *DynoIssue {
 // Returns *DynoIssue with all the relevant information regarding the certain bug
 func resourceHierarchyCheckerIssue(dynoIssue *DynoIssue) *DynoIssue {
 	title := fmt.Sprintf("DYNO Fuzz: ResourceHierarchyChecker at Endpoint %s", *dynoIssue.Body.Endpoint)
-	details := "\nDetails: Detects that a child resource can be accessed from a non-parent resource.\n"
-	visualizer := "\nVisualizer: [DYNO](the web url)\n"
+	details := "Details: Detects that a child resource can be accessed from a non-parent resource."
+	visualizer := "Visualizer: [DYNO](the web url)"
 	labels := []string{"bug"}
 	dynoIssue.Title = &title
 	dynoIssue.Labels = &labels
@@ -94,8 +94,8 @@ func resourceHierarchyCheckerIssue(dynoIssue *DynoIssue) *DynoIssue {
 // Returns *DynoIssue with all the relevant information regarding the certain bug
 func nameSpaceRuleCheckerIssue(dynoIssue *DynoIssue) *DynoIssue {
 	title := fmt.Sprintf("DYNO Fuzz: NameSpaceRuleChecker at Endpoint %s", *dynoIssue.Body.Endpoint)
-	details := "\nDetails: Detects that an unauthorized user can access service resources.\n"
-	visualizer := "\nVisualizer: [DYNO](the web url)\n"
+	details := "Details: Detects that an unauthorized user can access service resources."
+	visualizer := "Visualizer: [DYNO](the web url)"
 	labels := []string{"bug"}
 	dynoIssue.Title = &title
 	dynoIssue.Labels = &labels
@@ -110,8 +110,8 @@ func nameSpaceRuleCheckerIssue(dynoIssue *DynoIssue) *DynoIssue {
 // Returns *DynoIssue with all the relevant information regarding the certain bug
 func useAfterFreeCheckerIssue(dynoIssue *DynoIssue) *DynoIssue {
 	title := fmt.Sprintf("DYNO Fuzz: UseAfterFreeChecker at Endpoint %s", *dynoIssue.Body.Endpoint)
-	details := "\nDetails: Detects that a deleted resource can still being accessed after deletion.\n"
-	visualizer := "\nVisualizer: [DYNO](the web url)\n"
+	details := "Details: Detects that a deleted resource can still being accessed after deletion."
+	visualizer := "Visualizer: [DYNO](the web url)"
 	labels := []string{"bug"}
 	dynoIssue.Title = &title
 	dynoIssue.Labels = &labels
@@ -126,8 +126,8 @@ func useAfterFreeCheckerIssue(dynoIssue *DynoIssue) *DynoIssue {
 // Returns *DynoIssue with all the relevant information regarding the certain bug
 func leakageRuleCheckerIssue(dynoIssue *DynoIssue) *DynoIssue {
 	title := fmt.Sprintf("DYNO Fuzz: LeakageRuleChecker at Endpoint %s", *dynoIssue.Body.Endpoint)
-	details := "\nDetails: Detects that a failed resource creation leaks data in subsequent requests.\n"
-	visualizer := "\nVisualizer: [DYNO](the web url)\n"
+	details := "Details: Detects that a failed resource creation leaks data in subsequent requests."
+	visualizer := "Visualizer: [DYNO](the web url)"
 	labels := []string{"bug"}
 	dynoIssue.Title = &title
 	dynoIssue.Labels = &labels
@@ -142,8 +142,8 @@ func leakageRuleCheckerIssue(dynoIssue *DynoIssue) *DynoIssue {
 // Returns *DynoIssue with all the relevant information regarding the certain bug
 func invalidDynamicObjectCheckerIssue(dynoIssue *DynoIssue) *DynoIssue {
 	title := fmt.Sprintf("DYNO Fuzz: InvalidDynamicObjectChecker at Endpoint %s", *dynoIssue.Body.Endpoint)
-	details := "\nDetails: Detects 500 errors or unexpected success status codes when invalid dynamic objects are sent in requests.\n"
-	visualizer := "\nVisualizer: [DYNO](the web url)\n"
+	details := "Details: Detects 500 errors or unexpected success status codes when invalid dynamic objects are sent in requests."
+	visualizer := "Visualizer: [DYNO](the web url)"
 	labels := []string{"bug"}
 	dynoIssue.Title = &title
 	dynoIssue.Labels = &labels
@@ -158,8 +158,8 @@ func invalidDynamicObjectCheckerIssue(dynoIssue *DynoIssue) *DynoIssue {
 // Returns *DynoIssue with all the relevant information regarding the certain bug
 func payloadBodyCheckerIssue(dynoIssue *DynoIssue) *DynoIssue {
 	title := fmt.Sprintf("DYNO Fuzz: PayloadBodyChecker at Endpoint %s", *dynoIssue.Body.Endpoint)
-	details := "\nDetails: Detects 500 errors when fuzzing the JSON bodies of requests.\n"
-	visualizer := "\nVisualizer: [DYNO](the web url)\n"
+	details := "Details: Detects 500 errors when fuzzing the JSON bodies of requests."
+	visualizer := "Visualizer: [DYNO](the web url)"
 	labels := []string{"bug"}
 	dynoIssue.Title = &title
 	dynoIssue.Labels = &labels
