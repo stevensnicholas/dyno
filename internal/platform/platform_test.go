@@ -1,15 +1,15 @@
 package platform_test
 
 import (
-	"github.com/stretchr/testify/assert"
-	"dyno/internal/platform"
 	"dyno/internal/issue"
+	"dyno/internal/platform"
 	"dyno/internal/result"
+	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
-func TestFormatFuzzBody( t *testing.T) {
-	
+func TestFormatFuzzBody(t *testing.T) {
+
 	title := "InvalidDynamicObjectChecker Invalid 20x Response"
 	endpoint := "/api/blog/posts"
 	method := "-> POST /api/blog/posts HTTP/1.1"
@@ -21,23 +21,23 @@ func TestFormatFuzzBody( t *testing.T) {
 	asyncTime := "! max_async_wait_time 20"
 	previousResponse := "PREVIOUS RESPONSE: 'HTTP/1.1 201 Created response:{\"id\":10,\"body\":\"my first blog post\"}'"
 	errorType := "InvalidDynamicObjectChecker"
-	
-	methodInformation := result.DynoMethodInformation {
+
+	methodInformation := result.DynoMethodInformation{
 		AcceptedResponse: &acceptedResponse,
-		Host: &host, 
-		ContentType: &contentType, 
-		Request: &request,
+		Host:             &host,
+		ContentType:      &contentType,
+		Request:          &request,
 	}
-	
+
 	dynoResult := result.DynoResult{
-		Title: &title, 
-		Endpoint: &endpoint,
-		Method: &method, 
-		MethodInformation: &methodInformation, 
-		TimeDelay: &timeDelay, 
-		AsyncTime: &asyncTime, 
-		PreviousResponse: &previousResponse, 
-		ErrorType: &errorType,
+		Title:             &title,
+		Endpoint:          &endpoint,
+		Method:            &method,
+		MethodInformation: &methodInformation,
+		TimeDelay:         &timeDelay,
+		AsyncTime:         &asyncTime,
+		PreviousResponse:  &previousResponse,
+		ErrorType:         &errorType,
 	}
 
 	issueTitle := "DYNO Fuzz: InvalidDynamicObjectChecker at Endpoint /api/blog/posts"
@@ -47,42 +47,42 @@ func TestFormatFuzzBody( t *testing.T) {
 	assignee := "fishua"
 	state := "state"
 	milestone := 1
-	
+
 	issue := issue.DynoIssue{
-		Title: &issueTitle,
-		Details: &details, 
-		Visualizer: &visualizer, 
-		Body: &dynoResult,
-		Labels: &labels, 
-		Assignee: &assignee, 
-		State: &state, 
-		Milestone: &milestone, 
+		Title:      &issueTitle,
+		Details:    &details,
+		Visualizer: &visualizer,
+		Body:       &dynoResult,
+		Labels:     &labels,
+		Assignee:   &assignee,
+		State:      &state,
+		Milestone:  &milestone,
 	}
 
-	expectedBody := "# InvalidDynamicObjectChecker Invalid 20x Response\n" + 
-									"\nDetails: Detects 500 errors or unexpected success status codes when invalid dynamic objects are sent in requests.\n" + 
-									"\nVisualizer: [DYNO](the web url)\n" + 
-									"\n-> POST /api/blog/posts HTTP/1.1\n\n" + 
-									"- Accept: application/json\n" + 
-									"- Host: localhost:8888\n" + 
-									"- Content-Type: application/json\n" + 
-									"- Request: {    \"id\":99,    \"body\":\"my first blog post\"}\n\n" + 
-									"! producer_timing_delay 0\n" + 
-									"! max_async_wait_time 20\n" + 
-									"\nPREVIOUS RESPONSE: 'HTTP/1.1 201 Created response:{\"id\":10,\"body\":\"my first blog post\"}'\n"
-								
+	expectedBody := "# InvalidDynamicObjectChecker Invalid 20x Response\n" +
+		"\nDetails: Detects 500 errors or unexpected success status codes when invalid dynamic objects are sent in requests.\n" +
+		"\nVisualizer: [DYNO](the web url)\n" +
+		"\n-> POST /api/blog/posts HTTP/1.1\n\n" +
+		"- Accept: application/json\n" +
+		"- Host: localhost:8888\n" +
+		"- Content-Type: application/json\n" +
+		"- Request: {    \"id\":99,    \"body\":\"my first blog post\"}\n\n" +
+		"! producer_timing_delay 0\n" +
+		"! max_async_wait_time 20\n" +
+		"\nPREVIOUS RESPONSE: 'HTTP/1.1 201 Created response:{\"id\":10,\"body\":\"my first blog post\"}'\n"
+
 	assert.Equal(t, expectedBody, *platform.FormatFuzzBody(&issue))
 
-	methodInformation.ContentType = nil 
-	expectedBody = "# InvalidDynamicObjectChecker Invalid 20x Response\n" + 
-	"\nDetails: Detects 500 errors or unexpected success status codes when invalid dynamic objects are sent in requests.\n" + 
-	"\nVisualizer: [DYNO](the web url)\n" + 
-	"\n-> POST /api/blog/posts HTTP/1.1\n\n" + 
-	"- Accept: application/json\n" + 
-	"- Host: localhost:8888\n" +
-	"- Request: {    \"id\":99,    \"body\":\"my first blog post\"}\n\n" + 
-	"! producer_timing_delay 0\n" + 
-	"! max_async_wait_time 20\n" + 
-	"\nPREVIOUS RESPONSE: 'HTTP/1.1 201 Created response:{\"id\":10,\"body\":\"my first blog post\"}'\n"
+	methodInformation.ContentType = nil
+	expectedBody = "# InvalidDynamicObjectChecker Invalid 20x Response\n" +
+		"\nDetails: Detects 500 errors or unexpected success status codes when invalid dynamic objects are sent in requests.\n" +
+		"\nVisualizer: [DYNO](the web url)\n" +
+		"\n-> POST /api/blog/posts HTTP/1.1\n\n" +
+		"- Accept: application/json\n" +
+		"- Host: localhost:8888\n" +
+		"- Request: {    \"id\":99,    \"body\":\"my first blog post\"}\n\n" +
+		"! producer_timing_delay 0\n" +
+		"! max_async_wait_time 20\n" +
+		"\nPREVIOUS RESPONSE: 'HTTP/1.1 201 Created response:{\"id\":10,\"body\":\"my first blog post\"}'\n"
 	assert.Equal(t, expectedBody, *platform.FormatFuzzBody(&issue))
-} 
+}
