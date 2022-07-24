@@ -26,6 +26,7 @@ module "aws_only" {
   deployment_id       = var.deployment_id
   aws_lambda_function = module.main.aws_lambda_function
   static_react_bucket = module.main.static_react_bucket
+  restler_image_tag   = var.restler_image_tag
 }
 
 data "aws_canonical_user_id" "current" {}

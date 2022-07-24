@@ -100,4 +100,5 @@ jobs:
             -backend-config="encrypt=true" \
             -backend-config="dynamodb_table=comp9447-state"
           terraform apply -auto-approve \
-            -var="deployment_id=${{ steps.branch.outputs.branch }}";
+            -var="deployment_id=${{ steps.branch.outputs.branch }}" \
+            -var="restler_image_tag=${{ github.sha }}";
