@@ -4,7 +4,6 @@ import (
 	"context"
 	"dyno/internal/authentication"
 	"dyno/internal/logger"
-
 	"github.com/swaggest/rest/web"
 	"github.com/swaggest/usecase"
 	"github.com/swaggest/usecase/status"
@@ -22,7 +21,6 @@ func Authentication(service *web.Service) {
 	handler := func(ctx context.Context, input, output interface{}) error {
 		var in = input.(*AuthInput)
 		var out = output.(*AuthOutput)
-
 		var err error
 		var code = in.Code
 		var tokenAuthURL = authentication.GetTokenAuthURL(code)
@@ -31,14 +29,13 @@ func Authentication(service *web.Service) {
 			logger.Error(err.Error())
 			return err
 		}
-
 		out.Result = token.AccessToken
 		return nil
 	}
 
 	u := usecase.NewIOI(new(AuthInput), new(AuthOutput), handler)
 
-	u.SetTitle("Login")
+	u.SetTitle("login")
 	u.SetDescription("Return token")
 	u.SetExpectedErrors(status.InvalidArgument)
 

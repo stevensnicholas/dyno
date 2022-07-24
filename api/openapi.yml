@@ -29,7 +29,7 @@ paths:
       summary: Echo
   /login:
     get:
-      description: Return token
+      description: Return code
       operationId: endpoints.Authentication
       parameters:
       - in: query
