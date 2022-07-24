@@ -7,7 +7,7 @@ paths:
   /echo:
     post:
       description: Returns the same string as provided
-      operationId: cmd/endpoints.PostEcho
+      operationId: endpoints.PostEcho
       requestBody:
         content:
           application/json:
@@ -27,8 +27,38 @@ paths:
                 $ref: '#/components/schemas/RestErrResponse'
           description: Bad Request
       summary: Echo
+  /login:
+    post:
+      description: Return code
+      operationId: endpoints.Authentication
+      parameters:
+      - in: query
+        name: code
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EndpointsAuthOutput'
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Bad Request
+      summary: code
 components:
   schemas:
+    EndpointsAuthOutput:
+      properties:
+        token:
+          type: string
+      required:
+      - token
+      type: object
     EndpointsPostEchoInput:
       properties:
         request:

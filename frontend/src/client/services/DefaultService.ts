@@ -1,6 +1,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { EndpointsAuthOutput } from '../models/EndpointsAuthOutput';
 import type { EndpointsPostEchoInput } from '../models/EndpointsPostEchoInput';
 import type { EndpointsPostEchoOutput } from '../models/EndpointsPostEchoOutput';
 
@@ -18,7 +19,7 @@ export class DefaultService {
    * @returns EndpointsPostEchoOutput OK
    * @throws ApiError
    */
-  public cmdEndpointsPostEcho(
+  public endpointsPostEcho(
     requestBody?: EndpointsPostEchoInput,
   ): CancelablePromise<EndpointsPostEchoOutput> {
     return this.httpRequest.request({
@@ -26,6 +27,28 @@ export class DefaultService {
       url: '/echo',
       body: requestBody,
       mediaType: 'application/json',
+      errors: {
+        400: `Bad Request`,
+      },
+    });
+  }
+
+  /**
+   * code
+   * Return code
+   * @param code
+   * @returns EndpointsAuthOutput OK
+   * @throws ApiError
+   */
+  public endpointsAuthentication(
+    code?: string,
+  ): CancelablePromise<EndpointsAuthOutput> {
+    return this.httpRequest.request({
+      method: 'POST',
+      url: '/login',
+      query: {
+        'code': code,
+      },
       errors: {
         400: `Bad Request`,
       },
