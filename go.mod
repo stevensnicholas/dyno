@@ -21,8 +21,6 @@ require (
 
 require (
 	github.com/alexflint/go-scalar v1.1.0 // indirect
-<<<<<<< HEAD
-=======
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/go-chi/chi/v5 v5.0.7 // indirect
@@ -46,7 +44,6 @@ require (
 )
 
 require (
->>>>>>> 13e30cc1f1abb833bc56a910660974fb688ba7e3
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/go-chi/chi/v5 v5.0.7 // indirect
