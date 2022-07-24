@@ -2,8 +2,8 @@ package issue_test
 
 import (
 	"github.com/stretchr/testify/assert"
-	"golambda/internal/issue"
-	"golambda/internal/result"
+	"dyno/internal/issue"
+	"dyno/internal/result"
 	"testing"
 )
 
