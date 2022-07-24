@@ -23,8 +23,8 @@ func CreateIssues(dynoResults []result.DynoResult) []DynoIssue {
 	dynoIssues := []DynoIssue{}
 	dynoIssue := &DynoIssue{}
 	for i := range dynoResults {
-		dynoIssue.Body = &dynoResult[i]
-		dynoIssue = createIssue(*dynoResult[i].ErrorType, dynoIssue)
+		dynoIssue.Body = &dynoResults[i]
+		dynoIssue = createIssue(*dynoResults[i].ErrorType, dynoIssue)
 		if dynoIssue != nil {
 			dynoIssues = append(dynoIssues, *dynoIssue)
 		}
