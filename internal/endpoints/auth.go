@@ -3,11 +3,7 @@ package endpoints
 import (
 	"context"
 	"dyno/internal/authentication"
-<<<<<<< HEAD
-=======
 	"dyno/internal/logger"
->>>>>>> 13e30cc1f1abb833bc56a910660974fb688ba7e3
-	"fmt"
 	"github.com/swaggest/rest/web"
 	"github.com/swaggest/usecase"
 	"github.com/swaggest/usecase/status"
@@ -33,11 +29,6 @@ func Authentication(service *web.Service) {
 			logger.Error(err.Error())
 			return err
 		}
-<<<<<<< HEAD
-
-		fmt.Printf("%+v", token)
-=======
->>>>>>> 13e30cc1f1abb833bc56a910660974fb688ba7e3
 		out.Result = token.AccessToken
 		return nil
 	}
@@ -45,7 +36,7 @@ func Authentication(service *web.Service) {
 	u := usecase.NewIOI(new(AuthInput), new(AuthOutput), handler)
 
 	u.SetTitle("login")
-	u.SetDescription("Return tokencode")
+	u.SetDescription("Return token")
 	u.SetExpectedErrors(status.InvalidArgument)
 
 	service.Get("/login", u)
