@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import './App.css';
 import { AppClient } from './client';
-import Background from './background.jpg';
 import { Loading } from './components/Loading/Loading';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -28,7 +27,6 @@ export function App() {
         overflowX: 'hidden',
         width: '100%',
         height: '100%',
-        backgroundImage: `url(${Background})`,
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
         backgroundSize: 'cover',
