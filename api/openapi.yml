@@ -28,8 +28,8 @@ paths:
           description: Bad Request
       summary: Echo
   /login:
-    post:
-      description: Return code
+    get:
+      description: Return token
       operationId: endpoints.Authentication
       parameters:
       - in: query
