@@ -22,9 +22,9 @@ type DynoIssue struct {
 func CreateIssues(dynoResults []result.DynoResult) []DynoIssue {
 	dynoIssues := []DynoIssue{}
 	dynoIssue := &DynoIssue{}
-	for _, dynoResult := range dynoResults {
-		dynoIssue.Body = dynoResult
-		dynoIssue = createIssue(*dynoResult.ErrorType, dynoIssue)
+	for i := range dynoResults {
+		dynoIssue.Body = &dynoResult[i]
+		dynoIssue = createIssue(*dynoResult[i].ErrorType, dynoIssue)
 		if dynoIssue != nil {
 			dynoIssues = append(dynoIssues, *dynoIssue)
 		}
