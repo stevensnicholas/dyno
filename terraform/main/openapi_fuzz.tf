@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "bucket" {
-  bucket = "client-openAPI-files"
+  bucket = "${var.deployment_id}-client-openapi-files"
   versioning {
     enabled = true
   }
@@ -19,12 +19,12 @@ resource "aws_kms_key" "openapi_fuzz" {
 }
 
 resource "aws_kms_alias" "openapi_fuzz_alias" {
-  name          = "alias/openapi_fuzz_alias"
+  name          = "${var.deployment_id}_alias/openapi_fuzz_alias"
   target_key_id = aws_kms_key.ecr_kms.key_id
 }
 
 resource "aws_sqs_queue" "sqs_queue" {
-  name                      = "openApiFilesQueue"
+  name                      = "${var.deployment_id}-openapifiles-queue"
   delay_seconds             = 90
   max_message_size          = 2048
   message_retention_seconds = 86400
@@ -64,7 +64,8 @@ resource "aws_sqs_queue_policy" "policy" {
 }
 POLICY
 }
-resource "aws_s3_bucket_notification" "bucket_notification" {
+
+resource "aws_s3_bucket_notification" "openapi_notify_sqs" {
   bucket = aws_s3_bucket.bucket.id
 
   queue {
