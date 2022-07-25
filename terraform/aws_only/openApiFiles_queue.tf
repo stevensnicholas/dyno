@@ -70,3 +70,11 @@ resource "aws_sqs_queue_policy" "policy" {
 }
 POLICY
 }
+resource "aws_s3_bucket_notification" "bucket_notification" {
+  bucket = aws_s3_bucket.bucket.id
+
+  queue {
+    queue_arn = aws_sqs_queue.sqsQueue.arn
+    events    = ["s3:ObjectCreated:*"]
+  }
+}
