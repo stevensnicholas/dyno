@@ -21,7 +21,7 @@ resource "aws_iam_role" "lambda_restler" {
 
 resource "aws_iam_policy" "lambda_policy" {
   name        = "${var.deployment_id}-lambda-custom-policy-restler"
-  description = "My test policy"
+  description = "restler lambda policy"
 
   policy = <<EOT
 {
