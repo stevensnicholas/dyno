@@ -20,12 +20,22 @@ resource "aws_s3_bucket_public_access_block" "access" {
   restrict_public_buckets = true
 }
 
+resource "aws_kms_key" "sqsQueue_kms" {
+  enable_key_rotation = true
+}
+
+resource "aws_kms_alias" "sqsQueue_kms_alias" {
+  name          = "alias/sqsQueue_kms_alias"
+  target_key_id = aws_kms_key.ecr_kms.key_id
+}
+
 resource "aws_sqs_queue" "sqsQueue" {
   name                      = "openApiFilesQueue"
   delay_seconds             = 90
   max_message_size          = 2048
   message_retention_seconds = 86400
   receive_wait_time_seconds = 10
+  kms_master_key_id = aws_kms_alias.sqsQueue_kms_alias.target_key_arn
   tags = {
     Environment = "production"
   }
