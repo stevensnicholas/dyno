@@ -30,7 +30,7 @@ resource "aws_sns_topic" "sns_fuzz_results" {
   POLICY
 }
 # Event for everytime an Object/Fuzz Results is created will notify SNS
-resource "aws_s3_bucket_notification" "s3_notif" {
+resource "aws_s3_bucket_notification" "s3_notif_sns" {
   bucket = "${aws_s3_bucket.openapi_files_bucket.id}"
 
   topic {
