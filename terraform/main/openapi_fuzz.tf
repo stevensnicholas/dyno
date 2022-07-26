@@ -20,7 +20,7 @@ resource "aws_kms_key" "openapi_fuzz" {
 
 resource "aws_kms_alias" "openapi_fuzz_alias" {
   name          = "${var.deployment_id}_alias/openapi_fuzz_alias"
-  target_key_id = aws_kms_key.ecr_kms.key_id
+  target_key_id = aws_kms_key.openapi_fuzz.key_id
 }
 
 resource "aws_sqs_queue" "openapi_sqs_queue" {
