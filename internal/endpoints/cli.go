@@ -3,6 +3,7 @@ package endpoints
 import (
 	"context"
 	"dyno/internal/logger"
+	"fmt"
 	"strings"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -35,8 +36,10 @@ func recieveFile(service *web.Service) {
 
 		sess := session.Must(session.NewSession())
 		uploader := s3manager.NewUploader(sess)
-		//u := uuid.New()
-		//key := fmt.Sprintf("File/%s", u.String())
+
+		//will replace with the openapi bucket when created
+		u := uuid.New()
+		key := fmt.Sprintf("File/%s", u.String())
 		_, ierr := uploader.Upload(&s3manager.UploadInput{
 			Bucket: aws.String("test-store-swagger"),
 			Key:    aws.String("clientOpenApiFie"),
@@ -52,7 +55,7 @@ func recieveFile(service *web.Service) {
 
 	u := usecase.NewIOI(new(cliInput), new(cliOutput), handler)
 	u.SetTitle("OpenApiFile")
-	u.SetDescription("Returns the same string as provided")
+	u.SetDescription("Recieves the open-api file from client and adds to s3")
 	u.SetExpectedErrors(status.InvalidArgument)
 
 	service.Post("/cli", u)
