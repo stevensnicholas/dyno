@@ -3,7 +3,6 @@ package endpoints
 import (
 	"context"
 	"dyno/internal/logger"
-	"fmt"
 	"strings"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -38,8 +37,8 @@ func recieveFile(service *web.Service) {
 		uploader := s3manager.NewUploader(sess)
 
 		//will replace with the openapi bucket when created
-		u := uuid.New()
-		key := fmt.Sprintf("File/%s", u.String())
+		//u := uuid.New()
+		//key := fmt.Sprintf("File/%s", u.String())
 		_, ierr := uploader.Upload(&s3manager.UploadInput{
 			Bucket: aws.String("test-store-swagger"),
 			Key:    aws.String("clientOpenApiFie"),
