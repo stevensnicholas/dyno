@@ -1,5 +1,5 @@
 # Github Issues Architecture 
-# Includes Restler Github Issues Queue -> Github Issues Lambda -> Github Issues API
+# Includes Restler SNS -> Github Issues Queue -> Github Issues Lambda -> Github Issues API
 
 
 data "archive_file" "github_issues_lambda" {
@@ -8,14 +8,101 @@ data "archive_file" "github_issues_lambda" {
   output_path = "${path.module}/files/issues.zip"
 }
 
+# SNS Topic to Notify SQS 
+resource "aws_sns_topic" "sns_fuzz_results" {
+  name = "${var.deployment_id}-sns-fuzz-results"
+  kms_master_key_id = "${aws_kms_alias.fuzz_results_topic_key_alias.name}"
+  policy = <<POLICY
+    {
+      "Version":"2012-10-17",
+      "Statement":[
+        {
+          "Effect": "Allow",
+          "Principal": {"Service":"s3.amazonaws.com"},
+          "Action": "SNS:Publish",
+          "Resource":  "arn:aws:sns:*:*:${var.deployment_id}-sns-fuzz-results",
+          "Condition":{
+              "ArnLike":{"aws:SourceArn":"${aws_s3_bucket.openapi_files_bucket.arn}"}
+          }
+        }
+      ]
+    }
+  POLICY
+}
+# Event for everytime an Object/Fuzz Results is created will notify SNS
+resource "aws_s3_bucket_notification" "s3_notif" {
+  bucket = "${aws_s3_bucket.openapi_files_bucket.id}"
+
+  topic {
+    topic_arn = "${aws_sns_topic.sns_fuzz_results.arn}"
+    events = [
+      "s3:ObjectCreated:*",
+    ]
+  }
+}
+
+# Encryption for notifications key for SNS 
+resource "aws_kms_key" "fuzz_results_topic_key" {
+  description             = "fuzz-results-topic-key"
+  policy                  = "${data.aws_iam_policy_document.fuzz_results_topic_key_kms_policy.json}"
+ 
+}
+
+data "aws_iam_policy_document" "fuzz_results_topic_key_kms_policy" {
+  statement {
+    effect = "Allow"
+    principals {
+      identifiers = ["s3.amazonaws.com"]
+      type = "Service"
+    }
+    actions = [
+      "kms:GenerateDataKey",
+      "kms:Decrypt"
+    ]
+    resources = ["${aws_s3_bucket.bucket.arn}"]
+  }
+  # allow root user to administrate key
+  statement {
+    effect = "Allow"
+    principals {
+      identifiers = ["arn:aws:iam::${account_id}:root"]
+      type = "AWS"
+    }
+    actions = [
+      "kms:*"
+    ]
+    resources = ["*"]
+  }
+} 
+
+resource "aws_kms_alias" "fuzz_results_topic_key_alias" {
+  name          = "alias/topic-key"
+  target_key_id = "${aws_kms_key.fuzz_results_topic_key.key_id}"
+}
+
+# SNS Subscribe SQS
+resource "aws_sns_topic_subscription" "github_issues_sqs_target" {
+  topic_arn = "${aws_sns_topic.sns_fuzz_results}"
+  protocol = "sqs"
+  endpoint = "${aws_sqs_queue.github_issues_queue.arn}"
+}
+
+# Deadletter Queue for SQS to store messages not processed 
+resource "aws_sqs_queue" "github_issues_dl_queue" {
+  name = "${var.deployment_id}-github-issues-dl-queue"
+}
+
 # Github Issues Queue
 resource "aws_sqs_queue" "github_issues_queue" {
-  name                      = "${var.deployment_id}-github_issues_queue"
+  name                      = "${var.deployment_id}-github-issues-queue"
   delay_seconds             = 90
   message_retention_seconds = 86400
   max_message_size          = 2048
   receive_wait_time_seconds = 10
-  sqs_managed_sse_enabled   = true
+  redrive_policy = jsonencode({
+    deadLetterTargetArn = aws_sqs_queue.terraform_queue_deadletter.arn
+    maxReceiveCount     = 5
+  })
   policy                    = <<POLICY
   {
     "Version": "2012-10-17",
@@ -44,6 +131,31 @@ resource "aws_sqs_queue" "github_issues_queue" {
   tags = {
     name = "github_issues_queue"
   }
+}
+
+# SQS Policy to receive events from SNS Topic 
+resource "aws_sqs_queue_policy" "github_issues_queue_sns_policy" {
+  queue_url = aws_sqs_queue.github_issues_queue.id
+  policy = <<POLICY
+  {
+    "Version": "2012-10-17",
+    "Id": "sqspolicy",
+    "Statement": [
+      {
+        "Sid": "First",
+        "Effect": "Allow",
+        "Principal": "*",
+        "Action": "sqs:SendMessage",
+        "Resource": "${aws_sqs_queue.results_updates_queue.arn}",
+        "Condition": {
+          "ArnEquals": {
+            "aws:SourceArn": "${aws_sns_topic.results_updates.arn}"
+          }
+        }
+      }
+    ]
+  }
+  POLICY
 }
 
 # SQS Policy for Lambda Function 
@@ -78,7 +190,8 @@ resource "aws_iam_policy" "github_issues_lambda_policy" {
         Action = [
           "sqs:ReceiveMessage",
           "sqs:DeleteMessage",
-          "sqs:GetQueueAttributes"
+          "sqs:GetQueueAttributes", 
+          "sqs:ChangeMessageVisibility"
         ]
         Effect   = "Allow"
         Resource = "${aws_sqs_queue.github_issues_queue.arn}"
