@@ -11,7 +11,7 @@ data "archive_file" "github_issues_lambda" {
 # SNS Topic to Notify SQS 
 resource "aws_sns_topic" "sns_fuzz_results" {
   name = "${var.deployment_id}-sns-fuzz-results"
-  kms_master_key_id = "${aws_kms_alias.fuzz_results_topic_key_alias.name}"
+  kms_master_key_id = "${aws_kms_alias.fuzz_results_key_alias.name}"
   policy = <<POLICY
     {
       "Version":"2012-10-17",
@@ -42,13 +42,13 @@ resource "aws_s3_bucket_notification" "s3_notif" {
 }
 
 # Encryption for notifications key for SNS 
-resource "aws_kms_key" "fuzz_results_topic_key" {
+resource "aws_kms_key" "fuzz_results_key" {
   description             = "fuzz-results-topic-key"
-  policy                  = "${data.aws_iam_policy_document.fuzz_results_topic_key_kms_policy.json}"
- 
+  policy                  = "${data.aws_iam_policy_document.fuzz_results_key_kms_policy.json}"
+  enable_key_rotation = true
 }
 
-data "aws_iam_policy_document" "fuzz_results_topic_key_kms_policy" {
+data "aws_iam_policy_document" "fuzz_results_key_kms_policy" {
   statement {
     effect = "Allow"
     principals {
@@ -75,9 +75,9 @@ data "aws_iam_policy_document" "fuzz_results_topic_key_kms_policy" {
   }
 } 
 
-resource "aws_kms_alias" "fuzz_results_topic_key_alias" {
-  name          = "alias/topic-key"
-  target_key_id = "${aws_kms_key.fuzz_results_topic_key.key_id}"
+resource "aws_kms_alias" "fuzz_results_key_alias" {
+  name          = "alias/fuzz-results-key"
+  target_key_id = "${aws_kms_key.fuzz_results_key.key_id}"
 }
 
 # SNS Subscribe SQS
@@ -99,6 +99,7 @@ resource "aws_sqs_queue" "github_issues_queue" {
   message_retention_seconds = 86400
   max_message_size          = 2048
   receive_wait_time_seconds = 10
+  kms_master_key_id = "alias/fuzz-results-key"
   redrive_policy = jsonencode({
     deadLetterTargetArn = aws_sqs_queue.terraform_queue_deadletter.arn
     maxReceiveCount     = 5
