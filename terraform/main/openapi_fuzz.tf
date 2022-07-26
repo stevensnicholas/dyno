@@ -19,7 +19,7 @@ resource "aws_kms_key" "openapi_fuzz" {
 }
 
 resource "aws_kms_alias" "openapi_fuzz_alias" {
-  name          = "${var.deployment_id}_alias/openapi_fuzz_alias"
+  name          = "alias/${var.deployment_id}_openapi_fuzz_alias"
   target_key_id = aws_kms_key.openapi_fuzz.key_id
 }
 
@@ -34,6 +34,7 @@ resource "aws_sqs_queue" "openapi_sqs_queue" {
     Environment = "production"
   }
 }
+
 
 resource "aws_sqs_queue_policy" "openapi_s3_notify_sqs_policy" {
   queue_url = aws_sqs_queue.openapi_sqs_queue.id
@@ -53,7 +54,7 @@ resource "aws_sqs_queue_policy" "openapi_s3_notify_sqs_policy" {
       "Resource": "${aws_sqs_queue.openapi_sqs_queue.arn}",
       "Condition": {
         "StringEquals": {
-          "aws:SourceAccount": "${var.account_id}"
+          "aws:SourceAccount": "${data.aws_caller_identity.current.account_id}"
         },
         "ArnLike": {
           "aws:SourceArn": "${aws_s3_bucket.openapi_files_bucket.id}"
