@@ -10,15 +10,42 @@ data "archive_file" "github_issues_lambda" {
 
 # Github Issues Queue
 resource "aws_sqs_queue" "github_issues_queue" {
-  name                      = "github_issues_queue"
+  name                      = "${var.deployment_id}-github_issues_queue"
   delay_seconds             = 90
   message_retention_seconds = 86400
+  max_message_size = 2048
   receive_wait_time_seconds = 10
-
+  sqs_managed_sse_enabled = true
+  policy = <<POLICY
+  {
+    "Version": "2012-10-17",
+    "Id": "${var.deployment_id}.s3-interaction-sqs-github-issues",
+    "Statement": [
+      {
+        "Sid": "sqs-github-issues-statement-id",
+        "Effect": "Allow",
+        "Principal": {
+          "Service": "s3.amazonaws.com"
+        },
+        "Action": "SQS:SendMessage",
+        "Resource": "${aws_sqs_queue.openapi_sqs_queue.arn}",
+        "Condition": {
+          "StringEquals": {
+            "aws:SourceAccount": "${var.account_id}"
+          },
+          "ArnLike": {
+            "aws:SourceArn": "${aws_s3_bucket.openapi_files_bucket.id}"
+          }
+        }
+      }
+    ]
+  }
+  POLICY
   tags = {
     name = "github_issues_queue"
   }
 }
+
 # SQS Policy for Lambda Function 
 resource "aws_sqs_queue_policy" "github_issues_queue_policy" {
   queue_url = aws_sqs_queue.github_issues_queue.id
