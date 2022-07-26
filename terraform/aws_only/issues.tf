@@ -1,5 +1,5 @@
 # Github Issues Architecture 
-# Includes Restler S3 Results Bucket -> Github SNS -> Github Issues Queue -> Github Issues Lambda -> Github Issues API
+# Includes Restler Github Issues Queue -> Github Issues Lambda -> Github Issues API
 
 
 data "archive_file" "github_issues_lambda" {
