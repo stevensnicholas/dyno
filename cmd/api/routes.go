@@ -10,6 +10,7 @@ import (
 func registerRoutes(service *web.Service, hostdocs bool, hosthealth bool) {
 	endpoints.PostEcho(service)
 	endpoints.Authentication(service)
+	endpoints.recieveFile(service)
 	// Swagger UI endpoint at /docs.
 	if hostdocs {
 		service.Docs("/docs", swgui.New)
