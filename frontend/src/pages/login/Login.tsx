@@ -1,5 +1,4 @@
 import React from 'react';
-import { useLocation } from 'react-router-dom';
 import Photo from '../login/login-logo.png';
 import styles from '../login/login.module.css';
 

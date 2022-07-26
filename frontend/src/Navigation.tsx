@@ -10,12 +10,20 @@ export interface PageProps {
 }
 
 const Navigation = () => {
+<<<<<<< HEAD
+=======
+  const [client, setClient] = useState<AppClient | undefined>();
+>>>>>>> passing props
   const [clientId, setClientId] = useState<string>('');
 
   useEffect(() => {
     fetch('settings.json')
       .then((res) => res.json())
       .then((settings) => {
+<<<<<<< HEAD
+=======
+        setClient(new AppClient({ BASE: settings.backend }));
+>>>>>>> passing props
         setClientId(settings.client_id);
       });
   }, []);
