@@ -57,7 +57,7 @@ resource "aws_sqs_queue_policy" "openapi_s3_notify_sqs_policy" {
           "aws:SourceAccount": "${data.aws_caller_identity.current.account_id}"
         },
         "ArnLike": {
-          "aws:SourceArn": "${aws_s3_bucket.openapi_files_bucket.id}"
+          "aws:SourceArn": "${aws_s3_bucket.openapi_files_bucket.arn}"
         }
       }
     }

@@ -19,3 +19,9 @@ variable "restler_image_tag" {
   type        = string
   description = "restler image tag to pull"
 }
+
+variable "lambda_restler_iam_arn" {
+  type        = string
+  description = "lamdda restler iam arn"
+
+}
