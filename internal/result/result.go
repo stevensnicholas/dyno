@@ -3,7 +3,7 @@ package result
 type DynoResult struct {
 	Title             *string                `json:"title,omitempty"`
 	Endpoint          *string                `json:"endpoint,omitempty"`
-	HttpMethod        *string                `json:"httpMethod,omitempty"`
+	HTTPMethod        *string                `json:"httpMethod,omitempty"`
 	Method            *string                `json:"method,omitempty"`
 	MethodInformation *DynoMethodInformation `json:"methodInformation,omitempty"`
 	TimeDelay         *string                `json:"timeDelay,omitempty"`

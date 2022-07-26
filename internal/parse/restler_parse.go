@@ -123,7 +123,7 @@ func createResult(requestSplit []string, scanner *bufio.Scanner, dynoResult *res
 	method := strings.Trim(requestSplit[0], "\\r")
 	httpMethod := strings.Split(method, " ")[1]
 	dynoResult.Method = &method
-	dynoResult.HttpMethod = &httpMethod
+	dynoResult.HTTPMethod = &httpMethod
 	endpoint := strings.Split(requestSplit[0], " ")[2]
 	dynoResult.Endpoint = &endpoint
 	scanner.Scan()
