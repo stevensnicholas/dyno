@@ -1,4 +1,7 @@
 resource "aws_s3_bucket" "openapi_files_bucket" {
+  depends_on = [
+    aws_sqs_queue_policy.openapi_s3_notify_sqs_policy
+  ]
   bucket = "${var.deployment_id}-client-openapi-files"
   versioning {
     enabled = true
@@ -57,7 +60,7 @@ resource "aws_sqs_queue_policy" "openapi_s3_notify_sqs_policy" {
           "aws:SourceAccount": "${data.aws_caller_identity.current.account_id}"
         },
         "ArnLike": {
-          "aws:SourceArn": "${aws_s3_bucket.openapi_files_bucket.arn}"
+          "aws:SourceArn": "arn:aws:s3:::${var.deployment_id}-client-openapi-files"
         }
       }
     }
