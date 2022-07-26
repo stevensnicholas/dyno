@@ -121,7 +121,9 @@ func createMethod(requestSplit []string, dynoMethodInformation *result.DynoMetho
 // Returning a dynoResult struct
 func createResult(requestSplit []string, scanner *bufio.Scanner, dynoResult *result.DynoResult) *result.DynoResult {
 	method := strings.Trim(requestSplit[0], "\\r")
+	httpMethod := strings.Split(method, " ")[1]
 	dynoResult.Method = &method
+	dynoResult.HTTPMethod = &httpMethod
 	endpoint := strings.Split(requestSplit[0], " ")[2]
 	dynoResult.Endpoint = &endpoint
 	scanner.Scan()
