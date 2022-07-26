@@ -31,6 +31,11 @@ paths:
     get:
       description: Return token
       operationId: endpoints.Authentication
+      parameters:
+      - in: query
+        name: code
+        schema:
+          type: string
       requestBody:
         content:
           application/json:
