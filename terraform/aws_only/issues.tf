@@ -172,7 +172,6 @@ resource "aws_sqs_queue_policy" "github_issues_queue_policy" {
       Principal = {
         Service = "lambda.amazonaws.com"
       }
-
     }]
   })
 }
