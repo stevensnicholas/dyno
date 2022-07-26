@@ -2,8 +2,6 @@ import React from 'react';
 import { useLocation } from 'react-router-dom';
 import Photo from '../login/login-logo.png';
 import styles from '../login/login.module.css';
-<<<<<<< HEAD
-<<<<<<< HEAD
 
 interface Props {
   clientID?: string;
@@ -22,35 +20,6 @@ const Login = ({ clientID }: Props) => {
     path +
     '&scope=' +
     scope;
-=======
-import { GitHubURL } from '../../client/models/GithubURL';
-=======
->>>>>>> github url change
-
-type LocationState = {
-  from: {
-    path: string;
-  };
-};
-
-function GitHubURL(from: string) {
-  const rootUrl = 'https://github.com/login/oauth/authorize';
-  const options = {
-    client_id: '' as string,
-    redirect_url: 'http://localhost:8080/login' as string,
-    scope: 'user:email',
-    state: from,
-  };
-
-  const qs = new URLSearchParams(options);
-
-  return `${rootUrl}?${qs.toString()}`;
-}
-
-const Login = () => {
-  const location = useLocation();
-  const from = (location.state as LocationState)?.from?.path || '/';
->>>>>>> github link added
   return (
     <html>
       <body className={styles.login_background}>
@@ -74,11 +43,7 @@ const Login = () => {
             <div className="row">
               <div className={styles.login_box}>
                 <a
-<<<<<<< HEAD
                   href={githubURL}
-=======
-                  href={GitHubURL(from)}
->>>>>>> github link added
                   className="btn-large waves-effect waves-teal col s12 black"
                 >
                   Login
