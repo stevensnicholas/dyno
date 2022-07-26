@@ -19,7 +19,7 @@ resource "aws_sqs_queue" "github_issues_queue" {
     name = "github_issues_queue"
   }
 }
-
+# SQS Policy for Lambda Function 
 resource "aws_sqs_queue_policy" "github_issues_queue_policy" {
   queue_url = aws_sqs_queue.github_issues_queue.id
 
