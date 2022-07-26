@@ -1,6 +1,8 @@
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 import Photo from '../login/login-logo.png';
 import styles from '../login/login.module.css';
+<<<<<<< HEAD
 
 interface Props {
   clientID?: string;
@@ -19,6 +21,19 @@ const Login = ({ clientID }: Props) => {
     path +
     '&scope=' +
     scope;
+=======
+import { GitHubURL } from '../../client/models/GithubURL';
+
+type LocationState = {
+  from: {
+    path: string;
+  };
+};
+
+const Login = () => {
+  const location = useLocation();
+  const from = (location.state as LocationState)?.from?.path || '/';
+>>>>>>> github link added
   return (
     <html>
       <body className={styles.login_background}>
@@ -42,7 +57,11 @@ const Login = ({ clientID }: Props) => {
             <div className="row">
               <div className={styles.login_box}>
                 <a
+<<<<<<< HEAD
                   href={githubURL}
+=======
+                  href={GitHubURL(from)}
+>>>>>>> github link added
                   className="btn-large waves-effect waves-teal col s12 black"
                 >
                   Login
