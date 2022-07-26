@@ -1,31 +1,24 @@
 import React from 'react';
-import { useLocation } from 'react-router-dom';
 import Photo from '../login/login-logo.png';
 import styles from '../login/login.module.css';
 
-type LocationState = {
-  from: {
-    path: string;
-  };
-};
-
-function GitHubURL(from: string) {
-  const rootUrl = 'https://github.com/login/oauth/authorize';
-  const options = {
-    client_id: '' as string,
-    redirect_url: 'http://localhost:8080/login' as string,
-    scope: 'user:email',
-    state: from,
-  };
-
-  const qs = new URLSearchParams(options);
-
-  return `${rootUrl}?${qs.toString()}`;
+interface Props {
+  clientID?: string;
 }
 
-const Login = () => {
-  const location = useLocation();
-  const from = (location.state as LocationState)?.from?.path || '/';
+const Login = ({ clientID }: Props) => {
+  const redirectURL = 'http://localhost:8080/login';
+  const path = '/';
+  const scope = 'user:email';
+  const githubURL =
+    'https://github.com/login/oauth/authorize?' +
+    clientID +
+    '&redirect_uri=' +
+    redirectURL +
+    '?path=' +
+    path +
+    '&scope=' +
+    scope;
   return (
     <html>
       <body className={styles.login_background}>
@@ -49,7 +42,7 @@ const Login = () => {
             <div className="row">
               <div className={styles.login_box}>
                 <a
-                  href={GitHubURL(from)}
+                  href={githubURL}
                   className="btn-large waves-effect waves-teal col s12 black"
                 >
                   Login
