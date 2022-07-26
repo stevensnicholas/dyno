@@ -5,13 +5,13 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
-	// "io/ioutil"
+	"io/ioutil"
 )
 type GitHubUserInfo struct {
 	Name  string
 	Photo string
 	// Email string
-	ID    string
+	ID    float64
 }
 
 type Conf struct {
@@ -64,7 +64,7 @@ func GetToken(url string) (*Token, error) {
 	return &token, nil
 }
 
-func GetUserInfo(token *Token) (map[string]interface{}, error) {
+func GetUserInfo(token *Token) (*GitHubUserInfo, error) {
 
 	var userInfoUrl = "https://api.github.com/user"	
 	var req *http.Request
@@ -87,28 +87,28 @@ func GetUserInfo(token *Token) (map[string]interface{}, error) {
 		return nil, errors.New("could not retrieve user")
 	}
 
-	var userInfo = make(map[string]interface{})
-	if err = json.NewDecoder(res.Body).Decode(&userInfo); err != nil {
+	// var userInfo = make(map[string]interface{})
+	// if err = json.NewDecoder(res.Body).Decode(&userInfo); err != nil {
+	// 	return nil, err
+	// }
+
+	resBody, err := ioutil.ReadAll(res.Body)
+	if err != nil {
 		return nil, err
 	}
 
-	// resBody, err := ioutil.ReadAll(res.Body)
-	// if err != nil {
-	// 	return nil, err
-	// }
-
-	// var Info map[string]interface{}
+	var Info map[string]interface{}
 	
-	// if err := json.Unmarshal(resBody, &Info); err != nil {
-	// 	return nil, err
-	// }
+	if err := json.Unmarshal(resBody, &Info); err != nil {
+		return nil, err
+	}
 
-	// userInfo := &GitHubUserInfo{
-	// 	// Email: Info["email"].(string),
-	// 	Name:  Info["login"].(string),
-	// 	Photo: Info["avatar_url"].(string),
-	// 	ID:    Info["id"].(string),
-	// }
+	userinfo := &GitHubUserInfo{
+		// Email: Info["email"].(string),
+		Name:  Info["login"].(string),
+		Photo: Info["avatar_url"].(string),
+		ID:    Info["id"].(float64),
+	}
 
-	return userInfo, nil
+	return userinfo, nil
 }

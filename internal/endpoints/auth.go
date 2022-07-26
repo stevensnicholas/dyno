@@ -15,7 +15,7 @@ type AuthInput struct {
 }
 
 type AuthOutput struct {
-	Result map[string]interface{} `json:"user info"`
+	Result *authentication.GitHubUserInfo `json:"user info"`
 }
 
 func Authentication(service *web.Service) {
@@ -34,17 +34,17 @@ func Authentication(service *web.Service) {
 		}
 		fmt.Println("token: ", token)
 		
-		// var userInfo *authentication.GitHubUserInfo
-		// if userInfo, err = authentication.GetUserInfo(token); err != nil {
-		// 	logger.Error(err.Error())
-		// 	return err
-		// }
-
-		var userInfo = make(map[string]interface{})
+		var userInfo *authentication.GitHubUserInfo
 		if userInfo, err = authentication.GetUserInfo(token); err != nil {
 			logger.Error(err.Error())
 			return err
-	}
+		}
+
+	// 	var userInfo = make(map[string]interface{})
+	// 	if userInfo, err = authentication.GetUserInfo(token); err != nil {
+	// 		logger.Error(err.Error())
+	// 		return err
+	// }
 
 		out.Result = userInfo
 		return nil
