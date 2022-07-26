@@ -9,7 +9,6 @@ import (
 )
 
 func TestFormatFuzzBody(t *testing.T) {
-
 	title := "InvalidDynamicObjectChecker Invalid 20x Response"
 	endpoint := "/api/blog/posts"
 	method := "-> POST /api/blog/posts HTTP/1.1"
@@ -21,7 +20,6 @@ func TestFormatFuzzBody(t *testing.T) {
 	asyncTime := "! max_async_wait_time 20"
 	previousResponse := "PREVIOUS RESPONSE: 'HTTP/1.1 201 Created response:{\"id\":10,\"body\":\"my first blog post\"}'"
 	errorType := "InvalidDynamicObjectChecker"
-
 	methodInformation := result.DynoMethodInformation{
 		AcceptedResponse: &acceptedResponse,
 		Host:             &host,
@@ -47,7 +45,6 @@ func TestFormatFuzzBody(t *testing.T) {
 	assignee := "fishua"
 	state := "state"
 	milestone := 1
-
 	issue := issue.DynoIssue{
 		Title:      &issueTitle,
 		Details:    &details,

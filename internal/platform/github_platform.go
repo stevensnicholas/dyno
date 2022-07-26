@@ -10,7 +10,7 @@ import (
 // Creates an Authenticated Client for communitcation with github
 // Inputs: token is the user token
 // Returns the Client
-func CreateClient(ctx context.Context, token *string) *github.Client {
+func CreateGithubClient(ctx context.Context, token *string) *github.Client {
 	authToken := token
 	ts := oauth2.StaticTokenSource(
 		&oauth2.Token{AccessToken: *authToken},
