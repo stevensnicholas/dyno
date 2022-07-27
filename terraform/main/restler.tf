@@ -1,10 +1,10 @@
 resource "aws_cloudwatch_log_group" "lambda_restler" {
-  name              = "/aws/lambda/${var.deployment_id}-restler-fuzzer-lambda"
+  name              = "/aws/lambda/${var.deployment_id}-restler-fuzzer"
   retention_in_days = 30
 }
 
 resource "aws_iam_role" "lambda_restler" {
-  name = "${var.deployment_id}-lambda-execution-restler-lambda"
+  name = "${var.deployment_id}-lambda-execution-restler"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -20,7 +20,7 @@ resource "aws_iam_role" "lambda_restler" {
 }
 
 resource "aws_iam_policy" "lambda_policy" {
-  name        = "${var.deployment_id}-lambda-custom-policy-restler-lambda"
+  name        = "${var.deployment_id}-lambda-custom-policy-restler"
   description = "restler lambda policy"
 
   policy = <<EOT
