@@ -10,7 +10,7 @@ import (
 type GitHubUserInfo struct {
 	Name  string
 	Photo string
-	// Email string
+	Email string
 	ID    float64
 }
 
@@ -21,8 +21,8 @@ type Conf struct {
 }
 
 var conf = Conf{
-	ClientID:     "94143fe4a712d77c2983", // fill in with your id before test
-	ClientSecret: "ebcbba13830611e80c5800fc8f845a45f57d1ac5", // fill in with your secret before test
+	ClientID:     "", // fill in with your id before test, 
+	ClientSecret: "", // fill in with your secret before test
 	RedirectURL:  "http://localhost:8080/login",
 }
 
@@ -87,11 +87,6 @@ func GetUserInfo(token *Token) (*GitHubUserInfo, error) {
 		return nil, errors.New("could not retrieve user")
 	}
 
-	// var userInfo = make(map[string]interface{})
-	// if err = json.NewDecoder(res.Body).Decode(&userInfo); err != nil {
-	// 	return nil, err
-	// }
-
 	resBody, err := ioutil.ReadAll(res.Body)
 	if err != nil {
 		return nil, err
@@ -104,7 +99,7 @@ func GetUserInfo(token *Token) (*GitHubUserInfo, error) {
 	}
 
 	userinfo := &GitHubUserInfo{
-		// Email: Info["email"].(string),
+		Email: Info["email"].(string),
 		Name:  Info["login"].(string),
 		Photo: Info["avatar_url"].(string),
 		ID:    Info["id"].(float64),
