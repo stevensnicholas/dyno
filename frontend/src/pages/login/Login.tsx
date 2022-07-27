@@ -10,15 +10,7 @@ const Login = ({ clientID }: Props) => {
   const redirectURL = 'http://localhost:8080/login';
   const path = '/';
   const scope = 'user:email';
-  const githubURL =
-    'https://github.com/login/oauth/authorize?' +
-    clientID +
-    '&redirect_uri=' +
-    redirectURL +
-    '?path=' +
-    path +
-    '&scope=' +
-    scope;
+  const githubURL = `https://github.com/login/oauth/authorize?${clientID}&redirect_uri=${redirectURL}?path=${path}&scope=${scope}`;
   return (
     <html>
       <body className={styles.login_background}>

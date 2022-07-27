@@ -4,8 +4,10 @@ import { AppClient } from './client';
 import { Loading } from './components/Loading/Loading';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
-import { Demo } from './pages/Demo';
+import { Link, Route, Routes } from 'react-router-dom';
+import Home from './pages/Home';
+import Login from './pages/login/Login';
+import Dashboard from './pages/Dashboard';
 
 export interface PageProps {
   client: AppClient;
@@ -13,13 +15,16 @@ export interface PageProps {
 
 export function App() {
   const [client, setClient] = useState<AppClient | undefined>();
+  const [clientId, setClientId] = useState<string>('');
 
   useEffect(() => {
     fetch('settings.json')
       .then((res) => res.json())
-      .then((settings) => setClient(new AppClient({ BASE: settings.backend })));
+      .then((settings) => {
+        setClientId(settings.client_id);
+        setClient(new AppClient({ BASE: settings.backend }));
+      });
   }, []);
-
   return (
     <div
       id="main"
@@ -35,7 +40,6 @@ export function App() {
       <ToastContainer />
 
       <div className="App">
-        <h1>Go Lambda Skeleton</h1>
         {client ? (
           <>
             <div>
@@ -45,20 +49,20 @@ export function App() {
                     <Link to="/">Home</Link>
                   </li>
                   <li>
-                    <Link to="/about">About</Link>
+                    <Link to="/login">Login</Link>
                   </li>
                   <li>
-                    <Link to="/users">Users</Link>
+                    <Link to="/dashboard">Dashboard</Link>
                   </li>
                 </ul>
               </nav>
             </div>
 
-            <BrowserRouter>
-              <Routes>
-                <Route path="/" element={<Demo client={client} />} />
-              </Routes>
-            </BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/login" element={<Login clientID={clientId} />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+            </Routes>
           </>
         ) : (
           <Loading />
