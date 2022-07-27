@@ -69,7 +69,7 @@ components:
     EndpointsPostEchoOutput:
       properties:
         result:
-          type: map[string]
+          type: string
       required:
       - result
       type: object

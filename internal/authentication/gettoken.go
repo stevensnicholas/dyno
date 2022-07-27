@@ -42,7 +42,7 @@ func GetTokenAuthURL(code string) string {
 func GetToken(url string) (*Token, error) {
 	var req *http.Request
 	var err error
-	if req, err = http.NewRequest(http.MethodGet, url, nil); err != nil {
+	if req, err = http.NewRequest(http.MethodPost, url, nil); err != nil {
 		return nil, err
 	}
 	req.Header.Set("accept", "application/json")
@@ -65,7 +65,6 @@ func GetToken(url string) (*Token, error) {
 }
 
 func GetUserInfo(token *Token) (*GitHubUserInfo, error) {
-
 	var userInfoUrl = "https://api.github.com/user"	
 	var req *http.Request
 	var err error
