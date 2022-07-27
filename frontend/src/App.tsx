@@ -40,6 +40,7 @@ export function App() {
       <ToastContainer />
 
       <div className="App">
+        <h1>Go Lambda Skeleton</h1>
         {client ? (
           <>
             <div>
