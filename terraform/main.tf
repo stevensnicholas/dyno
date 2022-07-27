@@ -22,11 +22,12 @@ module "main" {
 }
 
 module "aws_only" {
-  source              = "./aws_only"
-  deployment_id       = var.deployment_id
-  aws_lambda_function = module.main.aws_lambda_function
-  static_react_bucket = module.main.static_react_bucket
-  restler_image_tag   = var.restler_image_tag
+  source                 = "./aws_only"
+  deployment_id          = var.deployment_id
+  aws_lambda_function    = module.main.aws_lambda_function
+  static_react_bucket    = module.main.static_react_bucket
+  restler_image_tag      = var.restler_image_tag
+  lambda_restler_iam_arn = module.main.lambda_restler_iam_arn
 }
 
 data "aws_canonical_user_id" "current" {}
