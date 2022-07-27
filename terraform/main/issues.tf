@@ -122,9 +122,6 @@ resource "aws_sqs_queue" "github_issues_queue" {
     ]
   }
   POLICY
-  tags = {
-    name = "github_issues_queue"
-  }
 }
 
 resource "aws_sqs_queue_policy" "github_issues_queue_sns_policy" {
