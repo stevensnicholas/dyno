@@ -1,14 +1,12 @@
 # Github Issues Architecture 
 # Includes Restler SNS -> Github Issues Queue -> Github Issues Lambda -> Github Issues API
 
-
 data "archive_file" "github_issues_lambda" {
   type        = "zip"
   source_file = "${path.module}/../../bin/issues/main"
   output_path = "${path.module}/files/issues.zip"
 }
 
-# SNS Topic to Notify SQS 
 resource "aws_sns_topic" "sns_fuzz_results" {
   name              = "${var.deployment_id}-sns-fuzz-results"
   kms_master_key_id = aws_kms_alias.fuzz_results_key_alias.name
@@ -29,7 +27,6 @@ resource "aws_sns_topic" "sns_fuzz_results" {
     }
   POLICY
 }
-# Event for everytime an Object/Fuzz Results is created will notify SNS
 resource "aws_s3_bucket_notification" "s3_notif_sns" {
   bucket = aws_s3_bucket.openapi_files_bucket.id
 
@@ -41,7 +38,6 @@ resource "aws_s3_bucket_notification" "s3_notif_sns" {
   }
 }
 
-# Encryption for notifications key for SNS 
 resource "aws_kms_key" "fuzz_results_key" {
   description         = "fuzz-results-topic-key"
   policy              = data.aws_iam_policy_document.fuzz_results_key_kms_policy.json
@@ -61,7 +57,6 @@ data "aws_iam_policy_document" "fuzz_results_key_kms_policy" {
     ]
     resources = ["${aws_s3_bucket.bucket.arn}"]
   }
-  # allow root user to administrate key
   statement {
     effect = "Allow"
     principals {
@@ -80,20 +75,17 @@ resource "aws_kms_alias" "fuzz_results_key_alias" {
   target_key_id = aws_kms_key.fuzz_results_key.key_id
 }
 
-# SNS Subscribe SQS
 resource "aws_sns_topic_subscription" "github_issues_sqs_target" {
   topic_arn = aws_sns_topic.sns_fuzz_results
   protocol  = "sqs"
   endpoint  = aws_sqs_queue.github_issues_queue.arn
 }
 
-# Deadletter Queue for SQS to store messages not processed 
 resource "aws_sqs_queue" "github_issues_dl_queue" {
   name              = "${var.deployment_id}-github-issues-dl-queue"
   kms_master_key_id = "alias/fuzz-results-key"
 }
 
-# Github Issues Queue
 resource "aws_sqs_queue" "github_issues_queue" {
   name                      = "${var.deployment_id}-github-issues-queue"
   delay_seconds             = 90
@@ -135,7 +127,6 @@ resource "aws_sqs_queue" "github_issues_queue" {
   }
 }
 
-# SQS Policy to receive events from SNS Topic 
 resource "aws_sqs_queue_policy" "github_issues_queue_sns_policy" {
   queue_url = aws_sqs_queue.github_issues_queue.id
   policy    = <<POLICY
@@ -160,7 +151,6 @@ resource "aws_sqs_queue_policy" "github_issues_queue_sns_policy" {
   POLICY
 }
 
-# SQS Policy for Lambda Function 
 resource "aws_sqs_queue_policy" "github_issues_queue_policy" {
   queue_url = aws_sqs_queue.github_issues_queue.id
 
@@ -178,8 +168,6 @@ resource "aws_sqs_queue_policy" "github_issues_queue_policy" {
   })
 }
 
-# # Github Issues Lambda
-# Lambda function policy
 resource "aws_iam_policy" "github_issues_lambda_policy" {
   name        = "${var.deployment_id}-github-issues-lambda-policy"
   description = "${var.deployment_id}-github-issues-lambda-policy"
@@ -210,7 +198,6 @@ resource "aws_iam_policy" "github_issues_lambda_policy" {
   })
 }
 
-# Lambda function role
 resource "aws_iam_role" "iam_github_issues_lambda" {
   name = "${var.deployment_id}-github-issues-lambda-role"
   assume_role_policy = jsonencode({
@@ -227,13 +214,11 @@ resource "aws_iam_role" "iam_github_issues_lambda" {
   })
 }
 
-# Role to Policy attachment
 resource "aws_iam_role_policy_attachment" "terraform_lambda_iam_policy_basic_execution" {
   role       = aws_iam_role.iam_github_issues_lambda.id
   policy_arn = aws_iam_policy.github_issues_lambda_policy.arn
 }
 
-# Lambda function declaration
 resource "aws_lambda_function" "github_issues_lambda" {
   function_name    = "${var.deployment_id}-github-issues-lambda"
   filename         = "files/issues.zip"
@@ -249,7 +234,6 @@ resource "aws_lambda_function" "github_issues_lambda" {
   role = aws_iam_role.iam_github_issues_lambda.arn
 }
 
-# Trigger 
 resource "aws_lambda_event_source_mapping" "event_source_mapping" {
   batch_size       = 1
   event_source_arn = aws_sqs_queue.github_issues_queue.arn
@@ -257,7 +241,6 @@ resource "aws_lambda_event_source_mapping" "event_source_mapping" {
   function_name    = aws_lambda_function.github_issues_lambda.arn
 }
 
-# CloudWatch Log Group for the Lambda function
 resource "aws_cloudwatch_log_group" "lambda_loggroup" {
   name              = "/aws/lambda/${aws_lambda_function.github_issues_lambda.function_name}"
   retention_in_days = 14
