@@ -5,6 +5,7 @@ import (
 	"dyno/internal/authentication"
 	"dyno/internal/logger"
 	"fmt"
+	"time"
 	"github.com/swaggest/rest/web"
 	"github.com/swaggest/usecase"
 	"github.com/swaggest/usecase/status"
@@ -15,7 +16,7 @@ type AuthInput struct {
 }
 
 type AuthOutput struct {
-	Result *authentication.GitHubUserInfo `json:"user info"`
+	Result string `json:"jwt"`
 }
 
 func Authentication(service *web.Service) {
@@ -33,20 +34,15 @@ func Authentication(service *web.Service) {
 			return err
 		}
 		fmt.Println("token: ", token)
-		
-		var userInfo *authentication.GitHubUserInfo
-		if userInfo, err = authentication.GetUserInfo(token); err != nil {
+
+		var jwt string
+		if jwt, err = authentication.CreateToken(time.Hour, token.AccessToken); err != nil {
 			logger.Error(err.Error())
 			return err
 		}
+		
 
-	// 	var userInfo = make(map[string]interface{})
-	// 	if userInfo, err = authentication.GetUserInfo(token); err != nil {
-	// 		logger.Error(err.Error())
-	// 		return err
-	// }
-
-		out.Result = userInfo
+		out.Result = jwt
 		return nil
 	}
 

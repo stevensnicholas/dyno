@@ -22,7 +22,7 @@ type Conf struct {
 
 var conf = Conf{
 	ClientID:     "94143fe4a712d77c2983", // fill in with your id before test
-	ClientSecret: "ce8c95475b2874e2204b3f878f3ebedb2a2320dd", // fill in with your secret before test
+	ClientSecret: "ebcbba13830611e80c5800fc8f845a45f57d1ac5", // fill in with your secret before test
 	RedirectURL:  "http://localhost:8080/login",
 }
 
