@@ -1,7 +1,24 @@
 import React from 'react';
 import Photo from '../login/login-logo.png';
 import styles from '../login/login.module.css';
-const Login = () => {
+
+interface Props {
+  clientID?: string;
+}
+
+const Login = ({ clientID }: Props) => {
+  const redirectURL = 'http://localhost:8080/login';
+  const path = '/';
+  const scope = 'user:email';
+  const githubURL =
+    'https://github.com/login/oauth/authorize?' +
+    clientID +
+    '&redirect_uri=' +
+    redirectURL +
+    '?path=' +
+    path +
+    '&scope=' +
+    scope;
   return (
     <html>
       <body className={styles.login_background}>
@@ -25,7 +42,7 @@ const Login = () => {
             <div className="row">
               <div className={styles.login_box}>
                 <a
-                  href="http://localhost:3000/login"
+                  href={githubURL}
                   className="btn-large waves-effect waves-teal col s12 black"
                 >
                   Login
