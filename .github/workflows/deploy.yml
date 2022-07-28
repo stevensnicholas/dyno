@@ -69,6 +69,7 @@ jobs:
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo "ECR_IMAGE_URL=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_ENV
   deploy:
     runs-on: ubuntu-latest
     container: hashicorp/terraform:1.1.6
@@ -108,4 +109,4 @@ jobs:
             -backend-config="dynamodb_table=comp9447-state"
           terraform apply -auto-approve \
             -var="deployment_id=${{ steps.branch.outputs.branch }}" \
-            -var="restler_image_tag=${{ github.sha }}";
+            -var="restler_image_tag=${{ env.ECR_IMAGE_URL }}";
