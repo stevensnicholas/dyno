@@ -73,7 +73,7 @@ resource "aws_sqs_queue_policy" "openapi_s3_notify_sqs_policy" {
   policy = <<POLICY
 {
   "Version": "2012-10-17",
-  "Id": "example-ID",
+  "Id": "allow s3",
   "Statement": [
     {
       "Sid": "Allow sqs",
