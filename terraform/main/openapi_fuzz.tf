@@ -56,9 +56,6 @@ resource "aws_sqs_queue_policy" "openapi_s3_notify_sqs_policy" {
       "Action": "SQS:SendMessage",
       "Resource": "${aws_sqs_queue.openapi_sqs_queue.arn}",
       "Condition": {
-        "StringEquals": {
-          "aws:SourceAccount": "${data.aws_caller_identity.current.account_id}"
-        },
         "ArnLike": {
           "aws:SourceArn": "arn:aws:s3:::${var.deployment_id}-client-openapi-files"
         }
