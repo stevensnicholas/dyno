@@ -71,6 +71,10 @@ POLICY
 
 resource "aws_s3_bucket_notification" "openapi_notify_sqs" {
   bucket = aws_s3_bucket.openapi_files_bucket.id
+  depends_on = [
+    aws_sqs_queue_policy.openapi_s3_notify_sqs_policy,
+    aws_s3_bucket.openapi_files_bucket
+  ]
 
   queue {
     queue_arn = aws_sqs_queue.openapi_sqs_queue.arn
