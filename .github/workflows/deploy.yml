@@ -57,10 +57,14 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
 <<<<<<< HEAD
+<<<<<<< HEAD
           ECR_REPOSITORY: ${{ steps.branch.outputs.branch }}_dyno_image_repository
 =======
           ECR_REPOSITORY: dyno_image_repository
 >>>>>>> add-back-in
+=======
+          ECR_REPOSITORY: ${{ steps.branch.outputs.branch }}_dyno_image_repository
+>>>>>>> fix action
           IMAGE_TAG: ${{ github.sha }}
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
