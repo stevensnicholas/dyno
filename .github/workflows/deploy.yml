@@ -59,6 +59,7 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
           ECR_REPOSITORY: ${{ steps.branch.outputs.branch }}_dyno_image_repository
 =======
           ECR_REPOSITORY: dyno_image_repository
@@ -66,6 +67,9 @@ jobs:
 =======
           ECR_REPOSITORY: ${{ steps.branch.outputs.branch }}_dyno_image_repository
 >>>>>>> fix action
+=======
+          ECR_REPOSITORY: ${{ steps.branch.outputs.branch }}_dyno_image_repository
+>>>>>>> 5d54b6cc9c36ba6729eb6278ae915397c427a462
           IMAGE_TAG: ${{ github.sha }}
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
