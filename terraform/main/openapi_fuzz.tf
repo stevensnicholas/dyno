@@ -19,7 +19,7 @@ resource "aws_s3_bucket_public_access_block" "openapi_files_bucket_access" {
 
 resource "aws_kms_key" "openapi_fuzz" {
   enable_key_rotation = true
-  policy = <<POLICY
+  policy              = <<POLICY
 {
   "Version": "2012-10-17",
   "Id": "key-allow-s3",
