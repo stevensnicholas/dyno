@@ -56,11 +56,12 @@ jobs:
       - name: Build, tag, and push image to Amazon ECR
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: dyno_image_repository
+          ECR_REPOSITORY: ${{ steps.branch.outputs.branch }}_dyno_image_repository
           IMAGE_TAG: ${{ github.sha }}
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo "ECR_IMAGE_URL=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_ENV
   deploy:
     runs-on: ubuntu-latest
     container: hashicorp/terraform:1.1.6
@@ -100,4 +101,4 @@ jobs:
             -backend-config="dynamodb_table=comp9447-state"
           terraform apply -auto-approve \
             -var="deployment_id=${{ steps.branch.outputs.branch }}" \
-            -var="restler_image_tag=${{ github.sha }}";
+            -var="restler_image_tag=${{ env.ECR_IMAGE_URL }}";
