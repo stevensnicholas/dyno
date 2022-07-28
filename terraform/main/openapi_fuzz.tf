@@ -19,6 +19,34 @@ resource "aws_s3_bucket_public_access_block" "openapi_files_bucket_access" {
 
 resource "aws_kms_key" "openapi_fuzz" {
   enable_key_rotation = true
+  policy              = <<POLICY
+{
+  "Version": "2012-10-17",
+  "Id": "key-allow-s3",
+  "Statement": [
+    {
+      "Sid": "Enable IAM User Permissions",
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"
+      },
+      "Action": "kms:*",
+      "Resource": "*"
+    },
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "s3.amazonaws.com"
+      },
+      "Action": [
+        "kms:GenerateDataKey",
+        "kms:Decrypt"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
+POLICY
 }
 
 resource "aws_kms_alias" "openapi_fuzz_alias" {
@@ -45,10 +73,10 @@ resource "aws_sqs_queue_policy" "openapi_s3_notify_sqs_policy" {
   policy = <<POLICY
 {
   "Version": "2012-10-17",
-  "Id": "example-ID",
+  "Id": "allow-s3",
   "Statement": [
     {
-      "Sid": "example-statement-ID",
+      "Sid": "Allow sqs",
       "Effect": "Allow",
       "Principal": {
         "Service": "s3.amazonaws.com"
@@ -64,4 +92,17 @@ resource "aws_sqs_queue_policy" "openapi_s3_notify_sqs_policy" {
   ]
 }
 POLICY
+}
+
+resource "aws_s3_bucket_notification" "openapi_notify_sqs" {
+  bucket = aws_s3_bucket.openapi_files_bucket.id
+  depends_on = [
+    aws_sqs_queue_policy.openapi_s3_notify_sqs_policy,
+    aws_s3_bucket.openapi_files_bucket
+  ]
+
+  queue {
+    queue_arn = aws_sqs_queue.openapi_sqs_queue.arn
+    events    = ["s3:ObjectCreated:*"]
+  }
 }
