@@ -56,6 +56,7 @@ jobs:
         run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
         id: branch
       - name: Build, tag, and push image to Amazon ECR
+        id: tag
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: ${{ steps.branch.outputs.branch }}_dyno_image_repository
@@ -63,7 +64,9 @@ jobs:
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-          echo "ECR_IMAGE_URL=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_ENV
+          echo "::set-output name=ECR_IMAGE_URL::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+    outputs:
+      ECR_IMAGE_URL: ${{ steps.tag.outputs.ECR_IMAGE_URL }}
   deploy:
     runs-on: ubuntu-latest
     container: hashicorp/terraform:1.1.6
@@ -103,4 +106,4 @@ jobs:
             -backend-config="dynamodb_table=comp9447-state"
           terraform apply -auto-approve \
             -var="deployment_id=${{ steps.branch.outputs.branch }}" \
-            -var="restler_image_tag=${{ env.ECR_IMAGE_URL }}";
+            -var="restler_image_tag=${{ needs.restler.outputs.ECR_IMAGE_URL }}";
