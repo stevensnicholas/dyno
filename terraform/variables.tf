@@ -5,5 +5,5 @@ variable "deployment_id" {
 
 variable "restler_image_tag" {
   type        = string
-  description = "restler image tag to pull"
+  description = "restler image tag to pull, if this is the first run then you need to supply an image from another ecr"
 }

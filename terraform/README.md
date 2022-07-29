@@ -2,6 +2,19 @@
 
 The Infrastructure takes the build artefacts from the backend and UI projects and deploys them to
 AWS using terraform.
+If you are deploying on AWS for the first time run Module ecr first and push an image into it which can
+be used by the Restler lambda.
+
+## Module Discrption
+
+### Main
+Most resources, can be deployed onto localstack
+
+### Ecr
+Just the ECR needs to be deployed first on a fresh aws account
+
+### AWS_only
+Resources that can not be tested on local stack
 
 ## Install
 
