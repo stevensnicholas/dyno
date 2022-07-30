@@ -33,6 +33,7 @@ module "aws_only" {
   static_react_bucket    = module.main.static_react_bucket
   restler_image_tag      = var.restler_image_tag
   lambda_restler_iam_arn = module.main.lambda_restler_iam_arn
+  open_api_sqs_arn       = module.main.open_api_sqs_arn
 }
 
 data "aws_canonical_user_id" "current" {}
