@@ -93,8 +93,8 @@ func main() {
 		readFileContent, _ = ioutil.ReadFile(args.Send.Path)
 
 		if isJSON(string(fileData)) || isYAML(string(fileData)) {
-			request_payload := content{DataJSON: readFileContent}
-			requestBody, _ = json.Marshal(request_payload)
+			requestPayload := content{DataJSON: readFileContent}
+			requestBody, _ = json.Marshal(requestPayload)
 			sendRequest(requestBody, url, "application/json")
 		} else {
 			logger.Fatal("Please provide either a JSON or YAML file")
