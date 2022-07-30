@@ -22,8 +22,7 @@ var args struct {
 }
 
 type content struct {
-	Data_yaml []byte `yaml:"result"`
-	Data_json []byte `json:"result"`
+	DataJson []byte `json:"result"`
 }
 
 func isJSON(s string) bool {
@@ -94,7 +93,7 @@ func main() {
 		readFileContent,_=ioutil.ReadFile(args.Send.Path)
 
 		if isJSON(string(fileData)) || isYAML(string(fileData)) {
-			request_payload:=content{Data_json : readFileContent}
+			request_payload:=content{DataJson : readFileContent}
 			requestBody,_=json.Marshal(request_payload)
 			sendRequest(requestBody, url, "application/json")
 		} else {
