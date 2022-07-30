@@ -19,6 +19,7 @@ provider "aws" {
 module "main" {
   source        = "./main"
   deployment_id = var.deployment_id
+  restler_lambda_timeout = var.restler_lambda_timeout
 }
 
 module "ecr" {
@@ -34,6 +35,7 @@ module "aws_only" {
   restler_image_tag      = var.restler_image_tag
   lambda_restler_iam_arn = module.main.lambda_restler_iam_arn
   open_api_sqs_arn       = module.main.open_api_sqs_arn
+  restler_lambda_timeout = var.restler_lambda_timeout
 }
 
 data "aws_canonical_user_id" "current" {}
