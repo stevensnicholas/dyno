@@ -25,3 +25,9 @@ variable "lambda_restler_iam_arn" {
   description = "lamdda restler iam arn"
 
 }
+
+variable "open_api_sqs_arn" {
+  type        = string
+  description = "open api bucket name used for lambda"
+
+}
