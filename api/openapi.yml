@@ -51,20 +51,20 @@ paths:
           description: Bad Request
       summary: Authentication
   /openapi:
-    get:
-      description: Gets openapi file and uploads to s3
+    post:
+      description: Recieves the open-api file from client and adds to s3
       operationId: endpoints.Fuzz
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/EndpointscliInput'
+              $ref: '#/components/schemas/EndpointsCliInput'
       responses:
         "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/EndpointscliOutput'
+                $ref: '#/components/schemas/EndpointsCliOutput'
           description: OK
         "400":
           content:
@@ -72,7 +72,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/RestErrResponse'
           description: Bad Request
-      summary: Fuzz
+      summary: Open Api Fuzz
 components:
   schemas:
     EndpointsAuthOutput:
@@ -82,6 +82,24 @@ components:
       required:
       - token
       type: object
+    EndpointsCliInput:
+      properties:
+        result:
+          items:
+            minimum: 0
+            type: integer
+          nullable: true
+          type: array
+      required:
+      - result
+      type: object
+    EndpointsCliOutput:
+      properties:
+        result:
+          type: string
+      required:
+      - result
+      type: object
     EndpointsPostEchoInput:
       properties:
         request:
@@ -90,20 +108,6 @@ components:
       - request
       type: object
     EndpointsPostEchoOutput:
-      properties:
-        result:
-          type: string
-      required:
-      - result
-      type: object
-    EndpointscliInput:
-      properties:
-        request:
-          type: string
-      required:
-      - request
-      type: object
-    EndpointscliOutput:
       properties:
         result:
           type: string
