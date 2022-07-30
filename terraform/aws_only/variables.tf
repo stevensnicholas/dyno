@@ -31,3 +31,9 @@ variable "open_api_sqs_arn" {
   description = "open api bucket name used for lambda"
 
 }
+
+variable "restler_lambda_timeout" {
+  type        = number 
+  description = "Time out for lambda - Related to SQS Queue visibility"
+
+}

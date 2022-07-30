@@ -6,7 +6,7 @@ resource "aws_lambda_function" "lambda_restler" {
   image_uri     = "${var.restler_image_tag}"
 >>>>>>> add back in restler
   package_type  = "Image"
-  timeout       = 60
+  timeout       = var.restler_lambda_timeout
 
   tracing_config {
     mode = "Active"
