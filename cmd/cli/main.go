@@ -3,12 +3,12 @@ package main
 import (
 	"dyno/internal/logger"
 	"encoding/json"
+	"github.com/alexflint/go-arg"
+	"gopkg.in/yaml.v3"
 	"io/ioutil"
 	"net/http"
 	"os"
 	"strings"
-	"github.com/alexflint/go-arg"
-	"gopkg.in/yaml.v3"
 )
 
 type SendCmd struct {
@@ -36,7 +36,7 @@ func isYAML(s string) bool {
 }
 
 func sendRequest(requestBody []byte, url string, contentType string) {
-	con:=strings.NewReader(string(requestBody))
+	con := strings.NewReader(string(requestBody))
 	req, err := http.NewRequest("POST", url, con)
 	if err != nil {
 		panic(err)
@@ -87,14 +87,14 @@ func main() {
 		url := "http://localhost:8080/openapi"
 		logger.Debugf("URL:>", url)
 		logger.Debugf("ss", data)
-		
+
 		var readFileContent []byte
 		var requestBody []byte
-		readFileContent,_=ioutil.ReadFile(args.Send.Path)
+		readFileContent, _ = ioutil.ReadFile(args.Send.Path)
 
 		if isJSON(string(fileData)) || isYAML(string(fileData)) {
-			request_payload:=content{DataJSON : readFileContent}
-			requestBody,_=json.Marshal(request_payload)
+			request_payload := content{DataJSON: readFileContent}
+			requestBody, _ = json.Marshal(request_payload)
 			sendRequest(requestBody, url, "application/json")
 		} else {
 			logger.Fatal("Please provide either a JSON or YAML file")
