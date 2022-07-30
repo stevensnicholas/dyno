@@ -15,5 +15,5 @@ variable "restler_image_tag" {
 variable "restler_lambda_timeout" {
   type        = number
   description = "restler lambda timeout - also used by SQS"
-  default = 60
+  default     = 60
 }

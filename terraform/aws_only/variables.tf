@@ -33,7 +33,7 @@ variable "open_api_sqs_arn" {
 }
 
 variable "restler_lambda_timeout" {
-  type        = number 
+  type        = number
   description = "Time out for lambda - Related to SQS Queue visibility"
 
 }

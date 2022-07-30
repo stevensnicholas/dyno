@@ -55,13 +55,13 @@ resource "aws_kms_alias" "openapi_fuzz_alias" {
 }
 
 resource "aws_sqs_queue" "openapi_sqs_queue" {
-  name                      = "${var.deployment_id}-openapifiles-queue"
-  delay_seconds             = 90
-  max_message_size          = 2048
-  message_retention_seconds = 86400
-  receive_wait_time_seconds = 10
+  name                       = "${var.deployment_id}-openapifiles-queue"
+  delay_seconds              = 90
+  max_message_size           = 2048
+  message_retention_seconds  = 86400
+  receive_wait_time_seconds  = 10
   visibility_timeout_seconds = var.restler_lambda_timeout + 5
-  kms_master_key_id         = aws_kms_alias.openapi_fuzz_alias.target_key_arn
+  kms_master_key_id          = aws_kms_alias.openapi_fuzz_alias.target_key_arn
   tags = {
     Environment = "production"
   }

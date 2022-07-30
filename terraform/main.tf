@@ -17,8 +17,8 @@ provider "aws" {
 }
 
 module "main" {
-  source        = "./main"
-  deployment_id = var.deployment_id
+  source                 = "./main"
+  deployment_id          = var.deployment_id
   restler_lambda_timeout = var.restler_lambda_timeout
 }
 
