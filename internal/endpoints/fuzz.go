@@ -3,15 +3,15 @@ package endpoints
 import (
 	"context"
 	"dyno/internal/logger"
-	"strings"
-  "fmt"
-	"github.com/google/uuid"
+	"fmt"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
+	"github.com/google/uuid"
 	"github.com/swaggest/rest/web"
 	"github.com/swaggest/usecase"
 	"github.com/swaggest/usecase/status"
+	"strings"
 )
 
 type cliInput struct {
@@ -19,7 +19,7 @@ type cliInput struct {
 }
 
 type cliOutput struct {
-	Result string `json:"result"`                                                                                                            
+	Result string `json:"result"`
 }
 
 func Fuzz(service *web.Service) {
@@ -32,7 +32,7 @@ func Fuzz(service *web.Service) {
 		bod := strings.NewReader(string(in.Data))
 
 		sess := session.Must(session.NewSession(&aws.Config{
-			Region: aws.String("ap-southeast-2")},))
+			Region: aws.String("ap-southeast-2")}))
 		uploader := s3manager.NewUploader(sess)
 
 		u := uuid.New()
