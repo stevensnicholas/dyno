@@ -4,4 +4,3 @@ bin
 coverage*
 venv
 db.sqlite
-terraform/ecr/.terraform.lock.hcl
