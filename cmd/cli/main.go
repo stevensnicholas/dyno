@@ -6,7 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
-
+	"strings"
 	"github.com/alexflint/go-arg"
 	"gopkg.in/yaml.v3"
 )
@@ -21,6 +21,11 @@ var args struct {
 	Debug   bool     `arg:"-d" help:"enable debug logging"`
 }
 
+type content struct {
+	Data_yaml []byte `yaml:"result"`
+	Data_json []byte `json:"result"`
+}
+
 func isJSON(s string) bool {
 	var js map[string]interface{}
 	return json.Unmarshal([]byte(s), &js) == nil
@@ -29,6 +34,28 @@ func isJSON(s string) bool {
 func isYAML(s string) bool {
 	var js map[string]interface{}
 	return yaml.Unmarshal([]byte(s), &js) == nil
+}
+
+func sendRequest(requestBody []byte, url string, contentType string) {
+	con:=strings.NewReader(string(requestBody))
+	req, err := http.NewRequest("POST", url, con)
+	if err != nil {
+		panic(err)
+	}
+	req.Header.Set("Content-Type", contentType)
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		panic(err)
+	}
+	defer resp.Body.Close()
+	body, _ := ioutil.ReadAll(resp.Body)
+
+	logger.Infof(
+		"response Status:", resp.Status,
+		"response Headers:", resp.Header,
+		"response Body:", string(body),
+	)
 }
 
 func main() {
@@ -58,36 +85,21 @@ func main() {
 		}
 		fileData, _ := ioutil.ReadAll(data)
 
-		url := "https://o8cnchwjji.execute-api.ap-southeast-2.amazonaws.com/v1/post_json"
+		url := "http://localhost:8080/openapi"
 		logger.Debugf("URL:>", url)
 		logger.Debugf("ss", data)
+		
+		var readFileContent []byte
+		var requestBody []byte
+		readFileContent,_=ioutil.ReadFile(args.Send.Path)
 
-		req, err := http.NewRequest("POST", url, data)
-		if err != nil {
-			panic(err)
-		}
-
-		if isJSON(string(fileData)) {
-			req.Header.Set("Content-Type", "application/json")
-		} else if isYAML(string(fileData)) {
-			req.Header.Set("Content-Type", "application/x-yaml")
+		if isJSON(string(fileData)) || isYAML(string(fileData)) {
+			request_payload:=content{Data_json : readFileContent}
+			requestBody,_=json.Marshal(request_payload)
+			sendRequest(requestBody, url, "application/json")
 		} else {
 			logger.Fatal("Please provide either a JSON or YAML file")
 		}
-
-		client := &http.Client{}
-		resp, err := client.Do(req)
-		if err != nil {
-			panic(err)
-		}
-		defer resp.Body.Close()
-		body, _ := ioutil.ReadAll(resp.Body)
-
-		logger.Infof(
-			"response Status:", resp.Status,
-			"response Headers:", resp.Header,
-			"response Body:", string(body),
-		)
 
 	default:
 		p := arg.MustParse(&args)
