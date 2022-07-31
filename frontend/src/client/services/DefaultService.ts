@@ -2,6 +2,8 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { EndpointsAuthOutput } from '../models/EndpointsAuthOutput';
+import type { EndpointsCliInput } from '../models/EndpointsCliInput';
+import type { EndpointsCliOutput } from '../models/EndpointsCliOutput';
 import type { EndpointsPostEchoInput } from '../models/EndpointsPostEchoInput';
 import type { EndpointsPostEchoOutput } from '../models/EndpointsPostEchoOutput';
 
@@ -49,6 +51,27 @@ export class DefaultService {
       query: {
         'code': code,
       },
+      errors: {
+        400: `Bad Request`,
+      },
+    });
+  }
+
+  /**
+   * Open Api Fuzz
+   * Recieves the open-api file from client and adds to s3
+   * @param requestBody
+   * @returns EndpointsCliOutput OK
+   * @throws ApiError
+   */
+  public endpointsFuzz(
+    requestBody?: EndpointsCliInput,
+  ): CancelablePromise<EndpointsCliOutput> {
+    return this.httpRequest.request({
+      method: 'POST',
+      url: '/openapi',
+      body: requestBody,
+      mediaType: 'application/json',
       errors: {
         400: `Bad Request`,
       },
