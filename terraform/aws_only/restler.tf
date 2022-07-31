@@ -1,6 +1,6 @@
 resource "aws_lambda_function" "lambda_restler" {
   function_name = "${var.deployment_id}-restler-fuzzer"
-  image_uri     = "${aws_ecr_repository.image_repository.repository_url}:${var.restler_image_tag}"
+  image_uri     = var.restler_image_tag
   package_type  = "Image"
   timeout       = 60
 

@@ -21,6 +21,11 @@ module "main" {
   deployment_id = var.deployment_id
 }
 
+module "ecr" {
+  source        = "./ecr"
+  deployment_id = var.deployment_id
+}
+
 module "aws_only" {
   source                 = "./aws_only"
   deployment_id          = var.deployment_id
