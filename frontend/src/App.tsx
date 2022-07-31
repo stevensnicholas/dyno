@@ -8,6 +8,7 @@ import { Link, Route, Routes } from 'react-router-dom';
 import Home from './pages/Home';
 import Login from './pages/login/Login';
 import Dashboard from './pages/Dashboard';
+import Oauth from './pages/oauth/Oauth';
 
 export interface PageProps {
   client: AppClient;
@@ -63,6 +64,7 @@ export function App() {
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login clientID={clientId} />} />
               <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/oauth" element={<Oauth />} />
             </Routes>
           </>
         ) : (
