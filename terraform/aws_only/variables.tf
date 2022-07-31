@@ -25,3 +25,15 @@ variable "lambda_restler_iam_arn" {
   description = "lamdda restler iam arn"
 
 }
+
+variable "open_api_sqs_arn" {
+  type        = string
+  description = "open api bucket name used for lambda"
+
+}
+
+variable "restler_lambda_timeout" {
+  type        = number
+  description = "Time out for lambda - Related to SQS Queue visibility"
+
+}
