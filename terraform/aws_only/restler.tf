@@ -5,8 +5,8 @@ resource "aws_lambda_function" "lambda_restler" {
   timeout       = var.restler_lambda_timeout
   environment {
     variables = {
-    results_upload_s3_bucket = var.fuzz_results_bucket
-  }
+      results_upload_s3_bucket = var.fuzz_results_bucket
+    }
   }
 
   tracing_config {
