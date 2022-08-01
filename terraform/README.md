@@ -38,8 +38,6 @@ Then the follwoing lines,
 3. Create the remaining resouces
 
 ```
-
-```
 cd terraform/ecr
 terraform init
 terraform apply -var="deployment_id=$infrastructure_prefix" -auto-approve
@@ -52,7 +50,7 @@ terraform import -var "deployment_id=$infrastructure_prefix" -var "restler_image
 terraform import -var "deployment_id=$infrastructure_prefix" -var "restler_image_tag=$temp_restler_img" module.ecr.aws_kms_alias.ecr_kms_alias_named "$ecr_kms_alias_named"
 terraform import -var "deployment_id=$infrastructure_prefix" -var "restler_image_tag=$temp_restler_img" module.ecr.aws_ecr_repository.image_repository_named "$image_repository_named"
 terraform apply -var "deployment_id=$infrastructure_prefix" -var "restler_image_tag=$temp_restler_img" -auto-approve
-
+```
 ## Development
 
 Create a `build` directory with the artefacts from the UI and a `bin` directory with the artefacts from the backend.

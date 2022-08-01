@@ -42,7 +42,7 @@ resource "aws_iam_policy" "lambda_policy" {
         "s3:GetObjectAcl"
       ],
       "Effect": "Allow",
-      "Resource": "${aws_s3_bucket.openapi_files_bucket.arn}"
+      "Resource": ["${aws_s3_bucket.openapi_files_bucket.arn}/*","${aws_s3_bucket.fuzz_results_bucket.arn}/*"]
     },
     {
         "Effect": "Allow",
@@ -52,6 +52,15 @@ resource "aws_iam_policy" "lambda_policy" {
             "logs:PutLogEvents"
         ],
         "Resource": "*"
+    },
+    {
+        "Effect": "Allow",
+        "Action": [
+            "sqs:ReceiveMessage",
+            "sqs:DeleteMessage",
+            "sqs:GetQueueAttributes"
+        ],
+        "Resource": "${aws_sqs_queue.openapi_sqs_queue.arn}"
     }
   ]
 }
@@ -60,4 +69,24 @@ EOT
 resource "aws_iam_role_policy_attachment" "lambda_restler" {
   policy_arn = aws_iam_policy.lambda_policy.arn
   role       = aws_iam_role.lambda_restler.name
+}
+
+resource "aws_s3_bucket" "fuzz_results_bucket" {
+  bucket = "${var.deployment_id}-fuzzer-results-comp9447-files"
+}
+
+resource "aws_s3_bucket_versioning" "fuzz_results_bucket_versioning" {
+  bucket = aws_s3_bucket.fuzz_results_bucket.id
+  versioning_configuration {
+    status = "Disabled"
+  }
+}
+
+resource "aws_s3_bucket_public_access_block" "fuzz_results_bucket_access" {
+  bucket = aws_s3_bucket.fuzz_results_bucket.id
+
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
 }
