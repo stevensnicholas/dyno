@@ -6,6 +6,8 @@ import os
 import shutil
 
 def handler(event, context):
+    #Restler consistently tries to save files to working directory
+    #So to avoid read only errors in lambda change wdir to /tmp
     os.chdir("/tmp")
     print("logging started")
     restler_compile_cmd = "dotnet /RESTler/restler/Restler.dll --workingDirPath /tmp  compile --api_spec /tmp/swagger.json "
@@ -25,7 +27,7 @@ def handler(event, context):
     run(restler_compile_cmd, shell=True)
     print("swagger file complied")
     run(restler_fuzz_cmd, shell=True)
-    print("fuzzy complete")
+    print("fuzzing-lean complete")
     s3 = boto3.client("s3")
     bucket_name = os.environ['results_upload_s3_bucket']
     random_prefix = uuid.uuid4()
@@ -33,9 +35,10 @@ def handler(event, context):
     logs_key = f"{random_prefix}/logs.zip"
     shutil.make_archive("/tmp/results", 'zip', "/tmp/FuzzLean")
     shutil.make_archive("/tmp/logs", 'zip', "/tmp/RestlerLogs")
-    response = s3.upload_file("/tmp/results.zip", bucket_name, logs_key)
-    response = s3.upload_file("/tmp/logs.zip", bucket_name, results_key)
-    print(f"S3 upload response: {response}")
+    response_results = s3.upload_file("/tmp/results.zip", bucket_name, logs_key)
+    response_logs = s3.upload_file("/tmp/logs.zip", bucket_name, results_key)
+    print(f"S3 upload response for results: {response_results}")
+    print(f"S3 upload response for logs: {response_logs}")
     with open("/tmp/FuzzLean/ResponseBuckets/runSummary.json", "r") as f:
         results = json.load(f)        
     return results
