@@ -65,11 +65,11 @@ func Fuzz(service *web.Service) {
 		result, err := svc.SendMessage(&sqs.SendMessageInput{
 			DelaySeconds: aws.Int64(10),
 			MessageAttributes: map[string]*sqs.MessageAttributeValue{
-				"Client": &sqs.MessageAttributeValue{
+				"Client": {
 					DataType:    aws.String("String"),
 					StringValue: aws.String("Will be the client name from env variable"),
 				},
-				"Content": &sqs.MessageAttributeValue{
+				"Content": {
 					DataType:    aws.String("String"),
 					StringValue: aws.String("Client OpenApi File"),
 				},
