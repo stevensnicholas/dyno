@@ -37,3 +37,9 @@ variable "restler_lambda_timeout" {
   description = "Time out for lambda - Related to SQS Queue visibility"
 
 }
+
+variable "fuzz_results_bucket" {
+  type        = string
+  description = "fuzz output bucket"
+
+}
