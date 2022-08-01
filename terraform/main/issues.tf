@@ -1,6 +1,5 @@
 # Issues Architecture 
 # Includes Restler SNS ->  Issues Queue ->  Issues Lambda ->  Issues API
-
 resource "aws_kms_key" "fuzz_results_key" {
   description         = "fuzz-results-topic-key"
   policy              = <<POLICY
@@ -43,6 +42,7 @@ resource "aws_kms_alias" "fuzz_results_key_alias" {
 resource "aws_sns_topic" "sns_fuzz_results" {
   name = "${var.deployment_id}-sns-fuzz-results"
   # kms_master_key_id = aws_kms_alias.fuzz_results_key_alias.id
+  #tfsec:ignore:aws-sns-enable-topic-encryption
   policy = <<POLICY
     {
       "Version":"2012-10-17",
@@ -65,6 +65,7 @@ resource "aws_sqs_queue" "issues_queue" {
   name                       = "${var.deployment_id}-issues-queue"
   visibility_timeout_seconds = 300
   # kms_master_key_id = aws_kms_alias.fuzz_results_key_alias.id
+  #tfsec:ignore:aws-sqs-enable-queue-encryption
 
 }
 
@@ -105,6 +106,7 @@ resource "aws_sns_topic_subscription" "issues_sns_sqs" {
   topic_arn = aws_sns_topic.sns_fuzz_results.arn
   protocol  = "sqs"
   endpoint  = aws_sqs_queue.issues_queue.arn
+  #tfsec:ignore:aws-sns-enable-topic-encryption
 }
 
 resource "aws_iam_role" "issues_lambda_role" {
@@ -140,7 +142,7 @@ resource "aws_iam_policy" "issues_lambda_policy" {
           "sqs:ChangeMessageVisibility"
         ]
         Effect   = "Allow"
-        Resource = "*"
+        Resource = "${aws_sqs_queue.issues_queue.arn}"
       },
       {
         Action = [
@@ -149,7 +151,7 @@ resource "aws_iam_policy" "issues_lambda_policy" {
           "logs:PutLogEvents"
         ]
         Effect   = "Allow"
-        Resource = "*"
+        Resource = "arn:aws:logs:*:*:*"
       }
     ]
   })
