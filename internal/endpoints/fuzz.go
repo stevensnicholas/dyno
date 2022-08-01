@@ -38,7 +38,7 @@ func Fuzz(service *web.Service) {
 
 		u := uuid.New()
 		key := fmt.Sprintf("Open-Api-Files/%s", u.String())
-		bucket_name:="test-store-swagger"
+		bucket_name := "test-store-swagger"
 		_, ierr := uploader.Upload(&s3manager.UploadInput{
 			//will use the bucket name as variable
 			Bucket: aws.String(bucket_name),
@@ -46,8 +46,8 @@ func Fuzz(service *web.Service) {
 			Body:   bod,
 		})
 
-		s3URI:=fmt.Sprintf("{\"s3_location\":\"s3://%s/%s\"}",bucket_name,key)
-		
+		s3URI := fmt.Sprintf("{\"s3_location\":\"s3://%s/%s\"}", bucket_name, key)
+
 		if ierr != nil {
 			logger.Infof("There was an issue uploading to s3: %s", ierr.Error())
 		}
@@ -63,23 +63,23 @@ func Fuzz(service *web.Service) {
 		qURL := "https://sqs.ap-southeast-2.amazonaws.com/117712065617/varun-test-sqs-queue"
 
 		result, err := svc.SendMessage(&sqs.SendMessageInput{
-				DelaySeconds: aws.Int64(10),
-				MessageAttributes: map[string]*sqs.MessageAttributeValue{
-						"Client": &sqs.MessageAttributeValue{
-								DataType:    aws.String("String"),
-								StringValue: aws.String("Will be the client name from env variable"),
-						},
-						"Content": &sqs.MessageAttributeValue{
-								DataType:    aws.String("String"),
-								StringValue: aws.String("Client OpenApi File"),
-						},
+			DelaySeconds: aws.Int64(10),
+			MessageAttributes: map[string]*sqs.MessageAttributeValue{
+				"Client": &sqs.MessageAttributeValue{
+					DataType:    aws.String("String"),
+					StringValue: aws.String("Will be the client name from env variable"),
 				},
-				MessageBody: aws.String(s3URI),
-				QueueUrl:    &qURL,
+				"Content": &sqs.MessageAttributeValue{
+					DataType:    aws.String("String"),
+					StringValue: aws.String("Client OpenApi File"),
+				},
+			},
+			MessageBody: aws.String(s3URI),
+			QueueUrl:    &qURL,
 		})
 
 		if err != nil {
-				logger.Infof("There was an issue adding event to sqs: %s", err.Error())
+			logger.Infof("There was an issue adding event to sqs: %s", err.Error())
 		}
 
 		logger.Infof("Success", *result.MessageId)
