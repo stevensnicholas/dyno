@@ -2,6 +2,7 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { EndpointsAuthOutput } from '../models/EndpointsAuthOutput';
+import type { EndpointsGetFuzzesOutput } from '../models/EndpointsGetFuzzesOutput';
 import type { EndpointsPostEchoInput } from '../models/EndpointsPostEchoInput';
 import type { EndpointsPostEchoOutput } from '../models/EndpointsPostEchoOutput';
 
@@ -27,6 +28,38 @@ export class DefaultService {
       url: '/echo',
       body: requestBody,
       mediaType: 'application/json',
+      errors: {
+        400: `Bad Request`,
+      },
+    });
+  }
+
+  /**
+   * Get Fuzz Bugs
+   * Returns the list of all the Fuzz Bugs
+   * @returns EndpointsGetFuzzesOutput OK
+   * @throws ApiError
+   */
+  public endpointsGetFuzzesBug(): CancelablePromise<EndpointsGetFuzzesOutput> {
+    return this.httpRequest.request({
+      method: 'GET',
+      url: '/fuzzBugs',
+      errors: {
+        400: `Bad Request`,
+      },
+    });
+  }
+
+  /**
+   * Get Fuzzes
+   * Returns the list of all the times the fuzzer ran
+   * @returns EndpointsGetFuzzesOutput OK
+   * @throws ApiError
+   */
+  public endpointsGetFuzzes(): CancelablePromise<EndpointsGetFuzzesOutput> {
+    return this.httpRequest.request({
+      method: 'GET',
+      url: '/fuzzes',
       errors: {
         400: `Bad Request`,
       },

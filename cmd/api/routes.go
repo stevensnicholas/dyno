@@ -9,6 +9,8 @@ import (
 
 func registerRoutes(service *web.Service, hostdocs bool, hosthealth bool) {
 	endpoints.PostEcho(service)
+	endpoints.GetFuzzes(service)
+	endpoints.GetFuzzesBug(service)
 	endpoints.Authentication(service)
 	// Swagger UI endpoint at /docs.
 	if hostdocs {

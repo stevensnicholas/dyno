@@ -1,4 +1,6 @@
-import (
+package endpoints
+
+/*import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
@@ -41,4 +43,4 @@ func GetDBItem(svc *dynamodb.Dynamodb){
 	})
 	item := Item{}
 	err = dynamodbattribute.UnmarshalMap(result.Item, &item)
-}
+}*/
