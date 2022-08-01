@@ -36,6 +36,7 @@ module "aws_only" {
   lambda_restler_iam_arn = module.main.lambda_restler_iam_arn
   open_api_sqs_arn       = module.main.open_api_sqs_arn
   restler_lambda_timeout = var.restler_lambda_timeout
+  fuzz_results_bucket    = module.main.fuzz_results_bucket
 }
 
 data "aws_canonical_user_id" "current" {}
