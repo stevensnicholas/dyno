@@ -12,6 +12,7 @@ const Dashboard = (props: Props) => {
   useEffect(() => {
     const code = window.location.search.substring(1).split('=')[2];
     props.client.default.endpointsAuthentication(code).then((res) => {
+      window.localStorage.setItem('token', res.token);
       setLoggedIn(true);
     });
   }, [props]);
