@@ -38,15 +38,15 @@ func Fuzz(service *web.Service) {
 
 		u := uuid.New()
 		key := fmt.Sprintf("Open-Api-Files/%s", u.String())
-		bucket_name := "test-store-swagger"
+		bucketName := "test-store-swagger"
 		_, ierr := uploader.Upload(&s3manager.UploadInput{
 			//will use the bucket name as variable
-			Bucket: aws.String(bucket_name),
+			Bucket: aws.String(bucketName),
 			Key:    aws.String(key),
 			Body:   bod,
 		})
 
-		s3URI := fmt.Sprintf("{\"s3_location\":\"s3://%s/%s\"}", bucket_name, key)
+		s3URI := fmt.Sprintf("{\"s3_location\":\"s3://%s/%s\"}", bucketName, key)
 
 		if ierr != nil {
 			logger.Infof("There was an issue uploading to s3: %s", ierr.Error())
