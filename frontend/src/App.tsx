@@ -62,7 +62,10 @@ export function App() {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login clientID={clientId} />} />
-              <Route path="/dashboard" element={<Dashboard />} />
+              <Route
+                path="/dashboard"
+                element={<Dashboard client={client} />}
+              />
             </Routes>
           </>
         ) : (
