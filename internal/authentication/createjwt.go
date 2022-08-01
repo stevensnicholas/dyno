@@ -20,12 +20,7 @@ func NewJWT(privateKey []byte, publicKey []byte) JWT {
 }
 
 func CreateToken(ttl time.Duration, gittoken string) (string, error) {
-	prvKey, err := ioutil.ReadFile("internal/authentication/cert/id_rsa")
-	if err != nil {
-		logger.Error(err.Error())
-			return "", err
-	}
-	pubKey, err := ioutil.ReadFile("internal/authentication/cert/id_rsa.pub")
+	prvKey, err := getParameter("prikey")
 	if err != nil {
 		logger.Error(err.Error())
 			return "", err

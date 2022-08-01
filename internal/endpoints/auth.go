@@ -16,7 +16,7 @@ type AuthInput struct {
 }
 
 type AuthOutput struct {
-	Result string `json:"jwt"`
+	Result *authentication.GitHubUserInfo `json:"use info: "`
 }
 
 func Authentication(service *web.Service) {
@@ -35,13 +35,18 @@ func Authentication(service *web.Service) {
 		}
 		fmt.Println("token: ", token)
 
-		var jwt string
-		if jwt, err = authentication.CreateToken(time.Hour, token.AccessToken); err != nil {
+		// var jwt string
+		// if jwt, err = authentication.CreateToken(time.Hour, token.AccessToken); err != nil {
+		// 	logger.Error(err.Error())
+		// 	return err
+		// }
+
+		var userinfo *authentication.GitHubUserInfo
+		if userinfo, err = authentication.GetUserInfo(token.AccessToken); err != nil {
 			logger.Error(err.Error())
 			return err
 		}
-		
-		out.Result = jwt
+		out.Result = userinfo
 		return nil
 	}
 
