@@ -19,6 +19,34 @@ resource "aws_s3_bucket_public_access_block" "openapi_files_bucket_access" {
 
 resource "aws_kms_key" "openapi_fuzz" {
   enable_key_rotation = true
+  policy              = <<POLICY
+{
+  "Version": "2012-10-17",
+  "Id": "key-allow-s3",
+  "Statement": [
+    {
+      "Sid": "Enable IAM User Permissions",
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"
+      },
+      "Action": "kms:*",
+      "Resource": "*"
+    },
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "s3.amazonaws.com"
+      },
+      "Action": [
+        "kms:GenerateDataKey",
+        "kms:Decrypt"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
+POLICY
 }
 
 resource "aws_kms_alias" "openapi_fuzz_alias" {
@@ -27,12 +55,13 @@ resource "aws_kms_alias" "openapi_fuzz_alias" {
 }
 
 resource "aws_sqs_queue" "openapi_sqs_queue" {
-  name                      = "${var.deployment_id}-openapifiles-queue"
-  delay_seconds             = 90
-  max_message_size          = 2048
-  message_retention_seconds = 86400
-  receive_wait_time_seconds = 10
-  kms_master_key_id         = aws_kms_alias.openapi_fuzz_alias.target_key_arn
+  name                       = "${var.deployment_id}-openapifiles-queue"
+  delay_seconds              = 90
+  max_message_size           = 2048
+  message_retention_seconds  = 86400
+  receive_wait_time_seconds  = 10
+  visibility_timeout_seconds = var.restler_lambda_timeout + 5
+  kms_master_key_id          = aws_kms_alias.openapi_fuzz_alias.target_key_arn
   tags = {
     Environment = "production"
   }
@@ -45,10 +74,10 @@ resource "aws_sqs_queue_policy" "openapi_s3_notify_sqs_policy" {
   policy = <<POLICY
 {
   "Version": "2012-10-17",
-  "Id": "example-ID",
+  "Id": "allow-s3",
   "Statement": [
     {
-      "Sid": "example-statement-ID",
+      "Sid": "Allow sqs",
       "Effect": "Allow",
       "Principal": {
         "Service": "s3.amazonaws.com"
