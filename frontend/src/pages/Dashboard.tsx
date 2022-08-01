@@ -11,8 +11,7 @@ const Dashboard = (props: Props) => {
 
   useEffect(() => {
     const code = window.location.search.substring(1).split('=')[2];
-    const url = `http://localhost:8080/login?code=${code}`;
-    props.client.default.endpointsAuthentication(url).then((res) => {
+    props.client.default.endpointsAuthentication(code).then((res) => {
       setLoggedIn(true);
     });
   }, [props]);
