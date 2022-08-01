@@ -7,10 +7,10 @@ interface Props {
 }
 
 const Login = ({ clientID }: Props) => {
-  const redirectURL = 'http://localhost:3000/oauth';
-  const path = '/';
+  const hostname = window.location.origin;
+  const redirectURL = `${hostname}/dashboard`;
   const scope = 'user:email';
-  const githubURL = `https://github.com/login/oauth/authorize?client_id=${clientID}&redirect_uri=${redirectURL}?path=${path}&scope=${scope}`;
+  const githubURL = `https://github.com/login/oauth/authorize?client_id=${clientID}&redirect_uri=${redirectURL}?scope=${scope}`;
 
   function GithubLogin() {
     window.location.replace(githubURL);
