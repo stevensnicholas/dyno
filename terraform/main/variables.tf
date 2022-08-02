@@ -10,6 +10,6 @@ variable "restler_lambda_timeout" {
 }
 
 variable "sns_fuzz_results" {
-  type = string 
+  type        = string
   description = "sns topic for issues and dynamodb messaging"
 }
