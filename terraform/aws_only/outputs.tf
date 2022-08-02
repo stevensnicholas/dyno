@@ -12,5 +12,5 @@ output "cf_endpoint" {
 
 
 output "redirect_url" {
-  value = "http://localhost:8080/login"
+  value = "http://localhost:3000/oauth"
 }

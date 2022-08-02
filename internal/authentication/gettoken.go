@@ -22,9 +22,9 @@ type Conf struct {
 }
 
 var conf = Conf{
-	ClientID:     "", // fill in with your id before test,
+	ClientID:     "", // fill in with your id before test
 	ClientSecret: "", // fill in with your secret before test
-	RedirectURL:  "http://localhost:8080/login",
+	RedirectURL:  "",
 }
 
 type Token struct {
