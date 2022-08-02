@@ -38,6 +38,7 @@ def handler(event, context):
     s3 = boto3.client("s3")
     sns = boto3.client("sns")
     bucket_name = os.environ["results_upload_s3_bucket"]
+    topic_name = os.environ["sns_topic_fuzz_results"]
     random_prefix = uuid.uuid4()
     for folder, prefix in [
         ("RestlerLogs", "logs"),
@@ -49,15 +50,17 @@ def handler(event, context):
         response = s3.upload_file(f"/tmp/{ prefix }.zip", bucket_name, key)
         print(f"S3 uploaded response for {prefix}: {response}")
         print(f"S3 {prefix} uploaded to s3://{bucket_name}/{key}")
-        snsMessage = {
-            "location": f"s3://{bucket_name}/{key}",
-            "uuid": f"{random_prefix}",
-        }
-        response = sns.publish(
-            TopicArn="string",
-            Message=snsMessage,
-            MessageStructure="json",
-        )
+
+    snsMessage = {
+        "location": f"s3://{bucket_name}/{random_prefix}/results.zip",
+        "uuid": f"{random_prefix}",
+    }
+    response = sns.publish(
+        TopicArn=topic_name,
+        Message=snsMessage,
+        MessageStructure="json",
+    )
+
     with open("/tmp/FuzzLean/ResponseBuckets/runSummary.json", "r") as f:
         results = json.load(f)
     return results

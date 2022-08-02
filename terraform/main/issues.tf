@@ -180,6 +180,12 @@ resource "aws_lambda_function" "issues_lambda" {
     mode = "Active"
   }
 
+  environment {
+    variables = {
+      sns_topic_fuzz_results = var.sns_fuzz_results
+    }
+  }
+
   role = aws_iam_role.issues_lambda_role.arn
 }
 
