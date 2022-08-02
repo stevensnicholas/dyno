@@ -42,6 +42,7 @@ resource "aws_kms_alias" "fuzz_results_key_alias" {
 resource "aws_sns_topic" "sns_fuzz_results" {
   name = "${var.deployment_id}-sns-fuzz-results"
   # kms_master_key_id = aws_kms_alias.fuzz_results_key_alias.id
+  #tfsec:ignore
   policy = <<POLICY
     {
       "Version":"2012-10-17",
@@ -64,6 +65,8 @@ resource "aws_sqs_queue" "issues_queue" {
   name                       = "${var.deployment_id}-issues-queue"
   visibility_timeout_seconds = 300
   # kms_master_key_id = aws_kms_alias.fuzz_results_key_alias.id
+  #tfsec:ignore
+
 }
 
 resource "aws_sqs_queue_policy" "issues_queue_sns_lambda_policy" {
@@ -103,6 +106,7 @@ resource "aws_sns_topic_subscription" "issues_sns_sqs" {
   topic_arn = aws_sns_topic.sns_fuzz_results.arn
   protocol  = "sqs"
   endpoint  = aws_sqs_queue.issues_queue.arn
+  #tfsec:ignore
 }
 
 resource "aws_iam_role" "issues_lambda_role" {
@@ -153,7 +157,7 @@ resource "aws_iam_policy" "issues_lambda_policy" {
   })
 }
 
-resource "aws_iam_role_policy_attachment" "terraform_lambda_iam_policy_basic_execution" {
+resource "aws_iam_role_policy_attachment" "issues_lambda_logs_sqs_policy_attachment" {
   role       = aws_iam_role.issues_lambda_role.id
   policy_arn = aws_iam_policy.issues_lambda_policy.arn
 }
@@ -179,14 +183,14 @@ resource "aws_lambda_function" "issues_lambda" {
   role = aws_iam_role.issues_lambda_role.arn
 }
 
-resource "aws_lambda_event_source_mapping" "event_source_mapping" {
+resource "aws_lambda_event_source_mapping" "issues_sqs_lambda_event_source_mapping" {
   batch_size       = 1
   event_source_arn = aws_sqs_queue.issues_queue.arn
   enabled          = true
   function_name    = aws_lambda_function.issues_lambda.arn
 }
 
-resource "aws_cloudwatch_log_group" "lambda_loggroup" {
+resource "aws_cloudwatch_log_group" "issues_lambda_loggroup" {
   name              = "/aws/lambda/${aws_lambda_function.issues_lambda.function_name}"
   retention_in_days = 14
 }
