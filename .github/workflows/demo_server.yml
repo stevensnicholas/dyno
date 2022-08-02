@@ -6,7 +6,6 @@ on:
 jobs:
   restler:
     runs-on: ubuntu-latest
-    container: hashicorp/terraform:1.1.6
     defaults:
       run:
         working-directory: ./restler
@@ -29,22 +28,22 @@ jobs:
         id: tag
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        run: |
-          cd demo_server
-          docker build -t demo_server .
+        run: docker build -t demo_server .
+        working-directory: demo_server
       - name: Terraform
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      run: |
-        cd terraform
-        printf "terraform {\n  backend \"s3\" {}\n}" > state.tf
-        terraform init \
-          -backend-config="bucket=comp9447-state" \
-          -backend-config="key=${{ steps.branch.outputs.branch }}_demo_server" \
-          -backend-config="region=ap-southeast-2" \
-          -backend-config="encrypt=true" \
-          -backend-config="dynamodb_table=comp9447-state-demo-server"
-        terraform apply -auto-approve \
-          -var="deployment_id=${{ steps.branch.outputs.branch }}" \
-          -var="restler_image_tag=${{ needs.restler.outputs.ECR_IMAGE_URL }}";
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        working-directory: demo_server/terraform
+        run: |
+          cd terraform
+          printf "terraform {\n  backend \"s3\" {}\n}" > state.tf
+          terraform init \
+            -backend-config="bucket=comp9447-state" \
+            -backend-config="key=${{ steps.branch.outputs.branch }}_demo_server" \
+            -backend-config="region=ap-southeast-2" \
+            -backend-config="encrypt=true" \
+            -backend-config="dynamodb_table=comp9447-state-demo-server"
+          terraform apply -auto-approve \
+            -var="deployment_id=${{ steps.branch.outputs.branch }}" \
+            -var="demo_server_tag=demo_server";
