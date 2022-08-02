@@ -1,3 +1,4 @@
+from pydoc_data.topics import topics
 import uuid
 from subprocess import run
 import json
@@ -35,6 +36,7 @@ def handler(event, context):
     run(restler_fuzz_cmd, shell=True)
     print("fuzzing-lean complete")
     s3 = boto3.client("s3")
+    sns = boto3.client("sns")
     bucket_name = os.environ["results_upload_s3_bucket"]
     random_prefix = uuid.uuid4()
     for folder, prefix in [
@@ -47,6 +49,12 @@ def handler(event, context):
         response = s3.upload_file(f"/tmp/{ prefix }.zip", bucket_name, key)
         print(f"S3 uploaded response for {prefix}: {response}")
         print(f"S3 {prefix} uploaded to s3://{bucket_name}/{key}")
+        snsMessage = {'location': f"s3://{bucket_name}/{key}", "uuid": f"{random_prefix}"}
+        response = sns.publish(
+            TopicArn='string',
+            Message= snsMessage,
+            MessageStructure='json',
+        )
     with open("/tmp/FuzzLean/ResponseBuckets/runSummary.json", "r") as f:
         results = json.load(f)
     return results
