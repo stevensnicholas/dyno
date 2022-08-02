@@ -8,6 +8,7 @@ import { Link, Route, Routes } from 'react-router-dom';
 import Home from './pages/Home';
 import Login from './pages/login/Login';
 import Dashboard from './pages/Dashboard';
+import OAuth from './pages/oauth/Oauth';
 
 export interface PageProps {
   client: AppClient;
