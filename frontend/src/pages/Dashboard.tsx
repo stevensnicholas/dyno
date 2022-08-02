@@ -3,7 +3,8 @@ import React from 'react';
 const Dashboard = () => {
   return (
     <div>
-      <p>Dashboard</p>
+      <p>Logged in successfully</p>
+      <p>Your test result will be displayed</p>
     </div>
   );
 };

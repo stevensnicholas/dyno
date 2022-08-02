@@ -16,6 +16,7 @@ export interface PageProps {
 export function App() {
   const [client, setClient] = useState<AppClient | undefined>();
   const [clientId, setClientId] = useState<string>('');
+  const [loggedIn, setLoggedIn] = useState<boolean>(false);
 
   useEffect(() => {
     fetch('settings.json')
@@ -25,6 +26,16 @@ export function App() {
         setClient(new AppClient({ BASE: settings.backend }));
       });
   }, []);
+
+  useEffect(() => {
+    const code = window.location.search.substring(1).split('=')[2];
+    if (client && code !== undefined) {
+      client.default.endpointsAuthentication(code).then((res) => {
+        window.localStorage.setItem('token', res.token);
+        setLoggedIn(true);
+      });
+    }
+  }, [client]);
   return (
     <div
       id="main"
@@ -42,29 +53,51 @@ export function App() {
       <div className="App">
         <h1>Go Lambda Skeleton</h1>
         {client ? (
-          <>
-            <div>
-              <nav>
-                <ul>
-                  <li>
-                    <Link to="/">Home</Link>
-                  </li>
-                  <li>
-                    <Link to="/login">Login</Link>
-                  </li>
-                  <li>
-                    <Link to="/dashboard">Dashboard</Link>
-                  </li>
-                </ul>
-              </nav>
-            </div>
+          loggedIn ? (
+            <>
+              <div>
+                <nav>
+                  <ul>
+                    <li>
+                      <Link to="/">Home</Link>
+                    </li>
+                    <li>
+                      <Link to="/login">Login</Link>
+                    </li>
+                    <li>
+                      <Link to="/dashboard">Dashboard</Link>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
 
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/login" element={<Login clientID={clientId} />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-            </Routes>
-          </>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/login" element={<Login clientID={clientId} />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+              </Routes>
+            </>
+          ) : (
+            <>
+              <div>
+                <nav>
+                  <ul>
+                    <li>
+                      <Link to="/">Home</Link>
+                    </li>
+                    <li>
+                      <Link to="/login">Login</Link>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
+
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/login" element={<Login clientID={clientId} />} />
+              </Routes>
+            </>
+          )
         ) : (
           <Loading />
         )}
