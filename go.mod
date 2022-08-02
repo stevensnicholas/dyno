@@ -54,9 +54,9 @@ require (
 	gopkg.in/yaml.v3 v3.0.1
 )
 
-require github.com/aws/aws-sdk-go v1.44.62
-
 require (
-	github.com/google/uuid v1.3.0 // indirect
-	github.com/jmespath/go-jmespath v0.4.0 // indirect
+	github.com/aws/aws-sdk-go v1.44.67
+	github.com/google/uuid v1.3.0
 )
+
+require github.com/jmespath/go-jmespath v0.4.0 // indirect

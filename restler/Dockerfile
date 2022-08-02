@@ -19,7 +19,8 @@ COPY app/* ${FUNCTION_DIR}
 RUN python3 -m pip install --upgrade pip
 RUN pip3 install \
     --target ${FUNCTION_DIR} \
-    awslambdaric
+    awslambdaric \
+    boto3
 FROM mcr.microsoft.com/restlerfuzzer/restler:v8.5.0
 ARG FUNCTION_DIR
 WORKDIR ${FUNCTION_DIR}
