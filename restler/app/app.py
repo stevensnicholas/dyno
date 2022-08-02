@@ -53,13 +53,13 @@ def handler(event, context):
 
     snsMessage = {
         "location": f"s3://{bucket_name}/{random_prefix}/results.zip",
-        "bucketName": f"{bucket_name}", 
+        "bucketName": f"{bucket_name}",
         "uuid": f"{random_prefix}",
-        "token": f"token",
-        "owner": f"owner",
-        "repo": f"repo",
+        "token": "token",
+        "owner": "owner",
+        "repo": "repo",
     }
-    
+
     response = sns.publish(
         TopicArn=topic_name,
         Message=snsMessage,
