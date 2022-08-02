@@ -45,7 +45,7 @@ resource "null_resource" "tag_and_push" {
   provisioner "local-exec" {
     command = <<EOF
     docker tag ${var.demo_server_tag} ${aws_ecr_repository.image_repository.repository_url}:latest
-    docker push ${aws_ecr_repository.image_repository.repository_url}
+    docker push ${aws_ecr_repository.image_repository.repository_url}:latest
     EOF
   }
 }
