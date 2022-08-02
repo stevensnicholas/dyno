@@ -4,6 +4,7 @@
 import type { EndpointsAuthOutput } from '../models/EndpointsAuthOutput';
 import type { EndpointsCliInput } from '../models/EndpointsCliInput';
 import type { EndpointsCliOutput } from '../models/EndpointsCliOutput';
+import type { EndpointsGetFuzzBugsOutput } from '../models/EndpointsGetFuzzBugsOutput';
 import type { EndpointsPostEchoInput } from '../models/EndpointsPostEchoInput';
 import type { EndpointsPostEchoOutput } from '../models/EndpointsPostEchoOutput';
 
@@ -29,6 +30,22 @@ export class DefaultService {
       url: '/echo',
       body: requestBody,
       mediaType: 'application/json',
+      errors: {
+        400: `Bad Request`,
+      },
+    });
+  }
+
+  /**
+   * Get Fuzz Bugs
+   * Returns the list of all the Fuzz Bugs
+   * @returns EndpointsGetFuzzBugsOutput OK
+   * @throws ApiError
+   */
+  public endpointsGetFuzzesBug(): CancelablePromise<EndpointsGetFuzzBugsOutput> {
+    return this.httpRequest.request({
+      method: 'GET',
+      url: '/fuzzBugs',
       errors: {
         400: `Bad Request`,
       },
