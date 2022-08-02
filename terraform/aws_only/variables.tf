@@ -43,3 +43,15 @@ variable "fuzz_results_bucket" {
   description = "fuzz output bucket"
 
 }
+
+variable "open_api_sqs_url" {
+  type        = string
+  description = "open api sqs queue url lambda"
+
+}
+
+variable "open_api_s3_name" {
+  type        = string
+  description = "open api s3 bucket name"
+
+}
