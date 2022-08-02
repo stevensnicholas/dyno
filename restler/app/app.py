@@ -49,11 +49,14 @@ def handler(event, context):
         response = s3.upload_file(f"/tmp/{ prefix }.zip", bucket_name, key)
         print(f"S3 uploaded response for {prefix}: {response}")
         print(f"S3 {prefix} uploaded to s3://{bucket_name}/{key}")
-        snsMessage = {'location': f"s3://{bucket_name}/{key}", "uuid": f"{random_prefix}"}
+        snsMessage = {
+            "location": f"s3://{bucket_name}/{key}",
+            "uuid": f"{random_prefix}",
+        }
         response = sns.publish(
-            TopicArn='string',
-            Message= snsMessage,
-            MessageStructure='json',
+            TopicArn="string",
+            Message=snsMessage,
+            MessageStructure="json",
         )
     with open("/tmp/FuzzLean/ResponseBuckets/runSummary.json", "r") as f:
         results = json.load(f)
