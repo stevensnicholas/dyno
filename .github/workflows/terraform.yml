@@ -3,6 +3,7 @@ on:
   pull_request:
     paths:
       - terraform/**
+      - .github/workflows/terraform.yml
 jobs:
   tf-fmt-validate:
     runs-on: ubuntu-latest
