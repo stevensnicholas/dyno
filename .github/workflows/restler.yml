@@ -1,0 +1,14 @@
+name: Python CI
+on:
+  pull_request:
+    paths:
+      - restler/**
+      - demo_server/**
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    container: hashicorp/terraform:1.1.6
+    steps:
+      - uses: actions/checkout@v2
+      - uses: psf/black@stable
+        run: black . --check
