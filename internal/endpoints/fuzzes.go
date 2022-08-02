@@ -19,7 +19,7 @@ type GetFuzzesOutput struct {
 }
 
 type Fuzzs struct {
-	Id       string    `json:"id"`
+	ID       string    `json:"id"`
 	Date     time.Time `json:"time"`
 	BugCount uint      `json:"bugCount"`
 }
