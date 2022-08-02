@@ -20,7 +20,7 @@ const Dashboard = () => {
         </div>
       ) : (
         <div>
-          <Link to='/login'>Please login with your GitHub account first</Link>
+          <Link to="/login">Please login with your GitHub account first</Link>
         </div>
       )}
     </>
