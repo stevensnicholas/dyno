@@ -27,6 +27,24 @@ paths:
                 $ref: '#/components/schemas/RestErrResponse'
           description: Bad Request
       summary: Echo
+  /fuzzes:
+    get:
+      description: Returns the list of all the times the fuzzer ran
+      operationId: endpoints.GetFuzzes
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EndpointsGetFuzzesOutput'
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Bad Request
+      summary: Get Fuzzes
   /login:
     get:
       description: Return token
@@ -99,6 +117,31 @@ components:
           type: string
       required:
       - result
+      type: object
+    EndpointsFuzzs:
+      properties:
+        bugCount:
+          minimum: 0
+          type: integer
+        id:
+          type: string
+        time:
+          format: date-time
+          type: string
+      required:
+      - bugCount
+      - id
+      - time
+      type: object
+    EndpointsGetFuzzesOutput:
+      properties:
+        fuzzes:
+          items:
+            $ref: '#/components/schemas/EndpointsFuzzs'
+          nullable: true
+          type: array
+      required:
+      - fuzzes
       type: object
     EndpointsPostEchoInput:
       properties:
