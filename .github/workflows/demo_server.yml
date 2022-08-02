@@ -44,7 +44,7 @@ jobs:
           -backend-config="key=${{ steps.branch.outputs.branch }}_demo_server" \
           -backend-config="region=ap-southeast-2" \
           -backend-config="encrypt=true" \
-          -backend-config="dynamodb_table=comp9447-state"
+          -backend-config="dynamodb_table=comp9447-state-demo-server"
         terraform apply -auto-approve \
           -var="deployment_id=${{ steps.branch.outputs.branch }}" \
           -var="restler_image_tag=${{ needs.restler.outputs.ECR_IMAGE_URL }}";
