@@ -6,6 +6,8 @@ resource "aws_lambda_function" "lambda_restler" {
   environment {
     variables = {
       results_upload_s3_bucket = var.fuzz_results_bucket
+      open_api_s3_bucket_name  = var.open_api_s3_name
+      sqs_queue_url            = var.open_api_sqs_url
     }
   }
 
