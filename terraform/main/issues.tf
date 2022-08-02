@@ -41,31 +41,11 @@ resource "aws_kms_alias" "fuzz_results_key_alias" {
 
 resource "aws_sns_topic" "sns_fuzz_results" {
   name = "${var.deployment_id}-sns-fuzz-results"
-  # kms_master_key_id = aws_kms_alias.fuzz_results_key_alias.id
-  #tfsec:ignore
-  policy = <<POLICY
-    {
-      "Version":"2012-10-17",
-      "Statement":[
-        {
-          "Effect": "Allow",
-          "Principal": {"Service":"s3.amazonaws.com"},
-          "Action": "SNS:Publish",
-          "Resource":  "arn:aws:sns:*:*:${var.deployment_id}-sns-fuzz-results",
-          "Condition":{
-              "ArnLike":{"aws:SourceArn":"${aws_s3_bucket.openapi_files_bucket.arn}"}
-          }
-        }
-      ]
-    }
-  POLICY
 }
 
 resource "aws_sqs_queue" "issues_queue" {
   name                       = "${var.deployment_id}-issues-queue"
   visibility_timeout_seconds = 300
-  # kms_master_key_id = aws_kms_alias.fuzz_results_key_alias.id
-  #tfsec:ignore
 
 }
 
@@ -106,7 +86,6 @@ resource "aws_sns_topic_subscription" "issues_sns_sqs" {
   topic_arn = aws_sns_topic.sns_fuzz_results.arn
   protocol  = "sqs"
   endpoint  = aws_sqs_queue.issues_queue.arn
-  #tfsec:ignore
 }
 
 resource "aws_iam_role" "issues_lambda_role" {
@@ -152,6 +131,17 @@ resource "aws_iam_policy" "issues_lambda_policy" {
         ]
         Effect   = "Allow"
         Resource = "arn:aws:logs:*:*:*"
+      },
+      {
+        Action = [
+          "s3:PutObject",
+          "s3:PutObjectAcl",
+          "s3:GetObject",
+          "s3:GetObjectAcl",
+          "s3:ListAllMyBuckets"
+        ]
+        Effect   = "Allow"
+        Resource = "${aws_s3_bucket.fuzz_results_bucket.arn}"
       }
     ]
   })

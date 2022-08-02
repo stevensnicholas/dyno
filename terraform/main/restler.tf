@@ -61,6 +61,11 @@ resource "aws_iam_policy" "lambda_policy" {
             "sqs:GetQueueAttributes"
         ],
         "Resource": "${aws_sqs_queue.openapi_sqs_queue.arn}"
+    }, 
+    {
+      "Effect": "Allow",
+      "Action": "SNS:Publish",
+      "Resource":  "${aws_sns_topic.sns_fuzz_results.arn}"
     }
   ]
 }
