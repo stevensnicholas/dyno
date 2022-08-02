@@ -24,3 +24,13 @@ output "open_api_sqs_arn" {
 output "fuzz_results_bucket" {
   value = aws_s3_bucket.fuzz_results_bucket.id
 }
+
+output "open_api_sqs_url" {
+  value = aws_sqs_queue.openapi_sqs_queue.id
+
+}
+
+output "open_api_s3_name" {
+  value = aws_s3_bucket.openapi_files_bucket.id
+
+}
