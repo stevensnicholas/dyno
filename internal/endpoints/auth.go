@@ -38,7 +38,7 @@ func Authentication(service *web.Service) {
 			logger.Error(err.Error())
 			return err
 		}
-		
+
 		out.Result = jwt
 		return nil
 	}

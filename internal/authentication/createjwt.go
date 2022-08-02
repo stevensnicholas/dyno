@@ -25,13 +25,17 @@ func CreateJWT(ttl time.Duration, gittoken string) (string, error) {
 	priPEM := getSSMParameterValue("testkey")
 
 	block, _ := pem.Decode([]byte(priPEM))
+
 	pri, err := x509.ParsePKCS1PrivateKey(block.Bytes)
+	if err != nil {
+		logger.Error(err.Error())
+		return "", err
+	}
 
 	claims := make(jwt.MapClaims)
 	claims["token"] = gittoken
 
 	jwt, err := jwt.NewWithClaims(jwt.SigningMethodRS256, claims).SignedString(pri)
-
 	if err != nil {
 		logger.Error(err.Error())
 		return "", err

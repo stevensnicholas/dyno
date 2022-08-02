@@ -66,11 +66,11 @@ func GetToken(url string) (*Token, error) {
 }
 
 func GetUserInfo(token *Token) (*GitHubUserInfo, error) {
-	var userInfoUrl = "https://api.github.com/user"
+	var userInfoURL = "https://api.github.com/user"
 	var req *http.Request
 	var err error
 
-	if req, err = http.NewRequest(http.MethodGet, userInfoUrl, nil); err != nil {
+	if req, err = http.NewRequest(http.MethodGet, userInfoURL, nil); err != nil {
 		return nil, err
 	}
 
