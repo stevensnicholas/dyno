@@ -2,10 +2,10 @@ package endpoints
 
 import (
 	"context"
+	"time"
+	
 	"dyno/internal/authentication"
 	"dyno/internal/logger"
-	"fmt"
-	"time"
 	"github.com/swaggest/rest/web"
 	"github.com/swaggest/usecase"
 	"github.com/swaggest/usecase/status"
@@ -16,7 +16,7 @@ type AuthInput struct {
 }
 
 type AuthOutput struct {
-	Result *authentication.GitHubUserInfo `json:"user info: "`
+	Result string `json:"jwt"`
 }
 
 func Authentication(service *web.Service) {
@@ -26,27 +26,20 @@ func Authentication(service *web.Service) {
 
 		var err error
 		var code = in.Code
-		fmt.Println("code: ", code)
 		var tokenAuthURL = authentication.GetTokenAuthURL(code)
 		var token *authentication.Token
 		if token, err = authentication.GetToken(tokenAuthURL); err != nil {
 			logger.Error(err.Error())
 			return err
 		}
-		fmt.Println("token: ", token)
 
 		var jwt string
 		if jwt, err = authentication.CreateToken(time.Hour, token.AccessToken); err != nil {
 			logger.Error(err.Error())
 			return err
 		}
-
-		var userinfo *authentication.GitHubUserInfo
-		if userinfo, err = authentication.GetUserInfo(token.AccessToken); err != nil {
-			logger.Error(err.Error())
-			return err
-		}
-		out.Result = userinfo
+		
+		out.Result = jwt
 		return nil
 	}
 
