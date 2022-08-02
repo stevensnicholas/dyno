@@ -1,29 +1,27 @@
 import React, { useEffect, useState } from 'react';
-import { AppClient } from '../client';
-import { Loading } from '../components/Loading/Loading';
+import { Link } from 'react-router-dom';
 
-interface Props {
-  client: AppClient;
-}
-
-const Dashboard = (props: Props) => {
+const Dashboard = () => {
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
 
   useEffect(() => {
-    const code = window.location.search.substring(1).split('=')[2];
-    props.client.default.endpointsAuthentication(code).then((res) => {
-      window.localStorage.setItem('token', res.token);
+    const Token = window.localStorage.getItem('token');
+    if (Token !== '') {
       setLoggedIn(true);
-    });
-  }, [props]);
+    }
+  }, [setLoggedIn]);
+
   return (
     <>
       {loggedIn ? (
         <div>
           <p>Dashboard</p>
+          <p>Successfully logged in. Your test results will be displayed</p>
         </div>
       ) : (
-        <Loading />
+        <div>
+          <Link to='/login'>Please login with your GitHub account first</Link>
+        </div>
       )}
     </>
   );
