@@ -3,7 +3,7 @@ module dyno
 go 1.17
 
 require (
-	github.com/aws/aws-lambda-go v1.28.0 // indirect
+	github.com/aws/aws-lambda-go v1.34.1 // indirect
 	github.com/stretchr/testify v1.8.0
 )
 
