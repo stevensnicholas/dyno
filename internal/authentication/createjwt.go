@@ -1,9 +1,9 @@
 package authentication
 
 import (
-	"time"
-	"encoding/pem"
 	"crypto/x509"
+	"encoding/pem"
+	"time"
 
 	"dyno/internal/logger"
 	"github.com/golang-jwt/jwt"
@@ -13,7 +13,7 @@ type JWT struct {
 	privateKey []byte
 	publicKey  []byte
 }
- 
+
 func NewJWT(privateKey []byte, publicKey []byte) JWT {
 	return JWT{
 		privateKey: privateKey,
@@ -23,9 +23,9 @@ func NewJWT(privateKey []byte, publicKey []byte) JWT {
 
 func CreateJWT(ttl time.Duration, gittoken string) (string, error) {
 	priPEM := getSSMParameterValue("testkey")
-				
+
 	block, _ := pem.Decode([]byte(priPEM))
-    pri, err := x509.ParsePKCS1PrivateKey(block.Bytes)
+	pri, err := x509.ParsePKCS1PrivateKey(block.Bytes)
 
 	claims := make(jwt.MapClaims)
 	claims["token"] = gittoken
@@ -34,7 +34,7 @@ func CreateJWT(ttl time.Duration, gittoken string) (string, error) {
 
 	if err != nil {
 		logger.Error(err.Error())
-			return "", err
+		return "", err
 	}
 
 	return jwt, nil

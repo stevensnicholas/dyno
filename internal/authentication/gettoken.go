@@ -4,9 +4,10 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"net/http"
 	"io/ioutil"
+	"net/http"
 )
+
 type GitHubUserInfo struct {
 	Name  string
 	Photo string
@@ -21,7 +22,7 @@ type Conf struct {
 }
 
 var conf = Conf{
-	ClientID:     "", // fill in with your id before test, 
+	ClientID:     "", // fill in with your id before test,
 	ClientSecret: "", // fill in with your secret before test
 	RedirectURL:  "http://localhost:8080/login",
 }
@@ -65,7 +66,7 @@ func GetToken(url string) (*Token, error) {
 }
 
 func GetUserInfo(token *Token) (*GitHubUserInfo, error) {
-	var userInfoUrl = "https://api.github.com/user"	
+	var userInfoUrl = "https://api.github.com/user"
 	var req *http.Request
 	var err error
 
@@ -92,7 +93,7 @@ func GetUserInfo(token *Token) (*GitHubUserInfo, error) {
 	}
 
 	var Info map[string]interface{}
-	
+
 	if err := json.Unmarshal(resBody, &Info); err != nil {
 		return nil, err
 	}
