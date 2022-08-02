@@ -4,7 +4,7 @@ import (
 	"time"
 	"encoding/pem"
 	"crypto/x509"
-	
+
 	"dyno/internal/logger"
 	"github.com/golang-jwt/jwt"
 )
@@ -21,23 +21,21 @@ func NewJWT(privateKey []byte, publicKey []byte) JWT {
 	}
 }
 
-func CreateToken(ttl time.Duration, gittoken string) (string, error) {
-	priPEM := "-----BEGIN PRIVATE KEY-----\n"+
-				getSSMParameterValue("testkey")+
-				"\n-----END PRIVATE KEY-----"
-
+func CreateJWT(ttl time.Duration, gittoken string) (string, error) {
+	priPEM := getSSMParameterValue("testkey")
+				
 	block, _ := pem.Decode([]byte(priPEM))
     pri, err := x509.ParsePKCS1PrivateKey(block.Bytes)
 
 	claims := make(jwt.MapClaims)
 	claims["token"] = gittoken
 
-	token, err := jwt.NewWithClaims(jwt.SigningMethodRS256, claims).SignedString(pri)
+	jwt, err := jwt.NewWithClaims(jwt.SigningMethodRS256, claims).SignedString(pri)
 
 	if err != nil {
 		logger.Error(err.Error())
 			return "", err
 	}
 
-	return token, nil
+	return jwt, nil
 }

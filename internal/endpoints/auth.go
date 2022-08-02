@@ -3,7 +3,7 @@ package endpoints
 import (
 	"context"
 	"time"
-	
+
 	"dyno/internal/authentication"
 	"dyno/internal/logger"
 	"github.com/swaggest/rest/web"
@@ -34,7 +34,7 @@ func Authentication(service *web.Service) {
 		}
 
 		var jwt string
-		if jwt, err = authentication.CreateToken(time.Hour, token.AccessToken); err != nil {
+		if jwt, err = authentication.CreateJWT(time.Hour, token.AccessToken); err != nil {
 			logger.Error(err.Error())
 			return err
 		}
