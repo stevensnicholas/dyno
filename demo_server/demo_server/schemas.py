@@ -9,12 +9,7 @@ class BlogPostPublicInput(SQLModel):
     body: str
 
     class Config:
-        schema_extra = {
-            "example": {
-                "id": 99,
-                "body": "my first blog post"
-            }
-        }
+        schema_extra = {"example": {"id": 99, "body": "my first blog post"}}
 
 
 class BlogPostInput(SQLModel):
@@ -26,11 +21,7 @@ class BlogPostInput(SQLModel):
 
     class Config:
         schema_extra = {
-            "example": {
-                "id": 22,
-                "body": "my first blog post",
-                "checksum": "abcde"
-            }
+            "example": {"id": 22, "body": "my first blog post", "checksum": "abcde"}
         }
 
 
