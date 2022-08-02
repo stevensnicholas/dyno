@@ -8,7 +8,7 @@ interface Props {
 
 const Login = ({ clientID }: Props) => {
   const hostname = window.location.origin;
-  const redirectURL = `${hostname}/oauth`;
+  const redirectURL = `${hostname}`;
   const scope = 'user:email';
   const githubURL = `https://github.com/login/oauth/authorize?client_id=${clientID}&redirect_uri=${redirectURL}?scope=${scope}`;
 
