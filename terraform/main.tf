@@ -39,7 +39,6 @@ module "aws_only" {
   fuzz_results_bucket    = module.main.fuzz_results_bucket
   open_api_sqs_url       = module.main.open_api_sqs_url
   open_api_s3_name       = module.main.open_api_s3_name
-  redirect_url           = module.main.redirect_url
 }
 
 data "aws_canonical_user_id" "current" {}

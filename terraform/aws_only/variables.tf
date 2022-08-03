@@ -55,8 +55,3 @@ variable "open_api_s3_name" {
   description = "open api s3 bucket name"
 
 }
-
-variable "redirect_url" {
-  type        = string
-  description = "let backend receive token from GitHub"
-}

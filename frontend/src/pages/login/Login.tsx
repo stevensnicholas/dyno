@@ -10,16 +10,12 @@ const Login = ({ clientID }: Props) => {
   const hostname = window.location.origin;
   const redirectURL = `${hostname}`;
   const scope = 'user:email';
-<<<<<<< HEAD
-  const githubURL = `https://github.com/login/oauth/authorize?client_id=${clientID}&redirect_uri=${redirectURL}?path=${path}&scope=${scope}`;
-=======
   const githubURL = `https://github.com/login/oauth/authorize?client_id=${clientID}&redirect_uri=${redirectURL}?scope=${scope}`;
 
   function GithubLogin() {
     window.location.replace(githubURL);
   }
 
->>>>>>> main
   return (
     <html>
       <body className={styles.login_background}>

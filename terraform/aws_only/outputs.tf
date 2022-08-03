@@ -9,8 +9,3 @@ output "api_test_endpoint" {
 output "cf_endpoint" {
   value = aws_cloudfront_distribution.frontend.domain_name
 }
-
-
-output "redirect_url" {
-  value = "http://localhost:3000/oauth"
-}
