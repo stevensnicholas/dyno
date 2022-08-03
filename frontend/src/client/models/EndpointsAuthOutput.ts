@@ -3,6 +3,6 @@
 /* eslint-disable */
 
 export type EndpointsAuthOutput = {
-  token: string;
+  jwt: string;
 };
 

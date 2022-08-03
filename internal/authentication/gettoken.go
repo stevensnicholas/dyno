@@ -4,8 +4,16 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 )
+
+type GitHubUserInfo struct {
+	Name  string
+	Photo string
+	Email string
+	ID    float64
+}
 
 type Conf struct {
 	ClientID     string
@@ -16,7 +24,7 @@ type Conf struct {
 var conf = Conf{
 	ClientID:     "", // fill in with your id before test
 	ClientSecret: "", // fill in with your secret before test
-	RedirectURL:  "http://localhost:8080/login",
+	RedirectURL:  "",
 }
 
 type Token struct {
@@ -35,7 +43,7 @@ func GetTokenAuthURL(code string) string {
 func GetToken(url string) (*Token, error) {
 	var req *http.Request
 	var err error
-	if req, err = http.NewRequest(http.MethodGet, url, nil); err != nil {
+	if req, err = http.NewRequest(http.MethodPost, url, nil); err != nil {
 		return nil, err
 	}
 	req.Header.Set("accept", "application/json")
@@ -55,4 +63,47 @@ func GetToken(url string) (*Token, error) {
 		return nil, err
 	}
 	return &token, nil
+}
+
+func GetUserInfo(token *Token) (*GitHubUserInfo, error) {
+	var userInfoURL = "https://api.github.com/user"
+	var req *http.Request
+	var err error
+
+	if req, err = http.NewRequest(http.MethodGet, userInfoURL, nil); err != nil {
+		return nil, err
+	}
+
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", token.AccessToken))
+
+	var client = http.Client{}
+	var res *http.Response
+
+	if res, err = client.Do(req); err != nil {
+		return nil, err
+	}
+
+	if res.StatusCode != http.StatusOK {
+		return nil, errors.New("could not retrieve user")
+	}
+
+	resBody, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	var Info map[string]interface{}
+
+	if err := json.Unmarshal(resBody, &Info); err != nil {
+		return nil, err
+	}
+
+	userinfo := &GitHubUserInfo{
+		Email: Info["email"].(string),
+		Name:  Info["login"].(string),
+		Photo: Info["avatar_url"].(string),
+		ID:    Info["id"].(float64),
+	}
+
+	return userinfo, nil
 }

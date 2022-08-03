@@ -31,7 +31,7 @@ export function App() {
     const code = window.location.search.substring(1).split('=')[2];
     if (client && code !== undefined) {
       client.default.endpointsAuthentication(code).then((res) => {
-        window.localStorage.setItem('token', res.token);
+        window.localStorage.setItem('token', res.jwt);
         setLoggedIn(true);
       });
     }

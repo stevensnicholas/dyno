@@ -113,10 +113,10 @@ components:
   schemas:
     EndpointsAuthOutput:
       properties:
-        token:
+        jwt:
           type: string
       required:
-      - token
+      - jwt
       type: object
     EndpointsCliInput:
       properties:

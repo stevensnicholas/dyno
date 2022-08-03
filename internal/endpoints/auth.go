@@ -2,9 +2,10 @@ package endpoints
 
 import (
 	"context"
+	"time"
+
 	"dyno/internal/authentication"
 	"dyno/internal/logger"
-
 	"github.com/swaggest/rest/web"
 	"github.com/swaggest/usecase"
 	"github.com/swaggest/usecase/status"
@@ -15,7 +16,7 @@ type AuthInput struct {
 }
 
 type AuthOutput struct {
-	Result string `json:"token"`
+	Result string `json:"jwt"`
 }
 
 func Authentication(service *web.Service) {
@@ -32,7 +33,13 @@ func Authentication(service *web.Service) {
 			return err
 		}
 
-		out.Result = token.AccessToken
+		var jwt string
+		if jwt, err = authentication.CreateJWT(time.Hour, token.AccessToken); err != nil {
+			logger.Error(err.Error())
+			return err
+		}
+
+		out.Result = jwt
 		return nil
 	}
 
