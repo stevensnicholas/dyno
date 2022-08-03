@@ -12,7 +12,7 @@ Install npm version 8.13.2 and Node.js version 16.15.1 or above. Download npm fr
 User Manual
 ===========
 1. Change to frontend directory: `cd frontend`
-2. Install the required dependencies: `npm install`
+2. Install the required dependencies: `npm ci`
 3. Run the React app: `npm start`
 
 ## Installation
@@ -20,8 +20,7 @@ User Manual
 ```
 npm install
 ```
-Installs all modules listed as dependencires in package.json. \
-Check you are in the frontend directory before run the command.
+Installs all modules listed as dependencies in package.json. 
 
 ## Run
 
