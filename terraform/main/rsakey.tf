@@ -6,6 +6,6 @@ resource "tls_private_key" "rsa_prikey" {
 resource "aws_ssm_parameter" "private_key" {
   name      = "${var.deployment_id}-prikey"
   type      = "String"
-  value     = tls_private_key.RSAprikey.private_key_pem
+  value     = tls_private_key.res_prikey.private_key_pem
   overwrite = true
 }
