@@ -1,11 +1,11 @@
-resource "aws_sqs_queue" "dynamodb queue" {
+resource "aws_sqs_queue" "dynamodb_queue" {
   name                       = "${var.deployment_id}-dynamodb-queue"
   visibility_timeout_seconds = 300
 
 }
 
-resource "aws_sqs_queue_policy" "dynamodb queue_sns_lambda_policy" {
-  queue_url = aws_sqs_queue.dynamodb queue.id
+resource "aws_sqs_queue_policy" "dynamodb_queue_sns_lambda_policy" {
+  queue_url = aws_sqs_queue.dynamodb_queue.id
   policy    = <<POLICY
   {
     "Version": "2012-10-17",
@@ -16,7 +16,7 @@ resource "aws_sqs_queue_policy" "dynamodb queue_sns_lambda_policy" {
         "Effect": "Allow",
         "Principal": "*",
         "Action": "sqs:SendMessage",
-        "Resource": "${aws_sqs_queue.dynamodb queue.arn}",
+        "Resource": "${aws_sqs_queue.dynamodb_queue.arn}",
         "Condition": {
           "ArnEquals": {
             "aws:SourceArn": "${aws_sns_topic.sns_fuzz_results.arn}"
@@ -27,7 +27,7 @@ resource "aws_sqs_queue_policy" "dynamodb queue_sns_lambda_policy" {
         "Sid": "sqs-lambda-dynamodb-policy",
         "Effect": "Allow",
         "Action": "sqs:SendMessage",
-        "Resource": "${aws_sqs_queue.dynamodb queue.arn}", 
+        "Resource": "${aws_sqs_queue.dynamodb_queue.arn}", 
         "Principal": {
           "Service": "lambda.amazonaws.com"
         }
@@ -40,7 +40,7 @@ resource "aws_sqs_queue_policy" "dynamodb queue_sns_lambda_policy" {
 resource "aws_sns_topic_subscription" "dynamodb_sns_sqs" {
   topic_arn = aws_sns_topic.sns_fuzz_results.arn
   protocol  = "sqs"
-  endpoint  = aws_sqs_queue.dynamodb queue.arn
+  endpoint  = aws_sqs_queue.dynamodb_queue.arn
 }
 
 resource "aws_iam_role" "dynamodb_lambda_role" {
