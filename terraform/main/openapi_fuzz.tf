@@ -100,12 +100,6 @@ resource "aws_sqs_queue_policy" "openapi_s3_notify_sqs_policy" {
           "aws:SourceArn": "arn:aws:s3:::${var.deployment_id}-client-openapi-files"
         }
       }
-    },
-    {
-      "Sid": "Allow sqs",
-      "Effect": "Allow",
-      "Action": ["lambda:CreateEventSourceMapping","lambda:ListEventSourceMappings","lambda:ListFunctions"],
-      "Resource": "*"
     }
   ]
 }
