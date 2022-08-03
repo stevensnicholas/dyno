@@ -2,8 +2,8 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type EndpointsFuzzb = {
-  endPoints: string;
+export type EndpointsFuzzbugs = {
+  endpoints: string;
   errorType: string;
   title: string;
 };

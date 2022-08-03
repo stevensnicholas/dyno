@@ -136,16 +136,16 @@ components:
       required:
       - result
       type: object
-    EndpointsFuzzb:
+    EndpointsFuzzbugs:
       properties:
-        endPoints:
+        endpoints:
           type: string
         errorType:
           type: string
         title:
           type: string
       required:
-      - endPoints
+      - endpoints
       - errorType
       - title
       type: object
@@ -168,7 +168,7 @@ components:
       properties:
         fuzzes:
           items:
-            $ref: '#/components/schemas/EndpointsFuzzb'
+            $ref: '#/components/schemas/EndpointsFuzzbugs'
           nullable: true
           type: array
       required:
