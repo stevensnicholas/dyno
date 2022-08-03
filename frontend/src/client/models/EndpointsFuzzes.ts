@@ -2,7 +2,7 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type EndpointsFuzzs = {
+export type EndpointsFuzzes = {
   bugCount: number;
   id: string;
   time: string;

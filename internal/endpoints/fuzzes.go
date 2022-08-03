@@ -14,10 +14,10 @@ type GetFuzzesInput struct {
 }
 
 type GetFuzzesOutput struct {
-	Fuzzes []Fuzzs `json:"fuzzes"`
+	Fuzzes []Fuzzes `json:"fuzzes"`
 }
 
-type Fuzzs struct {
+type Fuzzes struct {
 	ID       string    `json:"id"`
 	Date     time.Time `json:"time"`
 	BugCount uint      `json:"bugCount"`
@@ -26,7 +26,7 @@ type Fuzzs struct {
 func GetFuzzes(service *web.Service) {
 	handler := func(ctx context.Context, input, output interface{}) error {
 		var out = output.(*GetFuzzesOutput)
-		out.Fuzzes = []Fuzzs{}
+		out.Fuzzes = []Fuzzes{}
 
 		return nil
 	}

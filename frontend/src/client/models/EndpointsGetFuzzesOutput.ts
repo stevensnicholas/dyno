@@ -2,9 +2,9 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import type { EndpointsFuzzs } from './EndpointsFuzzs';
+import type { EndpointsFuzzes } from './EndpointsFuzzes';
 
 export type EndpointsGetFuzzesOutput = {
-  fuzzes: Array<EndpointsFuzzs> | null;
+  fuzzes: Array<EndpointsFuzzes> | null;
 };
 
