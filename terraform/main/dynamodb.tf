@@ -152,14 +152,14 @@ resource "aws_iam_role_policy_attachment" "dynamodb_lambda_logs_sqs_policy_attac
 
 data "archive_file" "dynamodb_lambda" {
   type        = "zip"
-  source_file = "${path.module}/../../bin/issues/main"
-  output_path = "${path.module}/files/issues.zip"
+  source_file = "${path.module}/../../bin/dynamodb/main"
+  output_path = "${path.module}/files/dynamodb.zip"
 }
 
-resource "aws_lambda_function" "issues_lambda" {
-  function_name    = "${var.deployment_id}-issues-lambda"
-  filename         = "${path.module}/files/issues.zip"
-  source_code_hash = data.archive_file.issues_lambda.output_base64sha256
+resource "aws_lambda_function" "dynamodb_lambda" {
+  function_name    = "${var.deployment_id}-dynamodb-lambda"
+  filename         = "${path.module}/files/dynamodb.zip"
+  source_code_hash = data.archive_file.dynamodb_lambda.output_base64sha256
 
   runtime = "go1.x"
   handler = "main"
@@ -168,17 +168,17 @@ resource "aws_lambda_function" "issues_lambda" {
     mode = "Active"
   }
 
-  role = aws_iam_role.issues_lambda_role.arn
+  role = aws_iam_role.dynamodb_lambda_role.arn
 }
 
-resource "aws_lambda_event_source_mapping" "issues_sqs_lambda_event_source_mapping" {
+resource "aws_lambda_event_source_mapping" "dynamodb_sqs_lambda_event_source_mapping" {
   batch_size       = 1
-  event_source_arn = aws_sqs_queue.issues_queue.arn
+  event_source_arn = aws_sqs_queue.dynamodb_queue.arn
   enabled          = true
   function_name    = aws_lambda_function.dynamodb_lambda.arn
 }
 
-resource "aws_cloudwatch_log_group" "issues_lambda_loggroup" {
+resource "aws_cloudwatch_log_group" "dynamodb_lambda_loggroup" {
   name              = "/aws/lambda/${aws_lambda_function.dynamodb_lambda.function_name}"
   retention_in_days = 14
 }
