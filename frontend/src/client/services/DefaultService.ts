@@ -4,6 +4,7 @@
 import type { EndpointsAuthOutput } from '../models/EndpointsAuthOutput';
 import type { EndpointsCliInput } from '../models/EndpointsCliInput';
 import type { EndpointsCliOutput } from '../models/EndpointsCliOutput';
+import type { EndpointsGetFuzzesOutput } from '../models/EndpointsGetFuzzesOutput';
 import type { EndpointsPostEchoInput } from '../models/EndpointsPostEchoInput';
 import type { EndpointsPostEchoOutput } from '../models/EndpointsPostEchoOutput';
 
@@ -29,6 +30,22 @@ export class DefaultService {
       url: '/echo',
       body: requestBody,
       mediaType: 'application/json',
+      errors: {
+        400: `Bad Request`,
+      },
+    });
+  }
+
+  /**
+   * Get Fuzzes
+   * Returns the list of all the times the fuzzer ran
+   * @returns EndpointsGetFuzzesOutput OK
+   * @throws ApiError
+   */
+  public endpointsGetFuzzes(): CancelablePromise<EndpointsGetFuzzesOutput> {
+    return this.httpRequest.request({
+      method: 'GET',
+      url: '/fuzzes',
       errors: {
         400: `Bad Request`,
       },
