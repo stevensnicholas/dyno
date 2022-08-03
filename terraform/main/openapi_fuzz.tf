@@ -43,6 +43,17 @@ resource "aws_kms_key" "openapi_fuzz" {
         "kms:Decrypt"
       ],
       "Resource": "*"
+    },
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "lambda.amazonaws.com"
+      },
+      "Action": [
+        "kms:GenerateDataKey",
+        "kms:Decrypt"
+      ],
+      "Resource": "*"
     }
   ]
 }
@@ -56,7 +67,7 @@ resource "aws_kms_alias" "openapi_fuzz_alias" {
 
 resource "aws_sqs_queue" "openapi_sqs_queue" {
   name                       = "${var.deployment_id}-openapifiles-queue"
-  delay_seconds              = 90
+  delay_seconds              = 0
   max_message_size           = 2048
   message_retention_seconds  = 86400
   receive_wait_time_seconds  = 10
@@ -89,6 +100,12 @@ resource "aws_sqs_queue_policy" "openapi_s3_notify_sqs_policy" {
           "aws:SourceArn": "arn:aws:s3:::${var.deployment_id}-client-openapi-files"
         }
       }
+    },
+    {
+      "Sid": "Allow sqs",
+      "Effect": "Allow",
+      "Action": ["lambda:CreateEventSourceMapping","lambda:ListEventSourceMappings","lambda:ListFunctions"],
+      "Resource": "*"
     }
   ]
 }

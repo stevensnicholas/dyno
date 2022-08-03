@@ -58,10 +58,20 @@ resource "aws_iam_policy" "lambda_policy" {
         "Action": [
             "sqs:ReceiveMessage",
             "sqs:DeleteMessage",
-            "sqs:GetQueueAttributes"
+            "sqs:GetQueueAttributes",
+            "sqs:ChangeMessageVisibility"
         ],
         "Resource": "${aws_sqs_queue.openapi_sqs_queue.arn}"
-    }, 
+    },
+    {
+      "Sid": "KMSDecryption",
+      "Effect": "Allow",
+      "Action": [
+        "kms:GenerateDataKey",
+        "kms:Decrypt"
+      ],
+      "Resource": "${aws_kms_key.openapi_fuzz.arn}"
+    },
     {
       "Effect": "Allow",
       "Action": "SNS:Publish",
