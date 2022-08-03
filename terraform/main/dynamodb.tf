@@ -1,7 +1,6 @@
 resource "aws_sqs_queue" "dynamodb_queue" {
   name                       = "${var.deployment_id}-dynamodb-queue"
   visibility_timeout_seconds = 300
-
 }
 
 resource "aws_sqs_queue_policy" "dynamodb_queue_sns_lambda_policy" {
