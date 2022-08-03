@@ -14,13 +14,13 @@ type GetFuzzBugsInput struct {
 }
 
 type GetFuzzBugsOutput struct {
-	Fuzzes []Fuzzb `json:"fuzzes"`
+	Fuzzes []Fuzzbugs `json:"fuzzes"`
 }
 
-type Fuzzb struct {
+type Fuzzbugs struct {
 	Title     string `json:"title"`
 	ErrorType string `json:"errorType"`
-	EndPoints string `json:"endPoints"`
+	Endpoints string `json:"endpoints"`
 }
 
 func GetFuzzesBug(service *web.Service) {
@@ -29,7 +29,7 @@ func GetFuzzesBug(service *web.Service) {
 		var out = output.(*GetFuzzBugsOutput)
 
 		logger.Infof("Received echo request: %s", in.UUID)
-		out.Fuzzes = []Fuzzb{}
+		out.Fuzzes = []Fuzzbugs{}
 
 		return nil
 	}
