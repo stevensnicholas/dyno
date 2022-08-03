@@ -2,7 +2,6 @@ package endpoints
 
 import (
 	"context"
-	"dyno/internal/logger"
 	"time"
 
 	"github.com/swaggest/rest/web"
@@ -26,10 +25,7 @@ type Fuzzs struct {
 
 func GetFuzzes(service *web.Service) {
 	handler := func(ctx context.Context, input, output interface{}) error {
-		var in = input.(*GetFuzzesInput)
 		var out = output.(*GetFuzzesOutput)
-
-		logger.Infof("Received echo request: %s", in.Request)
 		out.Fuzzes = []Fuzzs{}
 
 		return nil
