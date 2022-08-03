@@ -119,7 +119,7 @@ resource "aws_iam_policy" "dynamodb_lambda_policy" {
           "sqs:ChangeMessageVisibility"
         ]
         Effect   = "Allow"
-        Resource = "${aws_sqs_queue.dynamodb queue.arn}"
+        Resource = "${aws_sqs_queue.dynamodb_queue.arn}"
       },
       {
         Action = [
