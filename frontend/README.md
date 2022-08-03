@@ -1,16 +1,27 @@
-# Go Lambda Skeleton UI
+Frontend
+========
 
-React SPA for the Go Lambda Skeleton.
+This repository contains code for Dyno web application.
+The Dyno web application prompts users to log in with their GitHub account to use Dyno service. When the users is logged in, they will have access to Dashboard. Dashboard page will display test results.
 
-## Configuration
+Prerequisites
+=============
 
-Edit the `public/settings.json` to point the app to the correct backend.
+Install npm version 8.13.2 and Node.js version 16.15.1 or above. Download npm from https://docs.npmjs.com/downloading-and-installing-node-js-and-npm and Node.js from https://nodejs.org/en/download/
+
+User Manual
+===========
+1. Change to frontend directory: `cd comp9447-team2/frontend`
+2. Install the required dependencies: `npm install`
+3. Run the React app: `npm start`
+
+## Installation
 
 ```
-{
-  "backend": "http://<backend_host>:<backend_port>"
-}
+npm install
 ```
+Installs all modules listed as dependencires in package.json. \
+Check you are in the frontend directory before run the command.
 
 ## Run
 
