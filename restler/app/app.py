@@ -34,7 +34,7 @@ def handler(event, context):
         engine_settings = json.load(f)
         engine_settings["garbage_collection_interval"] = 0
     with open("/tmp/Compile/engine_settings.json", "w") as f:
-        json.dump("/tmp/Compile/engine_settings.json", f)
+        json.dump(engine_settings, f)
     logger.info("swagger file complied")
     run(restler_fuzz_cmd, shell=True)
     logger.info("fuzzing-lean complete")
