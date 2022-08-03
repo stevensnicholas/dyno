@@ -11,6 +11,7 @@ import (
 
 type GetFuzzBugsInput struct {
 	Request string `json:"request"`
+	Uuid    string `json:"uuid "`
 }
 
 type GetFuzzBugsOutput struct {
@@ -29,6 +30,7 @@ func GetFuzzesBug(service *web.Service) {
 		var out = output.(*GetFuzzBugsOutput)
 
 		logger.Infof("Received echo request: %s", in.Request)
+		logger.Infof("Received echo Uuid: %s", in.Uuid)
 		out.Fuzzes = []Fuzzb{}
 
 		return nil
