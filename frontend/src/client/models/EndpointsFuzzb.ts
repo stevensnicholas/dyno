@@ -3,7 +3,7 @@
 /* eslint-disable */
 
 export type EndpointsFuzzb = {
-  EndPoints: string;
+  endPoints: string;
   errorType: string;
   title: string;
 };

@@ -138,14 +138,14 @@ components:
       type: object
     EndpointsFuzzb:
       properties:
-        EndPoints:
+        endPoints:
           type: string
         errorType:
           type: string
         title:
           type: string
       required:
-      - EndPoints
+      - endPoints
       - errorType
       - title
       type: object
