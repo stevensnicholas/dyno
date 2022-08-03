@@ -35,7 +35,7 @@ resource "aws_kms_key" "fuzz_results_key" {
 }
 
 resource "aws_kms_alias" "fuzz_results_key_alias" {
-  name          = "alias/fuzz-results-key"
+  name          = "alias/${var.deployment_id}-fuzz-results-key"
   target_key_id = aws_kms_key.fuzz_results_key.key_id
 }
 
