@@ -7,10 +7,15 @@ interface Props {
 }
 
 const Login = ({ clientID }: Props) => {
-  const redirectURL = 'http://localhost:8080/login';
-  const path = '/';
+  const hostname = window.location.origin;
+  const redirectURL = `${hostname}`;
   const scope = 'user:email';
-  const githubURL = `https://github.com/login/oauth/authorize?${clientID}&redirect_uri=${redirectURL}?path=${path}&scope=${scope}`;
+  const githubURL = `https://github.com/login/oauth/authorize?client_id=${clientID}&redirect_uri=${redirectURL}?scope=${scope}`;
+
+  function GithubLogin() {
+    window.location.replace(githubURL);
+  }
+
   return (
     <html>
       <body className={styles.login_background}>
@@ -33,12 +38,12 @@ const Login = ({ clientID }: Props) => {
             </div>
             <div className="row">
               <div className={styles.login_box}>
-                <a
-                  href={githubURL}
+                <button
+                  onClick={() => GithubLogin()}
                   className="btn-large waves-effect waves-teal col s12 black"
                 >
                   Login
-                </a>
+                </button>
               </div>
             </div>
           </div>
