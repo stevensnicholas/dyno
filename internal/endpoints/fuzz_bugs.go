@@ -11,7 +11,7 @@ import (
 
 type GetFuzzBugsInput struct {
 	Request string `json:"request"`
-	Uuid    string `json:"uuid "`
+	UUID    string `json:"uuid "`
 }
 
 type GetFuzzBugsOutput struct {
