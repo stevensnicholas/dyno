@@ -1,4 +1,4 @@
-name: Deploy
+name: Deploy Demo Server
 on:
   push:
     branches:
@@ -36,7 +36,6 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         working-directory: ./demo_server/terraform
         run: |
-          cd terraform
           printf "terraform {\n  backend \"s3\" {}\n}" > state.tf
           terraform init \
             -backend-config="bucket=comp9447-state" \
