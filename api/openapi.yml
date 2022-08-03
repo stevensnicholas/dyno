@@ -149,7 +149,7 @@ components:
       - errorType
       - title
       type: object
-    EndpointsFuzzs:
+    EndpointsFuzzes:
       properties:
         bugCount:
           minimum: 0
@@ -178,7 +178,7 @@ components:
       properties:
         fuzzes:
           items:
-            $ref: '#/components/schemas/EndpointsFuzzs'
+            $ref: '#/components/schemas/EndpointsFuzzes'
           nullable: true
           type: array
       required:

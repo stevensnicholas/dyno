@@ -13,7 +13,7 @@ export type { EndpointsAuthOutput } from './models/EndpointsAuthOutput';
 export type { EndpointsCliInput } from './models/EndpointsCliInput';
 export type { EndpointsCliOutput } from './models/EndpointsCliOutput';
 export type { EndpointsFuzzbugs } from './models/EndpointsFuzzbugs';
-export type { EndpointsFuzzs } from './models/EndpointsFuzzs';
+export type { EndpointsFuzzes } from './models/EndpointsFuzzes';
 export type { EndpointsGetFuzzBugsOutput } from './models/EndpointsGetFuzzBugsOutput';
 export type { EndpointsGetFuzzesOutput } from './models/EndpointsGetFuzzesOutput';
 export type { EndpointsPostEchoInput } from './models/EndpointsPostEchoInput';
