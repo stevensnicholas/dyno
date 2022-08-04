@@ -162,7 +162,7 @@ resource "aws_lambda_function" "issues_lambda" {
   function_name    = "${var.deployment_id}-issues-lambda"
   filename         = "${path.module}/files/issues.zip"
   source_code_hash = data.archive_file.issues_lambda.output_base64sha256
-  timeout = 100
+  timeout          = 100
 
   runtime = "go1.x"
   handler = "main"

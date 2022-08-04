@@ -35,7 +35,7 @@ func ParseRestlerFuzzResults(fileContents string, fuzzError []string) []result.D
 	if err := scanner.Err(); err != nil {
 		panic(err)
 	}
-	
+
 	return dynoResults
 }
 

@@ -1,14 +1,14 @@
 package main
 
 import (
-	"dyno/internal/result"
-	"bytes"
 	"archive/zip"
+	"bytes"
 	"context"
 	"dyno/internal/issue"
 	"dyno/internal/logger"
 	"dyno/internal/parse"
 	"dyno/internal/platform"
+	"dyno/internal/result"
 	"encoding/json"
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
@@ -42,11 +42,11 @@ type Message struct {
 }
 
 type SQSMessage struct {
-	Type   *string `json:"Type,omitempty"`
+	Type      *string `json:"Type,omitempty"`
 	MessageID *string `json:"MessageId,omitempty"`
-	TopicArn   *string `json:"TopicArn,omitempty"`
-	Message *string `json:"Message,omitempty"`
-	Timestamp   *string `Timestamp:"Type,omitempty"`
+	TopicArn  *string `json:"TopicArn,omitempty"`
+	Message   *string `json:"Message,omitempty"`
+	Timestamp *string `Timestamp:"Type,omitempty"`
 }
 
 func handler(ctx context.Context, sqsEvent events.SQSEvent) error {
@@ -74,7 +74,6 @@ func handler(ctx context.Context, sqsEvent events.SQSEvent) error {
 	}
 	filename := *message.Location
 
-
 	obj := getObject(&filename, message.BucketName)
 
 	body, err := ioutil.ReadAll(obj.Body)
@@ -82,7 +81,7 @@ func handler(ctx context.Context, sqsEvent events.SQSEvent) error {
 	if err != nil {
 		panic(err)
 	}
-	
+
 	reader, err := zip.NewReader(bytes.NewReader(body), *obj.ContentLength)
 	if err != nil {
 		panic(err)

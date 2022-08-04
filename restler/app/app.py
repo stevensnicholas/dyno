@@ -78,8 +78,8 @@ def handler(event, context):
     snsMessage = {
         "location": f"s3://{bucket_name}/{key}",
         "uuid": f"{random_prefix}",
-        "token": f"{token}", 
-        "owner": f"{owner}", 
+        "token": f"{token}",
+        "owner": f"{owner}",
         "repo": f"{repo}",
     }
     response = sns.publish(
