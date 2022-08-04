@@ -98,8 +98,8 @@ func handler(ctx context.Context, sqsEvent events.SQSEvent) error {
 			if len(fuzzError) > 1 {
 				fileContents, _ := ioutil.ReadAll(read)
 				rawResults := parse.ParseRestlerFuzzResults(string(fileContents), fuzzError)
-				for _, result := range rawResults {
-					results = append(results, result)
+				for i := 0; i < len(rawResults); i++ {
+					results = append(results, rawResults[i])
 				}
 			}
 		}
@@ -108,15 +108,19 @@ func handler(ctx context.Context, sqsEvent events.SQSEvent) error {
 	issues := issue.CreateIssues(results)
 	githubClient := platform.CreateGithubClient(ctx, message.Token)
 
-	for _, issue := range issues {
-		githubClient.Issues.Create(ctx, *message.Owner, *message.Repo, &github.IssueRequest{
-			Title:     issue.Title,
-			Body:      platform.FormatFuzzBody(&issue),
-			Labels:    issue.Labels,
-			Assignee:  issue.Assignee,
-			State:     issue.State,
-			Milestone: issue.Milestone,
+	for i := 0; i < len(issues); i++ {
+		_, _, err := githubClient.Issues.Create(ctx, *message.Owner, *message.Repo, &github.IssueRequest{
+			Title:     issues[i].Title,
+			Body:      platform.FormatFuzzBody(&issues[i]),
+			Labels:    issues[i].Labels,
+			Assignee:  issues[i].Assignee,
+			State:     issues[i].State,
+			Milestone: issues[i].Milestone,
 		})
+
+		if err != nil {
+			panic(err)
+		}
 	}
 
 	if len(issues) != 0 {
