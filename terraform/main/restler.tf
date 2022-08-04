@@ -36,6 +36,14 @@ resource "aws_iam_policy" "lambda_policy" {
     },
     {
       "Action": [
+        "s3:ListBucket",
+        "s3:GetBucketLocation"
+      ],
+      "Effect": "Allow",
+      "Resource": ["${aws_s3_bucket.openapi_files_bucket.arn}","${aws_s3_bucket.fuzz_results_bucket.arn}"]
+    },
+    {
+      "Action": [
         "s3:PutObject",
         "s3:PutObjectAcl",
         "s3:GetObject",
@@ -94,6 +102,14 @@ resource "aws_s3_bucket_versioning" "fuzz_results_bucket_versioning" {
   bucket = aws_s3_bucket.fuzz_results_bucket.id
   versioning_configuration {
     status = "Disabled"
+  }
+}
+
+resource "aws_s3_bucket_ownership_controls" "fuzz_results_bucket" {
+  bucket = aws_s3_bucket.fuzz_results_bucket.id
+
+  rule {
+    object_ownership = "BucketOwnerEnforced"
   }
 }
 
