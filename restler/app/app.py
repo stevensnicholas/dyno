@@ -1,4 +1,3 @@
-from pydoc_data.topics import topics
 import uuid
 from subprocess import run
 import json
@@ -19,6 +18,9 @@ def handler(event, context):
     logger.info("logging started")
     local_api_spec_path = "/tmp/swagger.json"
     restler_compile_cmd = f"dotnet /RESTler/restler/Restler.dll --workingDirPath /tmp  compile --api_spec {local_api_spec_path} "
+    token = ""
+    repo = ""
+    owner = ""
     restler_fuzz_cmd = r"""
     dotnet /RESTler/restler/Restler.dll \
         --workingDirPath /tmp \
@@ -73,15 +75,18 @@ def handler(event, context):
         response = s3.upload_file(f"/tmp/{ prefix }.zip", bucket_name, key)
         print(f"S3 uploaded response for {prefix}: {response}")
         print(f"S3 {prefix} uploaded to s3://{bucket_name}/{key}")
-        snsMessage = {
-            "location": f"s3://{bucket_name}/{key}",
-            "uuid": f"{random_prefix}",
-        }
-        response = sns.publish(
-            TopicArn="string",
-            Message=snsMessage,
-            MessageStructure="json",
-        )
+    snsMessage = {
+        "location": f"s3://{bucket_name}/{key}",
+        "uuid": f"{random_prefix}",
+        "token": f"{token}", 
+        "owner": f"{owner}", 
+        "repo": f"{repo}",
+    }
+    response = sns.publish(
+        TopicArn="string",
+        Message=snsMessage,
+        MessageStructure="json",
+    )
     with open("/tmp/FuzzLean/ResponseBuckets/runSummary.json", "r") as f:
         results = json.load(f)
     return results

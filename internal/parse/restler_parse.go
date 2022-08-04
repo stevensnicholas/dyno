@@ -4,76 +4,23 @@ import (
 	"bufio"
 	"dyno/internal/result"
 	"fmt"
-	"os"
 	"strings"
 )
 
-// TODO Change the process of reading file according to SQS and S3 Buckets
-const bugFile = 6
-
 // Parses the fuzzing files from the bug_buckets folder and creates raw fuzzing results.
-// File is filepath to the bug_buckets.txt file that stores all the bugs that has occured.
-// Location is the current location of the file on the system.
-func ParseRestlerFuzzResults(location string, file string) []result.DynoResult {
-	f, err := os.Open(file)
-	if err != nil {
-		panic(err)
-	}
-	defer f.Close()
-	scanner := bufio.NewScanner(f)
-	dynoResults := []result.DynoResult{}
-	// Creating raw results from fuzz
-	for scanner.Scan() {
-		line := scanner.Text()
-		if line[:1] == "-" {
-			scanner.Scan()
-			line = scanner.Text()
-			bugFileNames := strings.Fields(line)
-			if len(bugFileNames) > 5 {
-				bugFileName := bugFileNames[bugFile]
-				fuzzError := strings.Split(bugFileName, "_")
-				results := CreateResults(location, bugFileName, fuzzError)
-				for i := 0; i < len(results); i++ {
-					dynoResults = append(dynoResults, results[i])
-				}
-			}
-		}
-	}
-
-	if err := scanner.Err(); err != nil {
-		panic(err)
-	}
-	return dynoResults
-}
-
-// Reads the a bug_bucket file that is specified by the category of the bug found by restler
-// Creates the body of the issue in regards to the bug found by the fuzzer with details on the bug
-// and how to fix itInternalServerErrors creates a github Issue Request for
-// the categorized bug by restler providing a description on what the bug is and how to possibly fix the bug
-// Inputs location is the location of the bug_buckets folder,
-// bugFileName is the name of the file that has the logs of the bug
-// fuzzError is the categoried error created
-// Returns a list of all the results from the fuzz error that has occured within a DynoResult struct
-func CreateResults(location string, bugFileName string, fuzzError []string) []result.DynoResult {
+// fileContents is the contents of a file from the s3 bucket object
+// fuzzError is the type of bug found
+func ParseRestlerFuzzResults(fileContents string, fuzzError []string) []result.DynoResult {
 	dynoResults := []result.DynoResult{}
 	dynoResult := &result.DynoResult{}
-
-	f, err := os.Open(fmt.Sprintf(location+"%s", bugFileName))
-	if err != nil {
-		panic(err)
-	}
-	defer f.Close()
-
 	title := fmt.Sprintf("%s Invalid %s Response", fuzzError[0], fuzzError[1])
 	dynoResult.Title = &title
 	dynoResult.ErrorType = &fuzzError[0]
-
-	scanner := bufio.NewScanner(f)
-
-	// Creating DynoResult and adding the result to a list of all the results within the bug
+	file := strings.NewReader(fileContents)
+	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		line := scanner.Text()
-		if len(line) > 0 && line[:1] == "-" {
+		if len(line) > 1 && line[0:2] == "->" {
 			requestSplit := strings.Split(line, "\\n")
 			dynoMethodInformation := &result.DynoMethodInformation{}
 			dynoMethodInformation = createMethod(requestSplit, dynoMethodInformation)
@@ -88,6 +35,7 @@ func CreateResults(location string, bugFileName string, fuzzError []string) []re
 	if err := scanner.Err(); err != nil {
 		panic(err)
 	}
+	
 	return dynoResults
 }
 
