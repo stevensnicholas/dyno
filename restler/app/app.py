@@ -28,49 +28,21 @@ def handler(event, context):
         --settings /tmp/Compile/engine_settings.json \
         --no_ssl
     """
-
+    #SQS check
+    if "records" in event:
+        if len(event["records"]) != 1:
+            raise ValueError("This lambda only supports one record at a time")
+        event = json.loads(event["records"][0]["body"])
     s3 = boto3.client("s3")
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 9808c42a4ee7bf47138dbd6cdb5d478ea27424ad
     if "s3_location" in event:
         swagger_url = urlparse(event["s3_location"])
         s3.download_file(swagger_url.netloc, swagger_url.path, local_api_spec_path)
     elif "swagger_json" in event:
-<<<<<<< HEAD
-=======
-    if event["swagger_file_s3_url"]:
-        swagger_url = urlparse(event["swagger_file_s3_url"])
-        s3.download_file(swagger_url.netloc, swagger_url.path, local_api_spec_path)
-    elif event["swagger_json"]:
->>>>>>> Allow s3 url as in
-=======
-    if "s3_location" in event:
-        swagger_url = urlparse(event["s3_location"])
-        s3.download_file(swagger_url.netloc, swagger_url.path, local_api_spec_path)
-    elif "swagger_json" in event:
->>>>>>> .
-=======
->>>>>>> 9808c42a4ee7bf47138dbd6cdb5d478ea27424ad
         with open(local_api_spec_path, "w") as f:
             json.dump(event["swagger_json"], f)
     else:
         raise KeyError(
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
             "No swagger file provided: Input needs to have either s3_location or swagger_json key"
-=======
-            "No swagger file provided: Input needs to have either swagger_file_s3_url or swagger_json key"
->>>>>>> Allow s3 url as in
-=======
-            "No swagger file provided: Input needs to have either s3_location or swagger_json key"
->>>>>>> .
-=======
-            "No swagger file provided: Input needs to have either s3_location or swagger_json key"
->>>>>>> 9808c42a4ee7bf47138dbd6cdb5d478ea27424ad
         )
     logger.info(f"swagger file saved at {local_api_spec_path}")
     run(restler_compile_cmd, shell=True)
