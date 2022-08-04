@@ -30,15 +30,15 @@ def handler(event, context):
     """
 
     s3 = boto3.client("s3")
-    if event["swagger_file_s3_url"]:
-        swagger_url = urlparse(event["swagger_file_s3_url"])
+    if "s3_location" in event:
+        swagger_url = urlparse(event["s3_location"])
         s3.download_file(swagger_url.netloc, swagger_url.path, local_api_spec_path)
-    elif event["swagger_json"]:
+    elif "swagger_json" in event:
         with open(local_api_spec_path, "w") as f:
             json.dump(event["swagger_json"], f)
     else:
         raise KeyError(
-            "No swagger file provided: Input needs to have either swagger_file_s3_url or swagger_json key"
+            "No swagger file provided: Input needs to have either s3_location or swagger_json key"
         )
     logger.info(f"swagger file saved at {local_api_spec_path}")
     run(restler_compile_cmd, shell=True)
