@@ -28,7 +28,7 @@ def handler(event, context):
         --settings /tmp/Compile/engine_settings.json \
         --no_ssl
     """
-    #SQS check
+    # SQS check
     if "records" in event:
         if len(event["records"]) != 1:
             raise ValueError("This lambda only supports one record at a time")
