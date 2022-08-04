@@ -1,7 +1,7 @@
 # About CLI
 
-Dyno's custom cli tool allows the clients to integrate Dyno within their CI/CD pipeline. It takes the OpenApi file given and sends it over to the Dyno backened for fuzzing.
-Currently, the cli only takes in either JSON or YAML as the format types for the specified OpenApi File.
+Dyno's CLI tool allows clients to make fuzzing requests to the Dyno Platform. In additon, it can be integrated within CI/CD pipelines.
+Currently, the CLI supports Open API files in both JSON and YAML.
 
 # Usage
 
@@ -18,12 +18,12 @@ $: dyno -h
     Commands:
       send                   can also use -d to provide the path to file
 
-# To send OpenApi File
+# To send Open API File
 
-$: dyno send {Path To Open Api File} 
+$: dyno send {path to open api file} 
 
 e.g:
-   dyno send C://file/is/here/file.json
+   dyno send /file/is/here/file.json
 
 Output: No output if successfully sent otherwise appropriate error will be thrown informing you whats wrong
 
