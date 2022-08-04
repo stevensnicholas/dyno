@@ -33,7 +33,7 @@ To use Dyno within your Github Actions workflow, you will need to add the dyno s
 e.g
  steps:
       - uses: actions/dyno-cli@v1.2.1
-      - name: Fuzz Api
+      - name: Fuzz API
         run: |
 	        dyno send /path/to/file.json
  
