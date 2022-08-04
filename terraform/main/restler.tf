@@ -97,6 +97,14 @@ resource "aws_s3_bucket_versioning" "fuzz_results_bucket_versioning" {
   }
 }
 
+resource "aws_s3_bucket_ownership_controls" "fuzz_results_bucket_versioning" {
+  bucket = aws_s3_bucket.fuzz_results_bucket.id
+
+  rule {
+    object_ownership = "BucketOwnerEnforced"
+  }
+}
+
 resource "aws_s3_bucket_public_access_block" "fuzz_results_bucket_access" {
   bucket = aws_s3_bucket.fuzz_results_bucket.id
 
