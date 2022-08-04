@@ -17,6 +17,14 @@ resource "aws_s3_bucket_public_access_block" "openapi_files_bucket_access" {
   restrict_public_buckets = true
 }
 
+resource "aws_s3_bucket_ownership_controls" "openapi_files_bucket" {
+  bucket = aws_s3_bucket.openapi_files_bucket.id
+
+  rule {
+    object_ownership = "BucketOwnerEnforced"
+  }
+}
+
 resource "aws_kms_key" "openapi_fuzz" {
   enable_key_rotation = true
   policy              = <<POLICY
