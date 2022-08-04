@@ -28,7 +28,11 @@ def handler(event, context):
         --settings /tmp/Compile/engine_settings.json \
         --no_ssl
     """
-
+    # SQS check
+    if "Records" in event:
+        if len(event["Records"]) != 1:
+            raise ValueError("This lambda only supports one record at a time")
+        event = json.loads(event["Records"][0]["body"])
     s3 = boto3.client("s3")
     if "s3_location" in event:
         swagger_url = urlparse(event["s3_location"])
