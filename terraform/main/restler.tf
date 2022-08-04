@@ -36,7 +36,8 @@ resource "aws_iam_policy" "lambda_policy" {
     },
     {
       "Action": [
-        "s3:ListBucket"
+        "s3:ListBucket",
+        "s3:GetBucketLocation"
       ],
       "Effect": "Allow",
       "Resource": ["${aws_s3_bucket.openapi_files_bucket.arn}","${aws_s3_bucket.fuzz_results_bucket.arn}"]
