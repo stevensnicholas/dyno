@@ -50,6 +50,12 @@ variable "open_api_sqs_url" {
 
 }
 
+variable "open_api_s3_name" {
+  type        = string
+  description = "open api s3 bucket name"
+
+}
+
 variable "issues_sns_topic_arn" {
   type        = string
   description = "issues sns arn"
