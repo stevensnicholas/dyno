@@ -61,8 +61,6 @@ def handler(event, context):
         json.dump(engine_settings, f)
     run(restler_fuzz_cmd, shell=True)
     logger.info("fuzzing-lean complete")
-    s3 = boto3.client("s3")
-    sns = boto3.client("sns")
     bucket_name = os.environ["results_upload_s3_bucket"]
     random_prefix = uuid.uuid4()
     for folder, prefix in [
@@ -85,6 +83,7 @@ def handler(event, context):
     }
     if os.environ.get("issues_sns_topic_arn",False):
         logger.info(f'Publish to SNS {os.environ["issues_sns_topic_arn"]}')
+        sns = boto3.client("sns")
         response = sns.publish(
             TopicArn=os.environ["issues_sns_topic_arn"],
             Message=snsMessage,
