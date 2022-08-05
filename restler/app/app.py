@@ -81,7 +81,7 @@ def handler(event, context):
         "owner": f"{owner}",
         "repo": f"{repo}",
     }
-    if os.environ.get("issues_sns_topic_arn",False):
+    if os.environ.get("issues_sns_topic_arn", False):
         logger.info(f'Publish to SNS {os.environ["issues_sns_topic_arn"]}')
         sns = boto3.client("sns")
         response = sns.publish(
