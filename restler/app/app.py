@@ -86,7 +86,7 @@ def handler(event, context):
         sns = boto3.client("sns")
         response = sns.publish(
             TopicArn=os.environ["issues_sns_topic_arn"],
-            Message=snsMessage,
+            Message=json.dumps(snsMessage),
             MessageStructure="json",
         )
     with open("/tmp/FuzzLean/ResponseBuckets/runSummary.json", "r") as f:
