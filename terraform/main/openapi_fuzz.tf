@@ -17,6 +17,14 @@ resource "aws_s3_bucket_public_access_block" "openapi_files_bucket_access" {
   restrict_public_buckets = true
 }
 
+resource "aws_s3_bucket_ownership_controls" "openapi_files_bucket" {
+  bucket = aws_s3_bucket.openapi_files_bucket.id
+
+  rule {
+    object_ownership = "BucketOwnerEnforced"
+  }
+}
+
 resource "aws_kms_key" "openapi_fuzz" {
   enable_key_rotation = true
   policy              = <<POLICY
@@ -43,6 +51,17 @@ resource "aws_kms_key" "openapi_fuzz" {
         "kms:Decrypt"
       ],
       "Resource": "*"
+    },
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "lambda.amazonaws.com"
+      },
+      "Action": [
+        "kms:GenerateDataKey",
+        "kms:Decrypt"
+      ],
+      "Resource": "*"
     }
   ]
 }
@@ -56,7 +75,7 @@ resource "aws_kms_alias" "openapi_fuzz_alias" {
 
 resource "aws_sqs_queue" "openapi_sqs_queue" {
   name                       = "${var.deployment_id}-openapifiles-queue"
-  delay_seconds              = 90
+  delay_seconds              = 0
   max_message_size           = 2048
   message_retention_seconds  = 86400
   receive_wait_time_seconds  = 10

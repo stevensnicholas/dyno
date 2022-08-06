@@ -4,7 +4,7 @@ The Golang Lambda React Template is a web application which deploys a golang API
 and a React frontend to AWS CloudFront / S3.
 
 ## Architecture Diagram
-![Architecture Diagram](team2.drawio.png)
+![Architecture Diagram](system-architecture.drawio.png)
 
 ## Install
 

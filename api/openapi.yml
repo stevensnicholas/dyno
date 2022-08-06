@@ -27,6 +27,24 @@ paths:
                 $ref: '#/components/schemas/RestErrResponse'
           description: Bad Request
       summary: Echo
+  /fuzzBugs:
+    get:
+      description: Returns the list of all the Fuzz Bugs
+      operationId: endpoints.GetFuzzesBug
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EndpointsGetFuzzBugsOutput'
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Bad Request
+      summary: Get Fuzz Bugs
   /fuzzes:
     get:
       description: Returns the list of all the times the fuzzer ran
@@ -118,7 +136,20 @@ components:
       required:
       - result
       type: object
-    EndpointsFuzzs:
+    EndpointsFuzzbugs:
+      properties:
+        endpoints:
+          type: string
+        errorType:
+          type: string
+        title:
+          type: string
+      required:
+      - endpoints
+      - errorType
+      - title
+      type: object
+    EndpointsFuzzes:
       properties:
         bugCount:
           minimum: 0
@@ -133,11 +164,21 @@ components:
       - id
       - time
       type: object
+    EndpointsGetFuzzBugsOutput:
+      properties:
+        fuzzes:
+          items:
+            $ref: '#/components/schemas/EndpointsFuzzbugs'
+          nullable: true
+          type: array
+      required:
+      - fuzzes
+      type: object
     EndpointsGetFuzzesOutput:
       properties:
         fuzzes:
           items:
-            $ref: '#/components/schemas/EndpointsFuzzs'
+            $ref: '#/components/schemas/EndpointsFuzzes'
           nullable: true
           type: array
       required:
