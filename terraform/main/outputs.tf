@@ -34,3 +34,8 @@ output "open_api_s3_name" {
   value = aws_s3_bucket.openapi_files_bucket.id
 
 }
+
+output "issues_sns_topic_arn" {
+  value = aws_sns_topic.sns_fuzz_results.arn
+
+}
