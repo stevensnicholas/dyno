@@ -104,7 +104,7 @@ The github workflows are expexcting the follwing action secrets
 | Action Secret                            | Its Use                                                                          |
 |------------------------------------------|----------------------------------------------------------------------------------|
 | AWS_ACCESS_KEY_ID                        | The ID of the AWS User that allows Github to deploy into AWS                     |
-| AWS_SECRET_ACCESS_KEY                    | The correspondingof the secret access key that allows Github to deploy into AWS  |
+| AWS_SECRET_ACCESS_KEY                    | The corresponding ID of secret access key that allows Github to deploy into AWS  |
 | AWS_DEFAULT_REGION                       | The default AWS region to be used by terraform                                   |
 | TERRAFORM_LOCK_DYNAMODB_TABLE            | The DynamoDB table which host the lock file for terraform deployment             |
 | TERRAFORM_LOCK_DYNAMODB_TABLE_DEMOSERVER | The DynamoDB table which host the lock file for terraform demo server deployment |
@@ -118,8 +118,9 @@ The deploment requires the following.
 
 To avoid a circular dependencies on the first deployment of Dyno with terrfrom 
   - The module terraform/ecr must be deployed first
+  - The resoucres must be tranfered to the root terraform state
   - This will have to be done before the github action workflow can be started as a docker container is needed to be deployed into an Elastic Container Registry
-  - Instructions  are in the  terraform/README.md  
+  - Instructions are in the terraform/README.md  
 
 ## Test Restler Backend
 ```
