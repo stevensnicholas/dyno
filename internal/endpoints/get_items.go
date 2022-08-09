@@ -1,6 +1,9 @@
 package endpoints
 
 import (
+	"fmt"
+	"log"
+
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
@@ -18,7 +21,7 @@ type Item struct {
 	Milestone  string
 }
 
-func GetDBItem(svc *dynamodb.Dynamodb) {
+func GetDBItem(svc *dynamodb.DynamoDB) {
 	result, err := svc.GetItem(&dynamodb.GetItemInput{
 		TableName: aws.String("dyno_table"),
 		Key: map[string]*dynamodb.AttributeValue{
@@ -51,6 +54,14 @@ func GetDBItem(svc *dynamodb.Dynamodb) {
 			},
 		},
 	})
+	if err != nil {
+		log.Fatalf("Got error calling GetItem: %s", err)
+	}
 	item := Item{}
 	err = dynamodbattribute.UnmarshalMap(result.Item, &item)
+	if err != nil {
+		panic(fmt.Sprintf("Failed to unmarshal Record, %v", err))
+	}
+	fmt.Println("Found item:")
+	fmt.Println("Year:  ", item.clientID)
 }
