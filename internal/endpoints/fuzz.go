@@ -2,11 +2,13 @@ package endpoints
 
 import (
 	"context"
+//	"os"
 	"dyno/internal/logger"
 	"fmt"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
+	"github.com/aws/aws-sdk-go/service/sqs"
 	"github.com/google/uuid"
 	"github.com/swaggest/rest/web"
 	"github.com/swaggest/usecase"
@@ -37,16 +39,41 @@ func Fuzz(service *web.Service) {
 
 		u := uuid.New()
 		key := fmt.Sprintf("Open-Api-Files/%s", u.String())
+		bucketName := os.Getenv("open_api_s3_name")
+
+		logger.Infof("bucket is %s",bucketName)
 		_, ierr := uploader.Upload(&s3manager.UploadInput{
-			//will use the bucket name as variable
-			Bucket: aws.String("test-store-swagger"),
+			Bucket: aws.String(bucketName),
 			Key:    aws.String(key),
 			Body:   bod,
 		})
 
+		s3URI := fmt.Sprintf("{\"s3_location\":\"s3://%s/%s\",\"uuid\":\"%s\"}", bucketName, key, u.String())
+
 		if ierr != nil {
 			logger.Infof("There was an issue uploading to s3: %s", ierr.Error())
 		}
+
+		//add sqs message
+		sess2 := session.Must(session.NewSessionWithOptions(session.Options{
+			SharedConfigState: session.SharedConfigEnable,
+		}))
+
+		svc := sqs.New(sess2)
+
+	  qURL := os.Getenv("open_api_sqs_url")
+
+		result, err := svc.SendMessage(&sqs.SendMessageInput{
+			DelaySeconds: aws.Int64(10),
+			MessageBody: aws.String(s3URI),
+			QueueUrl:    &qURL,
+		})
+
+		if err != nil {
+			logger.Infof("There was an issue adding event to sqs: %s", err.Error())
+		}
+
+		logger.Infof("Success", *result.MessageId)
 
 		return nil
 	}
