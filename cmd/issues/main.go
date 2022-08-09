@@ -10,14 +10,15 @@ import (
 	"dyno/internal/platform"
 	"dyno/internal/result"
 	"encoding/json"
+	"io/ioutil"
+	"strings"
+
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/google/go-github/v45/github"
-	"io/ioutil"
-	"strings"
 )
 
 func main() {
@@ -72,9 +73,9 @@ func handler(ctx context.Context, sqsEvent events.SQSEvent) error {
 			panic(err)
 		}
 	}
-	filename := *message.Location
+	S3Location := *message.Location
 
-	obj := getObject(&filename, message.BucketName)
+	obj := getObject(&S3Location, message.BucketName)
 
 	body, err := ioutil.ReadAll(obj.Body)
 
@@ -138,10 +139,10 @@ func init() {
 	})))
 }
 
-func getObject(filename *string, bucketName *string) *s3.GetObjectOutput {
+func getObject(S3Location *string, bucketName *string) *s3.GetObjectOutput {
 	resp, err := s3session.GetObject(&s3.GetObjectInput{
 		Bucket: aws.String(*bucketName),
-		Key:    aws.String(*filename),
+		Key:    aws.String(*S3Location),
 	})
 
 	if err != nil {
