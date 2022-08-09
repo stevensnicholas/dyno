@@ -34,7 +34,7 @@ const (
 )
 
 type Message struct {
-	Location   *string `json:"location,omitempty"`
+	Key        *string `json:"key,omitempty"`
 	BucketName *string `json:"bucketName,omitempty"`
 	UUID       *string `json:"uuid,omitempty"`
 	Token      *string `json:"token,omitempty"`
@@ -73,9 +73,9 @@ func handler(ctx context.Context, sqsEvent events.SQSEvent) error {
 			panic(err)
 		}
 	}
-	S3Location := *message.Location
+	s3Key := *message.Key
 
-	obj := getObject(&S3Location, message.BucketName)
+	obj := getObject(&s3Key, message.BucketName)
 
 	body, err := ioutil.ReadAll(obj.Body)
 
@@ -94,7 +94,7 @@ func handler(ctx context.Context, sqsEvent events.SQSEvent) error {
 			panic(err)
 		}
 		bugFileName := strings.Split(f.Name, "/")
-		if len(bugFileName) > 0 {
+		if len(bugFileName)-1 > 0 {
 			fuzzError := strings.Split(bugFileName[1], "_")
 			if len(fuzzError) > 1 {
 				fileContents, _ := ioutil.ReadAll(read)
@@ -139,10 +139,10 @@ func init() {
 	})))
 }
 
-func getObject(S3Location *string, bucketName *string) *s3.GetObjectOutput {
+func getObject(key *string, bucketName *string) *s3.GetObjectOutput {
 	resp, err := s3session.GetObject(&s3.GetObjectInput{
 		Bucket: aws.String(*bucketName),
-		Key:    aws.String(*S3Location),
+		Key:    aws.String(*key),
 	})
 
 	if err != nil {
