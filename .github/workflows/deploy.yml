@@ -101,7 +101,7 @@ jobs:
           terraform init \
             -backend-config="bucket=${{ secrets.TERRAFORM_STATE_S3_BUCKET }}" \
             -backend-config="key=${{ steps.branch.outputs.branch }}" \
-            -backend-config="region=${{ steps.branch.outputs.branch }}" \
+            -backend-config="region=${{ secrets.AWS_DEFAULT_REGION }}" \
             -backend-config="encrypt=true" \
             -backend-config="dynamodb_table=${{ secrets.TERRAFORM_LOCK_DYNAMODB_TABLE }}"
           terraform apply -auto-approve \
