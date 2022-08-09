@@ -54,9 +54,12 @@ func GetDBItem(svc *dynamodb.DynamoDB) {
 			},
 		},
 	})
+<<<<<<< HEAD
 	if err != nil {
 		log.Fatalf("Got error calling GetItem: %s", err)
 	}
+=======
+>>>>>>> edit file
 	item := Item{}
 	err = dynamodbattribute.UnmarshalMap(result.Item, &item)
 	if err != nil {
