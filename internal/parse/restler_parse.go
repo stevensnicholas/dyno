@@ -95,9 +95,9 @@ func createResult(requestSplit []string, scanner *bufio.Scanner, dynoResult *res
 	return dynoResult
 }
 
-// GetFuzzError is given the filename as a string and 
+// GetFuzzError is given the filename as a string and
 // returns the type of fuzzing error found by the fuzzer
-func GetFuzzError(filename string) []string{
+func GetFuzzError(filename string) []string {
 	fuzzError := strings.Split(filename, "_")
 	if len(fuzzError) <= 1 {
 		panic("FileName: not recognised as a RESTler File")

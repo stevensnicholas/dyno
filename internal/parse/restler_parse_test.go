@@ -1,10 +1,9 @@
 package parse_test
 
 import (
-	"os"
 	"dyno/internal/parse"
 	"github.com/stretchr/testify/assert"
-	"strings"
+	"os"
 	"testing"
 )
 
@@ -52,7 +51,7 @@ func TestParseRestlerFuzzResultsValid(t *testing.T) {
 	actualDynoResults = parse.ParseRestlerFuzzResults(fileContents, fuzzError)
 	assert.Equal(t, expectedDynoResults[6], *actualDynoResults[0].Title)
 	assert.Equal(t, expectedDynoResults[7], *actualDynoResults[1].Title)
-	
+
 	file, _ = os.ReadFile("../tests/bug_buckets/UseAfterFreeChecker_20x_1.txt")
 	fileContents = string(file)
 	fuzzError = parse.GetFuzzError("UseAfterFreeChecker_20x_1.txt")
