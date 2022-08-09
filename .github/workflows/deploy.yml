@@ -47,8 +47,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ap-southeast-2
-          mask-aws-account-id: false
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
@@ -64,9 +63,7 @@ jobs:
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-          echo "::set-output name=ECR_IMAGE_URL::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
-    outputs:
-      ECR_IMAGE_URL: ${{ steps.tag.outputs.ECR_IMAGE_URL }}
+
   deploy:
     runs-on: ubuntu-latest
     container: hashicorp/terraform:1.1.6
@@ -89,6 +86,16 @@ jobs:
       - name: Get branch name
         run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
         id: branch
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
       - name: Terraform
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -106,4 +113,4 @@ jobs:
             -backend-config="dynamodb_table=${{ secrets.TERRAFORM_LOCK_DYNAMODB_TABLE }}"
           terraform apply -auto-approve \
             -var="deployment_id=${{ steps.branch.outputs.branch }}" \
-            -var="restler_image_tag=${{ needs.restler.outputs.ECR_IMAGE_URL }}";
+            -var="restler_image_tag=${{ steps.login-ecr.outputs.registry }}/${{ steps.branch.outputs.branch }}_dyno_image_repository:${{ github.sha }}";
