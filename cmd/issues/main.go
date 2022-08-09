@@ -94,7 +94,7 @@ func handler(ctx context.Context, sqsEvent events.SQSEvent) error {
 			panic(err)
 		}
 		bugFileName := strings.Split(f.Name, "/")
-		if len(bugFileName)-1 > 0 {
+		if len(bugFileName) - 1 > 0 {
 			fuzzError := strings.Split(bugFileName[1], "_")
 			if len(fuzzError) > 1 {
 				fileContents, _ := ioutil.ReadAll(read)
