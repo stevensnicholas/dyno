@@ -1,27 +1,25 @@
-# Go Lambda Skeleton UI
+Frontend
+========
+This repository contains code for the Dyno web application. The web application allows users to view their fuzzing test results from dashboard. It focuses on providing visualisation tool that helps users to identify potential vulnerabilities residing in their APIs. The application consists of two modules, viewing test result and authentication. 
 
-React SPA for the Go Lambda Skeleton.
+## Dashboard
+A user can view their test history. It will display the test ID, OpenAPI file name which the user used for the test and the date of the test. When a user clicks any item from the test history section, the dashboard page will display the detailed result of the test. The dashboard page will also provide other user-friendly feature such as a link to the user's GitHub repository that is connected to Dyno or displaying the most frequent errors.
 
-## Configuration
+## Login
+The dashboard page is allowed only for authenticated users. In order to use the dashboard page, a user is required to login with their GitHub account. Once the user is logged in, the navigation in the web application will provide an access to the dashboard page.
 
-Edit the `public/settings.json` to point the app to the correct backend.
+Prerequisites
+==============
+Install npm version 8.13.2 and Node.js version 16.15.1 or above. Download npm from https://docs.npmjs.com/downloading-and-installing-node-js-and-npm and Node.js from https://nodejs.org/en/download/
 
-```
-{
-  "backend": "http://<backend_host>:<backend_port>"
-}
-```
+User Manual
+===========
+1. Change to "frontend" directory: `cd frontend`
+2. Install the required dependencies: `npm ci`
+3. Run the React app: `npm start`
 
-## Run
-
-```
-npm start
-```
-
-Runs the app in the development mode.\
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
-
+Other npm commands
+===================
 ## Test
 
 ```
@@ -47,3 +45,11 @@ npm run lint
 ```
 
 Runs eslint with the ruleset specified in `eslint.js`.
+
+## Fix
+
+```
+npm run fix
+```
+
+Fix eslint issues
