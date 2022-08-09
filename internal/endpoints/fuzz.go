@@ -2,7 +2,6 @@ package endpoints
 
 import (
 	"context"
-	"os"
 	"dyno/internal/logger"
 	"fmt"
 	"github.com/aws/aws-sdk-go/aws"
@@ -13,6 +12,7 @@ import (
 	"github.com/swaggest/rest/web"
 	"github.com/swaggest/usecase"
 	"github.com/swaggest/usecase/status"
+	"os"
 	"strings"
 )
 
@@ -41,7 +41,7 @@ func Fuzz(service *web.Service) {
 		key := fmt.Sprintf("Open-Api-Files/%s", u.String())
 		bucketName := os.Getenv("open_api_s3_name")
 
-		logger.Infof("bucket is %s",bucketName)
+		logger.Infof("bucket is %s", bucketName)
 		_, ierr := uploader.Upload(&s3manager.UploadInput{
 			Bucket: aws.String(bucketName),
 			Key:    aws.String(key),
@@ -61,12 +61,12 @@ func Fuzz(service *web.Service) {
 
 		svc := sqs.New(sess2)
 
-	  qURL := os.Getenv("open_api_sqs_url")
+		qURL := os.Getenv("open_api_sqs_url")
 
 		result, err := svc.SendMessage(&sqs.SendMessageInput{
 			DelaySeconds: aws.Int64(10),
-			MessageBody: aws.String(s3URI),
-			QueueUrl:    &qURL,
+			MessageBody:  aws.String(s3URI),
+			QueueUrl:     &qURL,
 		})
 
 		if err != nil {
