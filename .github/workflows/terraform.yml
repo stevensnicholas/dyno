@@ -19,11 +19,11 @@ jobs:
         run: |
           cd terraform
           terraform init \
-            -backend-config="bucket=go-lambda-skeleton-state" \
-            -backend-config="key=main" \
-            -backend-config="region=ap-southeast-2" \
+            -backend-config="bucket=${{ secrets.TERRAFORM_STATE_S3_BUCKET }}" \
+            -backend-config="key=${{ steps.branch.outputs.branch }}" \
+            -backend-config="region=${{ secrets.AWS_DEFAULT_REGION }}" \
             -backend-config="encrypt=true" \
-            -backend-config="dynamodb_table=comp9447-state"
+            -backend-config="dynamodb_table=${{ secrets.TERRAFORM_LOCK_DYNAMODB_TABLE }}"
           terraform validate
   tflint:
     runs-on: ubuntu-latest
