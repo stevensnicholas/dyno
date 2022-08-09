@@ -2,7 +2,7 @@ package endpoints
 
 import (
 	"context"
-//	"os"
+	"os"
 	"dyno/internal/logger"
 	"fmt"
 	"github.com/aws/aws-sdk-go/aws"
