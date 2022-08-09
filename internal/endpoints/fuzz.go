@@ -39,7 +39,7 @@ func Fuzz(service *web.Service) {
 
 		u := uuid.New()
 		key := fmt.Sprintf("Open-Api-Files/%s", u.String())
-		bucketName := os.Getenv("open_api_s3_name")
+		bucketName := os.Getenv("open_api_s3_bucket_name")
 
 		logger.Infof("bucket is %s", bucketName)
 		_, ierr := uploader.Upload(&s3manager.UploadInput{
@@ -61,7 +61,7 @@ func Fuzz(service *web.Service) {
 
 		svc := sqs.New(sess2)
 
-		qURL := os.Getenv("open_api_sqs_url")
+		qURL := os.Getenv("sqs_queue_url")
 
 		result, err := svc.SendMessage(&sqs.SendMessageInput{
 			DelaySeconds: aws.Int64(10),
