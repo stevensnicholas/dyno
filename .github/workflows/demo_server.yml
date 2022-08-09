@@ -16,7 +16,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ap-southeast-2
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
           mask-aws-account-id: false
       - name: Login to Amazon ECR
         id: login-ecr
@@ -38,11 +38,11 @@ jobs:
         run: |
           printf "terraform {\n  backend \"s3\" {}\n}" > state.tf
           terraform init \
-            -backend-config="bucket=comp9447-state" \
+            -backend-config="bucket=${{ secrets.TERRAFORM_STATE_S3_BUCKET }}" \
             -backend-config="key=${{ steps.branch.outputs.branch }}_demo_server" \
-            -backend-config="region=ap-southeast-2" \
+            -backend-config="region=${{ secrets.AWS_DEFAULT_REGION }}" \
             -backend-config="encrypt=true" \
-            -backend-config="dynamodb_table=comp9447-state-demo-server"
+            -backend-config="dynamodb_table=${{ secrets.TERRAFORM_LOCK_DYNAMODB_TABLE_DEMOSERVER }}"
           terraform apply -auto-approve \
             -var="deployment_id=${{ steps.branch.outputs.branch }}" \
             -var="demo_server_tag=demo_server";
