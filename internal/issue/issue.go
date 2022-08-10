@@ -31,17 +31,18 @@ func CreateIssues(selectedFuzzer string, dynoResults []result.DynoResult) []Dyno
 	}
 	return dynoIssues
 }
+
 // createFuzzerIssue allow for a user to select the specific fuzzer
-// that they want to utilize currently only supports RESTler. The 
-// selection is based on a string selected Fuzzer which is the name of the 
-// fuzzer that is selected by the user. Inputted is the selectedFuzzer 
+// that they want to utilize currently only supports RESTler. The
+// selection is based on a string selected Fuzzer which is the name of the
+// fuzzer that is selected by the user. Inputted is the selectedFuzzer
 // and then parsed through is the fuzzError and dynoIssue.
 // returned is the dynoIssue that is formatted by the fuzzer utilized
 func createFuzzerIssue(selectedFuzzer string, fuzzError string, dynoIssue *DynoIssue) *DynoIssue {
-	switch selectedFuzzer{
+	switch selectedFuzzer {
 	case "RESTler":
 		dynoIssue = createRestlerIssue(fuzzError, dynoIssue)
-	default: 
+	default:
 		panic(fmt.Sprintf("The selected fuzzer %s is not avaliable", selectedFuzzer))
 	}
 	return dynoIssue

@@ -30,7 +30,7 @@ func TestCreateIssueIntegratedTestFuzzerInvalid(t *testing.T) {
 			ErrorType:  &fuzzErrorList[0],
 		},
 	}
-	assert.Panics(t, func() {issue.CreateIssues("", dynoResults)})
+	assert.Panics(t, func() { issue.CreateIssues("", dynoResults) })
 
 }
 func TestCreateIssueIntegratedTestValid(t *testing.T) {
