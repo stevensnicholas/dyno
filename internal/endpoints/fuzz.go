@@ -12,7 +12,7 @@ import (
 	"github.com/swaggest/rest/web"
 	"github.com/swaggest/usecase"
 	"github.com/swaggest/usecase/status"
-	"os"
+	//"os"
 	"strings"
 )
 
@@ -39,7 +39,8 @@ func Fuzz(service *web.Service) {
 
 		u := uuid.New()
 		key := fmt.Sprintf("Open-Api-Files/%s", u.String())
-		bucketName := os.Getenv("open_api_s3_bucket_name")
+		//bucketName := os.Getenv("open_api_s3_bucket_name")
+		bucketName := "main-client-openapi-files"
 
 		logger.Infof("bucket is %s", bucketName)
 		_, ierr := uploader.Upload(&s3manager.UploadInput{
@@ -61,7 +62,8 @@ func Fuzz(service *web.Service) {
 
 		svc := sqs.New(sess2)
 
-		qURL := os.Getenv("sqs_queue_url")
+		//qURL := os.Getenv("sqs_queue_url")
+		qURL := "https://sqs.ap-southeast-2.amazonaws.com/117712065617/main-openapifiles-queue"
 
 		result, err := svc.SendMessage(&sqs.SendMessageInput{
 			DelaySeconds: aws.Int64(10),
