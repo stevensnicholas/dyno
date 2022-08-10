@@ -27,3 +27,7 @@ type DynoIssue struct {
 }
 ```
 
+## Severity Levels 
+- High: Given to issues where there is potential for accessing potential secrets, data leaks, unauthorized user access
+- Medium: Given to issues with unexpected errors or success codes and access to deleted resources
+- Low: Given to issues where there is a change to the json bodies of a request
