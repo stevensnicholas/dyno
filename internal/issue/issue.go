@@ -19,12 +19,12 @@ type DynoIssue struct {
 // CreateIssues collects all the results from the raw fuzzing results and formats
 // them using the DynoIssue struct to be presented as an issue on any communication platform.
 // Inputted is a slice of dynoResults and returns all the issues as a []DynoIssue.
-func CreateIssues(dynoResults []result.DynoResult) []DynoIssue {
+func CreateIssues(selectedFuzzer string, dynoResults []result.DynoResult) []DynoIssue {
 	dynoIssues := []DynoIssue{}
 	dynoIssue := &DynoIssue{}
 	for i := range dynoResults {
 		dynoIssue.Body = &dynoResults[i]
-		dynoIssue = createIssue(*dynoResults[i].ErrorType, dynoIssue)
+		dynoIssue = createFuzzerIssue(selectedFuzzer, *dynoResults[i].ErrorType, dynoIssue)
 		if dynoIssue != nil {
 			dynoIssues = append(dynoIssues, *dynoIssue)
 		}
@@ -32,11 +32,27 @@ func CreateIssues(dynoResults []result.DynoResult) []DynoIssue {
 	return dynoIssues
 }
 
-// createIssue sorts the bugs found by the fuzzer by there categories and creates a new DynoIssue
+// createFuzzerIssue allow for a user to select the specific fuzzer
+// that they want to utilize currently only supports RESTler. The
+// selection is based on a string selected Fuzzer which is the name of the
+// fuzzer that is selected by the user. Inputted is the selectedFuzzer
+// and then parsed through is the fuzzError and dynoIssue.
+// returned is the dynoIssue that is formatted by the fuzzer utilized
+func createFuzzerIssue(selectedFuzzer string, fuzzError string, dynoIssue *DynoIssue) *DynoIssue {
+	switch selectedFuzzer {
+	case "RESTler":
+		dynoIssue = createRestlerIssue(fuzzError, dynoIssue)
+	default:
+		panic(fmt.Sprintf("The selected fuzzer %s is not avaliable", selectedFuzzer))
+	}
+	return dynoIssue
+}
+
+// createRestlerIssue sorts the bugs found by the fuzzer by there categories and creates a new DynoIssue
 // Inputted is a fuzzError is the type of bug that has been found by the fuzzer and a
 // dynoIssue is a struct of a issue. Returns *DynoIssue with all the relevant
 // information regarding the certain bug
-func createIssue(fuzzError string, dynoIssue *DynoIssue) *DynoIssue {
+func createRestlerIssue(fuzzError string, dynoIssue *DynoIssue) *DynoIssue {
 	switch fuzzError {
 	case "InternalServerErrors":
 		dynoIssue = internalServerErrorsIssue(dynoIssue)

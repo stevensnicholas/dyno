@@ -61,7 +61,7 @@ func handler(ctx context.Context, sqsEvent events.SQSEvent) error {
 	defer log.Sync()
 	logger.Info("Function invoked!")
 	if len(sqsEvent.Records) == 0 {
-		logger.Info("No SQS events")
+		logger.Warn("No SQS events")
 	}
 	for _, sqsEvent := range sqsEvent.Records {
 		err = json.Unmarshal([]byte(sqsEvent.Body), &sqsMessage)
@@ -104,7 +104,7 @@ func handler(ctx context.Context, sqsEvent events.SQSEvent) error {
 		}
 	}
 
-	issues := issue.CreateIssues(results)
+	issues := issue.CreateIssues("RESTler", results)
 	githubClient := platform.CreateGithubClient(ctx, message.Token)
 
 	for i := 0; i < len(issues); i++ {
@@ -125,7 +125,7 @@ func handler(ctx context.Context, sqsEvent events.SQSEvent) error {
 	if len(issues) != 0 {
 		logger.Info("Issues sent to client")
 	} else {
-		logger.Info("No issues found in API")
+		logger.Warn("No issues found in API")
 	}
 
 	return nil
