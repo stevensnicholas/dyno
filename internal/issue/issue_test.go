@@ -9,10 +9,30 @@ import (
 
 func TestCreateIssueIntegratedTestInvalid(t *testing.T) {
 	dynoResults := []result.DynoResult{}
-	dynoIssues := issue.CreateIssues(dynoResults)
+	dynoIssues := issue.CreateIssues("RESTler", dynoResults)
 	assert.Equal(t, 0, len(dynoIssues))
 }
 
+func TestCreateIssueIntegratedTestFuzzerInvalid(t *testing.T) {
+	title := "title"
+	endpoint := "/endpoint"
+	method := "method"
+	httpMethod := "METHOD"
+	fuzzErrorList := [1]string{
+		"InternalServerErrors",
+	}
+	dynoResults := []result.DynoResult{
+		{
+			Title:      &title,
+			Endpoint:   &endpoint,
+			Method:     &method,
+			HTTPMethod: &httpMethod,
+			ErrorType:  &fuzzErrorList[0],
+		},
+	}
+	assert.Panics(t, func() {issue.CreateIssues("", dynoResults)})
+
+}
 func TestCreateIssueIntegratedTestValid(t *testing.T) {
 	title := "title"
 	endpoint := "/endpoint"
@@ -79,7 +99,7 @@ func TestCreateIssueIntegratedTestValid(t *testing.T) {
 		},
 	}
 
-	dynoIssues := issue.CreateIssues(dynoResults)
+	dynoIssues := issue.CreateIssues("RESTler", dynoResults)
 	assert.Equal(t, "DYNO Fuzz: InternalServerErrors at Endpoint /endpoint using METHOD Method", *dynoIssues[0].Title)
 	assert.Equal(t, "Details: '500 Internal Server' Errors and any other 5xx errors are detected.", *dynoIssues[0].Details)
 	assert.Equal(t, "Visualizer: [DYNO](the web url)", *dynoIssues[0].Visualizer)
