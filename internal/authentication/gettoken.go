@@ -16,18 +16,6 @@ type GitHubUserInfo struct {
 	ID    float64
 }
 
-type Conf struct {
-	ClientID     string
-	ClientSecret string
-	RedirectURL  string
-}
-
-var conf = Conf{
-	ClientID:     "", // fill in with your id before test
-	ClientSecret: "", // fill in with your secret before test
-	RedirectURL:  "",
-}
-
 type Token struct {
 	AccessToken string `json:"access_token"`
 	TokenType   string `json:"token_type"`
