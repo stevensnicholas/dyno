@@ -22,7 +22,11 @@ func NewJWT(privateKey []byte, publicKey []byte) JWT {
 }
 
 func CreateJWT(ttl time.Duration, gittoken string) (string, error) {
-	priPEM := getSSMParameterValue("prikey")
+	priPEM, err := getSSMParameterValue("prikey")
+	if err != nil {
+		logger.Error(err.Error())
+		return "", err
+	}
 
 	block, _ := pem.Decode([]byte(priPEM))
 

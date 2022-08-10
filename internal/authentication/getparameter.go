@@ -8,11 +8,12 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/ssm"
 )
 
-func getSSMParameterValue(parameterName string) string {
+func getSSMParameterValue(parameterName string) (string, error) {
 
 	cfg, err := config.LoadDefaultConfig(context.TODO())
 	if err != nil {
 		logger.Error(err.Error())
+		return "", err
 	}
 
 	svc := ssm.NewFromConfig(cfg)
@@ -22,8 +23,9 @@ func getSSMParameterValue(parameterName string) string {
 	})
 	if err != nil {
 		logger.Error(err.Error())
+		return "", err
 	}
 
-	return *resp.Parameter.Value
+	return *resp.Parameter.Value, nil
 
 }
