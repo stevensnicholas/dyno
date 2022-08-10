@@ -11,7 +11,7 @@ import (
 
 func getSSMParameterValue(parameterName string) (string, error) {
 
-	cfg, err := config.LoadDefaultConfig(context.TODO())//, config.WithRegion("ap-southeast-2")
+	cfg, err := config.LoadDefaultConfig(context.TODO())
 	if err != nil {
 		logger.Error(err.Error())
 		return "", err
