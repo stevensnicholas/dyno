@@ -87,23 +87,8 @@ func handler(ctx context.Context, sqsEvent events.SQSEvent) error {
 	if err != nil {
 		panic(err)
 	}
-	results := []result.DynoResult{}
-	for _, f := range reader.File {
-		read, err := f.Open()
-		if err != nil {
-			panic(err)
-		}
-		bugFileName := strings.Split(f.Name, "/")
-		fuzzError := strings.Split(bugFileName[len(bugFileName)-1], "_")
-		if len(fuzzError) > 1 {
-			fileContents, _ := ioutil.ReadAll(read)
-			rawResults := parse.ParseRestlerFuzzResults(string(fileContents), fuzzError)
-			for i := 0; i < len(rawResults); i++ {
-				results = append(results, rawResults[i])
-			}
-		}
-	}
 
+	results := readZipFile(reader)
 	issues := issue.CreateIssues("RESTler", results)
 	githubClient := platform.CreateGithubClient(ctx, message.Token)
 
@@ -137,6 +122,9 @@ func init() {
 	})))
 }
 
+// getObject uses the s3 key and bucketName to locate the object
+// where the fuzzer results are located allowing for raw result parsing
+// Inputted is the key and bucketName and returned is the s3 object
 func getObject(key *string, bucketName *string) *s3.GetObjectOutput {
 	resp, err := s3session.GetObject(&s3.GetObjectInput{
 		Bucket: aws.String(*bucketName),
@@ -148,4 +136,28 @@ func getObject(key *string, bucketName *string) *s3.GetObjectOutput {
 	}
 
 	return resp
+}
+
+// readZipFile reads the s3 object results.zip and decompresses it.
+// Reading the files in memory and using the parser to turn fuzz results into
+// dynoResults that are then used to create real issues.
+// Inputted is the zip.Reader and returned is a list of results
+func readZipFile(reader *zip.Reader) []result.DynoResult {
+	results := []result.DynoResult{}
+	for _, f := range reader.File {
+		read, err := f.Open()
+		if err != nil {
+			panic(err)
+		}
+		bugFileName := strings.Split(f.Name, "/")
+		fuzzError := strings.Split(bugFileName[len(bugFileName)-1], "_")
+		if len(fuzzError) > 1 {
+			fileContents, _ := ioutil.ReadAll(read)
+			rawResults := parse.ParseRestlerFuzzResults(string(fileContents), fuzzError)
+			for i := 0; i < len(rawResults); i++ {
+				results = append(results, rawResults[i])
+			}
+		}
+	}
+	return results
 }
