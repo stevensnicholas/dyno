@@ -7,7 +7,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Link, Route, Routes } from 'react-router-dom';
 import Home from './pages/Home';
 import Login from './pages/login/Login';
-import Dashboard from './pages/Dashboard';
+import Dashboard from './pages/dashboard/Dashboard';
+import TestResult from './pages/dashboard/TestResult';
 
 export interface PageProps {
   client: AppClient;
@@ -32,10 +33,15 @@ export function App() {
     if (client && code !== undefined) {
       client.default.endpointsAuthentication(code).then((res) => {
         window.localStorage.setItem('token', res.jwt);
-        setLoggedIn(true);
       });
     }
   }, [client]);
+
+  useEffect(() => {
+    if (window.localStorage.getItem('token') !== undefined) {
+      setLoggedIn(true);
+    }
+  }, []);
   return (
     <div
       id="main"
@@ -75,6 +81,7 @@ export function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/login" element={<Login clientID={clientId} />} />
                 <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/testresult/:id" element={<TestResult />} />
               </Routes>
             </>
           ) : (

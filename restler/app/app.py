@@ -75,7 +75,8 @@ def handler(event, context):
         logger.info(f"S3 {prefix} uploaded to s3://{bucket_name}/{key}")
     key = f"{random_prefix}/results.zip"
     snsMessage = {
-        "location": f"s3://{bucket_name}/{key}",
+        "key": f"{key}",
+        "bucketName": f"{bucket_name}",
         "uuid": f"{random_prefix}",
         "token": f"{token}",
         "owner": f"{owner}",
