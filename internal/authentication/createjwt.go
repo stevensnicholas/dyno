@@ -28,7 +28,6 @@ func CreateJWT(ttl time.Duration, gittoken string) (string, error) {
 		return "", err
 	}
 
-
 	block, _ := pem.Decode([]byte(priPEM))
 
 	pri, err := x509.ParsePKCS1PrivateKey(block.Bytes)
