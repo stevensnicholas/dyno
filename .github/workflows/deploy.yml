@@ -48,7 +48,6 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
-          mask-aws-account-id: false
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
@@ -64,9 +63,6 @@ jobs:
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-          echo "::set-output name=ECR_IMAGE_URL::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
-    outputs:
-      ECR_IMAGE_URL: ${{ steps.tag.outputs.ECR_IMAGE_URL }}
   deploy:
     runs-on: ubuntu-latest
     container: hashicorp/terraform:1.1.6
@@ -106,4 +102,4 @@ jobs:
             -backend-config="dynamodb_table=${{ secrets.TERRAFORM_LOCK_DYNAMODB_TABLE }}"
           terraform apply -auto-approve \
             -var="deployment_id=${{ steps.branch.outputs.branch }}" \
-            -var="restler_image_tag=${{ needs.restler.outputs.ECR_IMAGE_URL }}";
+            -var="restler_image_tag=${{ secrets.AWS_DEFAULT_ACCOUNT }}.dkr.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com/${{ steps.branch.outputs.branch }}_dyno_image_repository:${{ github.sha }}";

@@ -10,14 +10,15 @@ import (
 	"dyno/internal/platform"
 	"dyno/internal/result"
 	"encoding/json"
+	"io/ioutil"
+	"strings"
+
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/google/go-github/v45/github"
-	"io/ioutil"
-	"strings"
 )
 
 func main() {
@@ -33,7 +34,7 @@ const (
 )
 
 type Message struct {
-	Location   *string `json:"location,omitempty"`
+	Key        *string `json:"key,omitempty"`
 	BucketName *string `json:"bucketName,omitempty"`
 	UUID       *string `json:"uuid,omitempty"`
 	Token      *string `json:"token,omitempty"`
@@ -72,9 +73,9 @@ func handler(ctx context.Context, sqsEvent events.SQSEvent) error {
 			panic(err)
 		}
 	}
-	filename := *message.Location
+	s3Key := *message.Key
 
-	obj := getObject(&filename, message.BucketName)
+	obj := getObject(&s3Key, message.BucketName)
 
 	body, err := ioutil.ReadAll(obj.Body)
 
@@ -93,14 +94,12 @@ func handler(ctx context.Context, sqsEvent events.SQSEvent) error {
 			panic(err)
 		}
 		bugFileName := strings.Split(f.Name, "/")
-		if len(bugFileName) > 0 {
-			fuzzError := strings.Split(bugFileName[1], "_")
-			if len(fuzzError) > 1 {
-				fileContents, _ := ioutil.ReadAll(read)
-				rawResults := parse.ParseRestlerFuzzResults(string(fileContents), fuzzError)
-				for i := 0; i < len(rawResults); i++ {
-					results = append(results, rawResults[i])
-				}
+		fuzzError := strings.Split(bugFileName[len(bugFileName)-1], "_")
+		if len(fuzzError) > 1 {
+			fileContents, _ := ioutil.ReadAll(read)
+			rawResults := parse.ParseRestlerFuzzResults(string(fileContents), fuzzError)
+			for i := 0; i < len(rawResults); i++ {
+				results = append(results, rawResults[i])
 			}
 		}
 	}
@@ -138,10 +137,10 @@ func init() {
 	})))
 }
 
-func getObject(filename *string, bucketName *string) *s3.GetObjectOutput {
+func getObject(key *string, bucketName *string) *s3.GetObjectOutput {
 	resp, err := s3session.GetObject(&s3.GetObjectInput{
 		Bucket: aws.String(*bucketName),
-		Key:    aws.String(*filename),
+		Key:    aws.String(*key),
 	})
 
 	if err != nil {
