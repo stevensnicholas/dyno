@@ -18,14 +18,14 @@ variable "restler_lambda_timeout" {
   default     = 300
 }
 
-variable "client_id"{
+variable "client_id" {
   type        = string
   description = "GitHub OAuth client ID"
 
 }
 
-variable "client_secret"{
+variable "client_secret" {
   type        = string
   description = "GitHub OAuth client secret"
-  
+
 }
