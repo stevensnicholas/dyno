@@ -21,9 +21,11 @@ variable "restler_lambda_timeout" {
 variable "client_id"{
   type        = string
   description = "GitHub OAuth client ID"
+
 }
 
 variable "client_secret"{
   type        = string
   description = "GitHub OAuth client secret"
+  
 }

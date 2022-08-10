@@ -11,9 +11,9 @@ resource "aws_ssm_parameter" "private_key" {
 }
 
 resource "aws_ssm_parameter" "public_key" {
-  name      = "${var.deployment_id}-prikey"
+  name      = "${var.deployment_id}-pubkey"
   type      = "String"
-  value     = tls_private_key.rsa_prikey.private_key_pem
+  value     = tls_private_key.rsa_prikey.public_key_pem
   overwrite = true
 }
 
