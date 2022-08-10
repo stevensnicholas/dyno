@@ -1,6 +1,7 @@
 package authentication
 
 import (
+	"dyno/internal/logger"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -33,11 +34,23 @@ type Token struct {
 	Scope       string `json:"scope"`
 }
 
-func GetTokenAuthURL(code string) string {
+func GetTokenAuthURL(code string) (string, error) {
+	ClientID, err := getSSMParameterValue("client_id")
+	if err != nil {
+		logger.Error(err.Error())
+		return "", err
+	}
+
+	ClientSecret, err := getSSMParameterValue("client_secret")
+	if err != nil {
+		logger.Error(err.Error())
+		return "", err
+	}
+
 	return fmt.Sprintf(
 		"https://github.com/login/oauth/access_token?client_id=%s&client_secret=%s&code=%s",
-		conf.ClientID, conf.ClientSecret, code,
-	)
+		ClientID, ClientSecret, code,
+	), nil
 }
 
 func GetToken(url string) (*Token, error) {

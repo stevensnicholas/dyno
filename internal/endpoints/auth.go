@@ -6,6 +6,7 @@ import (
 
 	"dyno/internal/authentication"
 	"dyno/internal/logger"
+
 	"github.com/swaggest/rest/web"
 	"github.com/swaggest/usecase"
 	"github.com/swaggest/usecase/status"
@@ -26,7 +27,13 @@ func Authentication(service *web.Service) {
 
 		var err error
 		var code = in.Code
-		var tokenAuthURL = authentication.GetTokenAuthURL(code)
+		var tokenAuthURL string
+
+		if tokenAuthURL, err = authentication.GetTokenAuthURL(code); err != nil {
+			logger.Error(err.Error())
+			return err
+		}
+
 		var token *authentication.Token
 		if token, err = authentication.GetToken(tokenAuthURL); err != nil {
 			logger.Error(err.Error())
