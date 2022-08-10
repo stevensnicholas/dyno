@@ -94,14 +94,12 @@ func handler(ctx context.Context, sqsEvent events.SQSEvent) error {
 			panic(err)
 		}
 		bugFileName := strings.Split(f.Name, "/")
-		if len(bugFileName)-1 > 0 {
-			fuzzError := strings.Split(bugFileName[1], "_")
-			if len(fuzzError) > 1 {
-				fileContents, _ := ioutil.ReadAll(read)
-				rawResults := parse.ParseRestlerFuzzResults(string(fileContents), fuzzError)
-				for i := 0; i < len(rawResults); i++ {
-					results = append(results, rawResults[i])
-				}
+		fuzzError := strings.Split(bugFileName[len(bugFileName)-1], "_")
+		if len(fuzzError) > 1 {
+			fileContents, _ := ioutil.ReadAll(read)
+			rawResults := parse.ParseRestlerFuzzResults(string(fileContents), fuzzError)
+			for i := 0; i < len(rawResults); i++ {
+				results = append(results, rawResults[i])
 			}
 		}
 	}

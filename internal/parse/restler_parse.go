@@ -7,6 +7,10 @@ import (
 	"strings"
 )
 
+const (
+	RESTLERFILEID = "->"
+)
+
 // Parses the fuzzing files from the bug_buckets folder and creates raw fuzzing results.
 // fileContents is the contents of a file from the s3 bucket object
 // fuzzError is the type of bug found
@@ -20,7 +24,7 @@ func ParseRestlerFuzzResults(fileContents string, fuzzError []string) []result.D
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		line := scanner.Text()
-		if len(line) > 1 && line[0:2] == "->" {
+		if len(line) > 1 && line[0:2] == RESTLERFILEID {
 			requestSplit := strings.Split(line, "\\n")
 			dynoMethodInformation := &result.DynoMethodInformation{}
 			dynoMethodInformation = createMethod(requestSplit, dynoMethodInformation)
@@ -100,7 +104,7 @@ func createResult(requestSplit []string, scanner *bufio.Scanner, dynoResult *res
 func GetFuzzError(filename string) []string {
 	fuzzError := strings.Split(filename, "_")
 	if len(fuzzError) <= 1 {
-		panic("FileName: not recognised as a RESTler File")
+		panic("FileName: not recognized as a RESTler File")
 	}
 	return strings.Split(filename, "_")
 }
