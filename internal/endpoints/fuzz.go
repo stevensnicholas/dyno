@@ -12,15 +12,14 @@ import (
 	"github.com/swaggest/rest/web"
 	"github.com/swaggest/usecase"
 	"github.com/swaggest/usecase/status"
-	//"os"
 	"strings"
 )
 
 type cliInput struct {
-	Data []byte `json:"result"`
+	Data  []byte  `json:"result"`
 	Token *string `json:"token"`
 	Owner *string `json:"owner"`
-	Repo *string `json:"repo"`
+	Repo  *string `json:"repo"`
 }
 
 type cliOutput struct {
@@ -55,7 +54,7 @@ func Fuzz(service *web.Service) {
 			Key:    aws.String(key),
 			Body:   bod,
 		})
-		
+
 		s3URI := fmt.Sprintf("{\"s3_location\":\"s3://%s/%s\",\"uuid\":\"%s\"}", bucketName, key, u.String())
 		if token != nil && owner != nil && repo != nil {
 			s3URI = fmt.Sprintf("{\"s3_location\":\"s3://%s/%s\",\"uuid\":\"%s\",\"token\":\"%s\",\"owner\":\"%s\",\"repo\":\"%s\",}", bucketName, key, u.String(), *token, *owner, *repo)
