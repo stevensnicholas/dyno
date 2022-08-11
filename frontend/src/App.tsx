@@ -18,6 +18,7 @@ export function App() {
   const [client, setClient] = useState<AppClient | undefined>();
   const [clientId, setClientId] = useState<string>('');
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
+  const [token, setToken] = useState<string>('');
 
   useEffect(() => {
     fetch('settings.json')
@@ -33,15 +34,17 @@ export function App() {
     if (client && code !== undefined) {
       client.default.endpointsAuthentication(code).then((res) => {
         window.localStorage.setItem('token', res.jwt);
+        setToken(res.jwt);
       });
     }
   }, [client]);
 
   useEffect(() => {
-    if (window.localStorage.getItem('token') !== undefined) {
+    if (token) {
       setLoggedIn(true);
     }
-  }, []);
+  }, [token]);
+
   return (
     <div
       id="main"
@@ -78,7 +81,7 @@ export function App() {
               </div>
 
               <Routes>
-                <Route path="/" element={<Home />} />
+                <Route path="/" element={<Home loggedIn={loggedIn} />} />
                 <Route path="/login" element={<Login clientID={clientId} />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/testresult/:id" element={<TestResult />} />
@@ -100,7 +103,7 @@ export function App() {
               </div>
 
               <Routes>
-                <Route path="/" element={<Home />} />
+                <Route path="/" element={<Home loggedIn={loggedIn} />} />
                 <Route path="/login" element={<Login clientID={clientId} />} />
               </Routes>
             </>

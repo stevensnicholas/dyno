@@ -1,3 +1,7 @@
+:root {
+  --main-font-color: #515A5A;
+}
+
 .App {
   text-align: center;
   margin: 0 5px;
@@ -101,4 +105,16 @@ h2 {
 
 .selectable-text:hover {
   color: var(--red);
+}
+
+h1 {
+  color: var(--main-font-color);
+}
+
+nav {
+  background-color: #66CDAA;
+}
+
+nav ul a {
+  font-size: 1.5rem;
 }
