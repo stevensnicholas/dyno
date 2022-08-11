@@ -39,6 +39,9 @@ def handler(event, context):
     s3 = boto3.client("s3")
     if "s3_location" in event:
         swagger_url = urlparse(event["s3_location"])
+        token = event["token"]
+        repo = event["repo"]
+        owner = event["owner"]
         logger.info(f"Trying to get: s3://{swagger_url.netloc}{swagger_url.path}")
         s3.download_file(
             swagger_url.netloc, swagger_url.path.lstrip("/"), local_api_spec_path

@@ -18,6 +18,9 @@ import (
 
 type cliInput struct {
 	Data []byte `json:"result"`
+	Token *string `json:"token"`
+	Owner *string `json:"owner"`
+	Repo *string `json:"repo"`
 }
 
 type cliOutput struct {
@@ -28,6 +31,10 @@ func Fuzz(service *web.Service) {
 	handler := func(ctx context.Context, input, output interface{}) error {
 		var in = input.(*cliInput)
 		var out = output.(*cliOutput)
+
+		token := in.Token
+		owner := in.Owner
+		repo := in.Repo
 
 		logger.Infof("Received client OpenAPI File")
 		out.Result = "Saved"
@@ -48,8 +55,11 @@ func Fuzz(service *web.Service) {
 			Key:    aws.String(key),
 			Body:   bod,
 		})
-
+		
 		s3URI := fmt.Sprintf("{\"s3_location\":\"s3://%s/%s\",\"uuid\":\"%s\"}", bucketName, key, u.String())
+		if token != nil && owner != nil && repo != nil {
+			s3URI = fmt.Sprintf("{\"s3_location\":\"s3://%s/%s\",\"uuid\":\"%s\",\"token\":\"%s\",\"owner\":\"%s\",\"repo\":\"%s\",}", bucketName, key, u.String(), *token, *owner, *repo)
+		}
 
 		if ierr != nil {
 			logger.Infof("There was an issue uploading to s3: %s", ierr.Error())
