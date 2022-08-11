@@ -1,3 +1,7 @@
+:root {
+  --main-font-color: #515A5A;
+}
+
 .App {
   text-align: center;
   margin: 0 5px;
@@ -104,7 +108,7 @@ h2 {
 }
 
 h1 {
-  color: #515A5A;
+  color: var(--main-font-color);
 }
 
 nav {
