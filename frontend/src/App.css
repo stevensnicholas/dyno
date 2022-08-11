@@ -102,3 +102,15 @@ h2 {
 .selectable-text:hover {
   color: var(--red);
 }
+
+h1 {
+  color: #515A5A;
+}
+
+nav {
+  background-color: #66CDAA;
+}
+
+nav ul a {
+  font-size: 1.5rem;
+}

@@ -1,0 +1,15 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700|Montserrat:400,400i,500);
+
+
+.result-text {
+  text-align: left;
+  color: #515A5A;
+}
+
+h5 {
+  padding: 10px;
+}
+
+.section {
+  text-align: left;
+}
