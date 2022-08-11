@@ -12,7 +12,7 @@ require github.com/swaggest/usecase v1.1.3
 require (
 	github.com/akrylysov/algnhsa v0.12.1
 	github.com/alexflint/go-arg v1.4.3
-	github.com/aws/aws-sdk-go-v2 v1.16.10
+	github.com/aws/aws-sdk-go-v2 v1.16.11
 	github.com/aws/aws-sdk-go-v2/config v1.16.0
 	github.com/aws/aws-sdk-go-v2/service/ssm v1.27.8
 	github.com/google/go-github/v45 v45.2.0
