@@ -18,14 +18,14 @@ resource "aws_ssm_parameter" "public_key" {
 }
 
 resource "aws_ssm_parameter" "client_id" {
-  name      = "client_id"
+  name      = "${var.deployment_id}-client_id"
   type      = "String"
   value     = var.client_id
   overwrite = true
 }
 
 resource "aws_ssm_parameter" "client_secret" {
-  name      = "client_secret"
+  name      = "${var.deployment_id}-client_secret"
   type      = "String"
   value     = var.client_secret
   overwrite = true
