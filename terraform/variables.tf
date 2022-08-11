@@ -17,3 +17,15 @@ variable "restler_lambda_timeout" {
   description = "restler lambda timeout - also used by SQS"
   default     = 300
 }
+
+variable "client_id" {
+  type        = string
+  description = "GitHub OAuth client ID"
+
+}
+
+variable "client_secret" {
+  type        = string
+  description = "GitHub OAuth client secret"
+
+}

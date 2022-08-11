@@ -102,4 +102,6 @@ jobs:
             -backend-config="dynamodb_table=${{ secrets.TERRAFORM_LOCK_DYNAMODB_TABLE }}"
           terraform apply -auto-approve \
             -var="deployment_id=${{ steps.branch.outputs.branch }}" \
-            -var="restler_image_tag=${{ secrets.AWS_DEFAULT_ACCOUNT }}.dkr.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com/${{ steps.branch.outputs.branch }}_dyno_image_repository:${{ github.sha }}";
+            -var="restler_image_tag=${{ secrets.AWS_DEFAULT_ACCOUNT }}.dkr.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com/${{ steps.branch.outputs.branch }}_dyno_image_repository:${{ github.sha }}"; \
+            -var="client_id=${{ secrets.GIT_HUB_CLIENT_ID }}" \
+            -var="client_secret=${{ secrets.GIT_HUB_CLIENT_SECRET }}" 

@@ -20,6 +20,8 @@ module "main" {
   source                 = "./main"
   deployment_id          = var.deployment_id
   restler_lambda_timeout = var.restler_lambda_timeout
+  client_id              = var.client_id
+  client_secret          = var.client_secret
 }
 
 module "ecr" {
