@@ -71,19 +71,32 @@ POLICY
 resource "aws_kms_alias" "openapi_fuzz_alias" {
   name          = "alias/${var.deployment_id}_openapi_fuzz_alias"
   target_key_id = aws_kms_key.openapi_fuzz.key_id
+
 }
 
 resource "aws_sqs_queue" "openapi_sqs_queue" {
   name                       = "${var.deployment_id}-openapifiles-queue"
   delay_seconds              = 0
   max_message_size           = 2048
-  message_retention_seconds  = 86400
+  message_retention_seconds  = 3600
   receive_wait_time_seconds  = 10
   visibility_timeout_seconds = var.restler_lambda_timeout + 5
   kms_master_key_id          = aws_kms_alias.openapi_fuzz_alias.target_key_arn
   tags = {
     Environment = "production"
   }
+  redrive_policy = jsonencode({
+    deadLetterTargetArn = aws_sqs_queue.dead_letter_openapi.arn
+    maxReceiveCount     = 1
+  })
+}
+
+resource "aws_sqs_queue" "dead_letter_openapi" {
+  name = "${var.deployment_id}-openapifiles-queue-deadletter"
+  redrive_allow_policy = jsonencode({
+    redrivePermission = "byQueue",
+    sourceQueueArns   = ["arn:aws:sqs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:${var.deployment_id}-openapifiles-queue"]
+  })
 }
 
 

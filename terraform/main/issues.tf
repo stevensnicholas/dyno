@@ -46,7 +46,19 @@ resource "aws_sns_topic" "sns_fuzz_results" {
 resource "aws_sqs_queue" "issues_queue" {
   name                       = "${var.deployment_id}-issues-queue"
   visibility_timeout_seconds = 300
+  message_retention_seconds  = 3600
+  redrive_policy = jsonencode({
+    deadLetterTargetArn = aws_sqs_queue.dead_letter_issues.arn
+    maxReceiveCount     = 1
+  })
+}
 
+resource "aws_sqs_queue" "dead_letter_issues" {
+  name = "${var.deployment_id}-issues-queue-deadletter"
+  redrive_allow_policy = jsonencode({
+    redrivePermission = "byQueue",
+    sourceQueueArns   = ["arn:aws:sqs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:${var.deployment_id}-issues-queue"]
+  })
 }
 
 resource "aws_sqs_queue_policy" "issues_queue_sns_lambda_policy" {
