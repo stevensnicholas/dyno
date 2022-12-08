@@ -9,6 +9,6 @@
     "test:docker": "cypress run --config baseUrl=http://frontend:8080"
   },
   "devDependencies": {
-    "typescript": "^4.7.4"
+    "typescript": "^4.9.4"
   }
 }
